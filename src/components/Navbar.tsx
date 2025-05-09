@@ -1,9 +1,9 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-
-import React, { useEffect } from "react";
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const NewsTicker = () => {
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
@@ -24,18 +24,18 @@ const NewsTicker = () => {
   }, []);
 
   return (
-    <div className="w-full flex items-center py-2 flex items-center justify-between px-4 bg-gray-200">
-      <div className="bg-green-700 text-white py-1 px-4 shadow-md">
+    <div className="w-full flex items-center py-2 justify-between px-4 bg-gray-200">
+      <div className="bg-green-700 text-white py-1 px-4 shadow-md rounded">
         <span className="font-semibold">Highlights:</span>
       </div>
-      <div className="text-xl font-semibold text-gray-800/60 max-w-xs">
-        {newsItems[currentNewsIndex]}
+      <div className="text-xl font-semibold text-gray-800 max-w-xs overflow-hidden">
+        <p className="whitespace-nowrap">{newsItems[currentNewsIndex]}</p>
       </div>
       <button
         onClick={() =>
           setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
         }
-        className="bg-green-700 text-white py-1 px-3 hover:bg-green-600 transition duration-200 ease-in-out"
+        className="bg-green-700 text-white py-1 px-3 rounded hover:bg-green-600 transition duration-200 ease-in-out"
       >
         Next
       </button>
@@ -45,70 +45,179 @@ const NewsTicker = () => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <div className="text-2xl font-bold text-green-800">G-ROOT</div>
-        <div className="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
-          <Link href="/">Home</Link>
-          <Link href="/about">About</Link>
-          <Link href="/achievers">Alumni</Link>
-          <Link href="/events">Events</Link>
-          <div className="relative group">
-            <Link href="/cds" className=" rounded flex items-center">
-              CDS <span className="rounded ml-2"></span>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex space-x-16 text-m font-medium text-gray-700">
+          <Link
+            href="/"
+            className="hover:text-green-600 transition duration-200"
+          >
+            Home
+          </Link>
+          <Link
+            href="/about"
+            className="hover:text-green-600 transition duration-200"
+          >
+            About
+          </Link>
+          <Link
+            href="/achievers"
+            className="hover:text-green-600 transition duration-200"
+          >
+            Alumni
+          </Link>
+          <Link
+            href="/innovationhub"
+            className="hover:text-green-600 transition duration-200"
+          >
+            Innovation Hub
+          </Link>
+          <Link
+            href="/events"
+            className="hover:text-green-600 transition duration-200"
+          >
+            Events
+          </Link>
+
+          {/* Multi-level Dropdown for CDS */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsDropdownOpen(true)}
+            onMouseLeave={() => setIsDropdownOpen(false)}
+          >
+            <Link
+              href="/cds"
+              className="flex items-center group hover:text-green-600 transition duration-200"
+              aria-haspopup="true"
+              aria-expanded={isDropdownOpen ? "true" : "false"} // Accessibility
+            >
+              CDS <span className="ml-2"></span>
             </Link>
-            <div className="absolute left-0 hidden mt-2 space-y-2 bg-white shadow-lg group-hover:block  group-focus:block transition-all duration-200 ease-in-ou">
+
+            {/* Submenu Dropdown */}
+            <div
+              className={`absolute left-0 mt-2 space-y-2 bg-white shadow-lg rounded-lg group-hover:block group-focus:block transition-all duration-300 ease-in-out ${
+                isDropdownOpen ? "block" : "hidden"
+              }`}
+              aria-labelledby="cds-dropdown" // Link this dropdown to the parent
+            >
               <Link
                 href="/cds/mihu"
-                className="block rounded px-4 py-2 text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
               >
                 MIHU
               </Link>
-              <Link
-                href="/cds/recruitment"
-                className="block rounded px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                Recruitment
-              </Link>
+              <div className="relative group">
+                <Link
+                  href="/cds/recruitment"
+                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                >
+                  Recruitment
+                </Link>
+              </div>
             </div>
           </div>
-          <Link href="/gallery">Gallery</Link>
-          <Link href="/contact">Contact</Link>
-        </div>
-        <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)}>☰</button>
-        </div>
-      </div>
-      {isOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-700 flex flex-col items-start">
-          <Link href="/" className="block">
-            Home
-          </Link>
-          <Link href="/about" className="block">
-            About
-          </Link>
-          <Link href="/achievers" className="block">
-            Alumni
-          </Link>
-          <Link href="/events" className="block">
-            Events
-          </Link>
-          <Link href="/cds" className="block">
-            CDS
-          </Link>
-          <Link href="/gallery" className="block">
+
+          <Link
+            href="/gallery"
+            className="hover:text-green-600 transition duration-200"
+          >
             Gallery
           </Link>
-          <Link href="/contact" className="block">
+          <Link
+            href="/contact"
+            className="hover:text-green-600 transition duration-200"
+          >
             Contact
+          </Link>
+          <Link
+            href="/login"
+            className="flex items-center hover:text-green-600 transition duration-200"
+          >
+            <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />{" "}
+            {/* Add the icon */}
+            Login
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-green-800 hover:text-green-600 transition duration-200"
+            aria-expanded={isOpen ? "true" : "false"} // Dynamic state change
+            aria-controls="mobile-menu" // Optional: Link to the mobile menu element for better context
+          >
+            ☰
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <div
+          id="mobile-menu"
+          className="md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-700 flex flex-col items-start"
+        >
+          <Link
+            href="/"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            Home
+          </Link>
+          <Link
+            href="/about"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            About
+          </Link>
+          <Link
+            href="/achievers"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            Alumni
+          </Link>
+          <Link
+            href="/events"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            Events
+          </Link>
+          <Link
+            href="/cds"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            CDS
+          </Link>
+          <Link
+            href="/gallery"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            Gallery
+          </Link>
+          <Link
+            href="/contact"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            Contact
+          </Link>
+          <Link
+            href="/login"
+            className="block hover:text-green-600 transition duration-200"
+          >
+            Login
           </Link>
         </div>
       )}
-      <div>
-        <NewsTicker />
-      </div>
+
+      {/* News Ticker */}
+      <NewsTicker />
     </nav>
   );
 };

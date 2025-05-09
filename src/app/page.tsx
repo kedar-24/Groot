@@ -33,21 +33,31 @@ export default async function HomePage() {
     <main className="bg-white text-black">
       <HeroSection />
       <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-6 border-b-2 border-red-500 inline-block">
+        <h2 className="text-3xl font-bold mb-6 border-b-4 border-red-500 inline-block pb-2">
           Latest News
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <NewsCard
-              key={article._id}
-              title={article.title}
-              date={article.date}
-              category={article.category}
-              imageUrl={article.imageUrl}
-              content={article.content}
-            />
-          ))}
-        </div>
+
+        {/* Loading state or fallback message */}
+        {articles.length === 0 ? (
+          <div className="text-center text-lg font-medium text-gray-500">
+            <p>
+              No news articles available at the moment. Please check back later.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {articles.map((article) => (
+              <NewsCard
+                key={article._id}
+                title={article.title}
+                date={article.date}
+                category={article.category}
+                imageUrl={article.imageUrl}
+                content={article.content}
+              />
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
