@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+body {
+  @apply font-sans bg-white text-black;
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -22,9 +28,4 @@
   }
 }
 
-body {
-  @apply font-sans;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+
