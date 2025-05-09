@@ -9,13 +9,10 @@ const HeroSection = () => {
           <p className="text-lg mb-6">
             Everything You Need to Know About Markets.
           </p>
-          <button className="bg-white text-green-900 px-5 py-2 rounded font-semibold hover:bg-gray-100 transition">
-            Read More
-          </button>
         </div>
         <div className="hidden md:block">
           <Image
-            src="/assets/hero-news.jpg"
+            src="/images/hero.jpg"
             alt="Hero"
             width={600}
             height={400}

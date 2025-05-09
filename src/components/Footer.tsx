@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-8 mt-20">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <h4 className="font-semibold mb-2">Site</h4>
           <ul className="space-y-1 text-sm text-gray-300">
@@ -37,7 +37,7 @@ export default function Footer() {
               placeholder="Enter your email"
               className="w-full p-2 rounded text-black bg-gray-200"
             />
-            <button className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <button className="w-full p-2 bg-green-800 text-white rounded hover:bg-green-700 transition">
               Subscribe
             </button>
           </form>
