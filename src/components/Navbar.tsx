@@ -15,7 +15,26 @@ const Navbar = () => {
           <Link href="/about">About</Link>
           <Link href="/achievers">Alumni</Link>
           <Link href="/events">Events</Link>
-          <Link href="/cds">CDS</Link>
+          {/* <Link href="/cds">CDS</Link> */}
+          <div className="relative group">
+            <Link href="/cds" className="flex items-center">
+              CDS <span className="ml-2"></span>
+            </Link>
+            <div className="absolute left-0 hidden mt-2 space-y-2 bg-white shadow-lg group-hover:block">
+              <Link
+                href="/cds/mihu"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                MIHU
+              </Link>
+              <Link
+                href="/cds/recruitment"
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Recruitment
+              </Link>
+            </div>
+          </div>
           <Link href="/gallery">Gallery</Link>
           <Link href="/contact">Contact</Link>
         </div>

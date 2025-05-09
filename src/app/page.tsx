@@ -1,7 +1,5 @@
 import HeroSection from "@/components/HeroSection";
 import NewsCard from "@/components/NewsCard";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 interface Article {
   _id: string;
@@ -33,7 +31,6 @@ export default async function HomePage() {
 
   return (
     <main className="bg-white text-black">
-      <Navbar />
       <HeroSection />
       <section className="max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-3xl font-bold mb-6 border-b-2 border-red-500 inline-block">
@@ -52,7 +49,6 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
-      <Footer />
     </main>
   );
 }

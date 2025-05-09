@@ -35,7 +35,7 @@ export default function Footer() {
             <input
               type="email"
               placeholder="Enter your email"
-              className="w-full p-2 rounded text-black"
+              className="w-full p-2 rounded text-black bg-gray-200"
             />
             <button className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">
               Subscribe
