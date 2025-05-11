@@ -70,6 +70,11 @@ export default function LoginPage() {
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+              <div className="flex justify-end mt-1">
+                <Link href="/login/forgot-password" className="text-blue-500 hover:underline text-sm">
+                  Forgot password?
+                </Link>
+              </div>
             </div>
             <div className="flex items-center mt-2">
               <input
