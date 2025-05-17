@@ -31,8 +31,8 @@ const NewsTicker = () => {
       <div className="text-xl font-semibold text-gray-800 max-w-xs overflow-hidden">
         <p className="whitespace-nowrap">{newsItems[currentNewsIndex]}</p>
       </div>
-      <button
-        onClick={() =>
+      <button 
+          onClick={() =>
           setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
         }
         className="bg-green-700 text-white py-1 px-3 rounded hover:bg-green-600 transition duration-200 ease-in-out"

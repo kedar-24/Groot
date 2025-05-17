@@ -35,7 +35,7 @@ export default function LoginPage() {
           <h1 className="text-4xl font-bold text-gray-800 mb-6">
             Welcome Back!
           </h1>
-          <p className="text-gray-600 mb-4">Login to your account</p>
+          <p className="text-gray-600 mb-4">Login to your profile</p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label
@@ -50,7 +50,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@example.com"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${email ? "text-blue-700" : "text-gray-900"}`}
                 required
               />
             </div>
@@ -67,9 +67,14 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
+              <div className="flex justify-end mt-1">
+                <Link href="/login/forgot-password" className="text-blue-500 hover:underline text-sm">
+                  Forgot password?
+                </Link>
+              </div>
             </div>
             <div className="flex items-center mt-2">
               <input
