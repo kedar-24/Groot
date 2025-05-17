@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import "@/app/globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,32 +10,36 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <html lang="en">
-      <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Groot Alumini Page" />
-        <meta name="author" content="Your Name" />
-        <meta property="og:title" content="G-Root Website" />
-        <meta property="og:description" content="Groot Alumini Page" />
-        <meta property="og:image" content="/path-to-image.jpg" />
-        <title>G-Root Website</title>
-      </head>
-      <body className="bg-gray-50 text-gray-900 font-sans antialiased">
-        {/* Sticky Navbar */}
-        <div className="sticky top-0 z-50 bg-white shadow-md transition-all duration-300 ease-in-out">
+      <body>
+        {/* Navbar */}
+        <header
+          className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ease-in-out ${
+            scrolled ? "shadow-lg" : "shadow-md"
+          }`}
+        >
           <Navbar />
-        </div>
+        </header>
 
-        {/* Main Content Section */}
-        <main className="min-h-screen pt-16 pb-8 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-screen-xl mx-auto">{children}</div>
+        {/* Main content */}
+        <main className="flex-grow min-h-screen pt-16 pb-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
+          {children}
         </main>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-8 mt-12">
-          <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <footer className="bg-gray-900 text-white py-8 w-full">
+          <div className="px-4 md:px-8 max-w-7xl mx-auto">
             <Footer />
           </div>
         </footer>

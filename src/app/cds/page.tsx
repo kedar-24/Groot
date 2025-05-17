@@ -73,7 +73,7 @@ export default function CDSPage() {
             there&apos;s a place for you here.
           </p>
           <a
-            href="/join"
+            href="/cds/mihu/join"
             className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
           >
             Get Involved

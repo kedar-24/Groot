@@ -11,7 +11,7 @@ export default function AboutPage() {
           </p>
           <a
             href="/join"
-            className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
+            className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 hover:scale-200 transition duration-300 "
           >
             Join Us
           </a>

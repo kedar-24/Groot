@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -46,14 +46,28 @@ const NewsTicker = () => {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleDropdownOpen = () => {
+    if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
+    setIsDropdownOpen(true);
+  };
+
+  const handleDropdownClose = () => {
+    dropdownTimer.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 200); // 200ms delay
+  };
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="text-2xl font-bold text-green-800">G-ROOT</div>
+    <nav className="bg-white shadow-max-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+        <Link href="/" className="text-2xl font-bold text-green-800">
+          G-ROOT
+        </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-16 text-m font-medium text-gray-700">
+        <div className="hidden md:flex flex-wrap gap-x-15 gap-y-2 text-sm font-medium text-gray-700 min-w-0">
           <Link
             href="/"
             className="hover:text-green-600 transition duration-200"
@@ -88,16 +102,18 @@ const Navbar = () => {
           {/* Multi-level Dropdown for CDS */}
           <div
             className="relative group"
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
+            onMouseEnter={handleDropdownOpen}
+            onMouseLeave={handleDropdownClose}
+            onFocus={handleDropdownOpen}
+            onBlur={handleDropdownClose}
           >
             <Link
               href="/cds"
-              className="flex items-center group hover:text-green-600 transition duration-200"
+              className="flex items-center group hover:text-green-600 transition-all duration-200"
               aria-haspopup="true"
               aria-expanded={isDropdownOpen ? "true" : "false"} // Accessibility
             >
-              CDS <span className="ml-2"></span>
+              CDS
             </Link>
 
             {/* Submenu Dropdown */}
@@ -140,22 +156,30 @@ const Navbar = () => {
             href="/login"
             className="flex items-center hover:text-green-600 transition duration-200"
           >
-            <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />{" "}
-            {/* Add the icon */}
+            <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />
             Login
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-green-800 hover:text-green-600 transition duration-200"
-            aria-expanded={isOpen ? "true" : "false"} // Dynamic state change
-            aria-controls="mobile-menu" // Optional: Link to the mobile menu element for better context
-          >
-            ☰
-          </button>
+          <span className="flex space-x-5 items-center justify-center">
+            <Link
+              href="/login"
+              className="flex items-center hover:text-green-600 transition duration-200"
+            >
+              <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />
+              Login
+            </Link>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-green-800 hover:text-green-600 transition duration-200"
+              aria-expanded={isOpen ? "true" : "false"} // Dynamic state change
+              aria-controls="mobile-menu" // Optional: Link to the mobile menu element for better context
+            >
+              ☰
+            </button>
+          </span>
         </div>
       </div>
 
@@ -163,55 +187,49 @@ const Navbar = () => {
       {isOpen && (
         <div
           id="mobile-menu"
-          className="md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-700 flex flex-col items-start"
+          className="max-md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-700 flex flex-col items-start"
         >
           <Link
             href="/"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             Home
           </Link>
           <Link
             href="/about"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             About
           </Link>
           <Link
             href="/achievers"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             Alumni
           </Link>
           <Link
             href="/events"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             Events
           </Link>
           <Link
             href="/cds"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             CDS
           </Link>
           <Link
             href="/gallery"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             Gallery
           </Link>
           <Link
             href="/contact"
-            className="block hover:text-green-600 transition duration-200"
+            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
           >
             Contact
-          </Link>
-          <Link
-            href="/login"
-            className="block hover:text-green-600 transition duration-200"
-          >
-            Login
           </Link>
         </div>
       )}

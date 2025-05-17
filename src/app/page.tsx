@@ -1,14 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import NewsCard from "@/components/NewsCard";
-
-interface Article {
-  _id: string;
-  title: string;
-  date: string;
-  category: string;
-  imageUrl: string;
-  content: string;
-}
+import type { Article } from "@/models/Article";
 
 async function getArticles(): Promise<Article[]> {
   try {
@@ -19,7 +11,12 @@ async function getArticles(): Promise<Article[]> {
     if (!res.ok) return [];
 
     const data = await res.json();
-    return Array.isArray(data) ? data : [];
+
+    if (Array.isArray(data)) {
+      return data.slice(0, 6);
+    }
+
+    return [];
   } catch (error) {
     console.error("Error fetching articles:", error);
     return [];
@@ -30,33 +27,51 @@ export default async function HomePage() {
   const articles = await getArticles();
 
   return (
-    <main className="bg-white text-black">
+    <main className="bg-white text-gray-900 min-h-screen">
       <HeroSection />
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-6 border-b-4 border-red-500 inline-block pb-2">
+
+      <section
+        aria-labelledby="latest-news-heading"
+        className="max-w-7xl mx-auto px-6 py-16 sm:px-12"
+      >
+        <h2
+          id="latest-news-heading"
+          className="text-4xl font-extrabold tracking-tight mb-8 border-b-4 border-red-600 inline-block pb-3"
+        >
           Latest News
         </h2>
 
-        {/* Loading state or fallback message */}
         {articles.length === 0 ? (
-          <div className="text-center text-lg font-medium text-gray-500">
-            <p>
-              No news articles available at the moment. Please check back later.
+          <div className="flex flex-col items-center justify-center py-20">
+            <p className="text-lg text-gray-500 font-semibold mb-4">
+              No news articles available at the moment.
+            </p>
+            <p className="text-sm text-gray-400 max-w-sm text-center">
+              Please check back later or refresh the page for the latest
+              updates.
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ul
+            role="list"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+          >
             {articles.map((article) => (
-              <NewsCard
+              <li
                 key={article._id}
-                title={article.title}
-                date={article.date}
-                category={article.category}
-                imageUrl={article.imageUrl}
-                content={article.content}
-              />
+                className="transform transition duration-300 hover:scale-[1.03] focus-within:scale-[1.03] will-change-transform"
+              >
+                <NewsCard
+                  title={article.title}
+                  date={article.date}
+                  category={article.category}
+                  imageUrl={article.imageUrl}
+                  content={article.content}
+                  url={article.url}
+                />
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </section>
     </main>
