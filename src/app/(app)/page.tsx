@@ -33,12 +33,11 @@ export default async function HomePage() {
         <div className="flex-1 flex h-full">
           <HeroSection />
         </div>
-        {/* Right: Top full-width, bottom two half-width */}
-        <div className="flex flex-col flex-1 h-full">
+        <div className="flex flex-col flex-1 h-full bg-green-800 gap-y-0.5 p-1">
           {/* Top: full width, half height */}
           <section className="h-1/2 flex items-center justify-center">
             <div
-              className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:shadow-black/80 hover:scale-105 flex items-center justify-center bg-cover bg-top"
+              className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-95 flex items-center justify-center bg-cover bg-top"
               style={{ backgroundImage: "url('/images/hero.webp')" }}
             >
               <span className="text-white text-lg font-bold">
@@ -46,11 +45,12 @@ export default async function HomePage() {
               </span>
             </div>
           </section>
+
           {/* Bottom: two half-width sections */}
-          <div className="flex flex-row h-1/2">
+          <div className="flex flex-row h-1/2 gap-x-0.5">
             <section className="w-1/2 h-full flex items-center justify-center">
               <div
-                className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:shadow-black/80 hover:scale-105 flex items-center justify-center bg-cover bg-bottom"
+                className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-95 flex items-center justify-center bg-cover bg-bottom"
                 style={{ backgroundImage: "url('/images/image1.webp')" }}
               >
                 <span className="text-white text-lg font-bold">
@@ -60,7 +60,7 @@ export default async function HomePage() {
             </section>
             <section className="w-1/2 h-full flex items-center justify-center">
               <div
-                className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 hover:shadow-black/80 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-105 flex items-center justify-center bg-cover bg-right"
+                className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-95 flex items-center justify-center bg-cover bg-right"
                 style={{ backgroundImage: "url('/images/image2.webp')" }}
               >
                 <span className="text-white text-lg font-bold">
@@ -71,6 +71,7 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
+
       {/* Latest News Section */}
       <section
         aria-labelledby="latest-news-heading"
@@ -96,12 +97,12 @@ export default async function HomePage() {
         ) : (
           <ul
             role="list"
-            className="flex flex-wrap gap-6 sm:gap-10 justify-center"
+            className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
           >
             {articles.map((article) => (
               <li
                 key={article._id}
-                className="flex-grow basis-[300px] max-w-full sm:max-w-[48%] xl:max-w-[32%] flex transition duration-300 hover:scale-[1.03] focus-within:scale-[1.03] will-change-transform"
+                className="transition duration-300 hover:scale-[1.03] focus-within:scale-[1.03] will-change-transform"
               >
                 <NewsCard
                   title={article.title}

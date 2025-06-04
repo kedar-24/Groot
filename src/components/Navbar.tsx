@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import "@/styles/globals.css";
 import Link from "next/link";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,17 +26,17 @@ const NewsTicker = () => {
 
   return (
     <div className="w-full flex items-center py-2 justify-between px-4 bg-gray-200">
-      <div className="bg-green-700 text-white py-1 px-4 shadow-md rounded">
+      <div className="button-primary">
         <span className="font-semibold">Highlights:</span>
       </div>
       <div className="text-xl font-semibold text-gray-800 max-w-xs overflow-hidden">
         <p className="whitespace-nowrap">{newsItems[currentNewsIndex]}</p>
       </div>
-      <button 
-          onClick={() =>
+      <button
+        onClick={() =>
           setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
         }
-        className="bg-green-700 text-white py-1 px-3 rounded hover:bg-green-600 transition duration-200 ease-in-out"
+        className="button-primary"
       >
         Next
       </button>

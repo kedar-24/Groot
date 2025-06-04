@@ -61,9 +61,7 @@ const RecruitmentPage: React.FC = () => {
 
             <button
               onClick={handleSearch}
-              className="text-white/95 inline-block bg-red-600 hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-400
-              transition rounded-lg px-8 py-4 font-semibold text-lg shadow-lg shadow-red-700/50 hover:shadow-xl
-              transform hover:scale-105 will-change-transform"
+              className="button-red text-white"
               disabled={loading}
             >
               {loading ? "Searching..." : "Search Jobs"}
