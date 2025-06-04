@@ -1,6 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import NewsCard from "@/components/NewsCard";
-import type { Article } from "@/models/Article";
+import type Article from "@/models/Article";
 
 async function getArticles(): Promise<Article[]> {
   try {
