@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import AuthLayout from "@/components/LoginLayout";
+import FormContainer from "@/components/FormContainer";
+import Input from "@/components/Input";
+import Button from "@/components/button";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -13,11 +17,14 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200">
-      <div className="bg-white p-8 rounded-b-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">Forgot Password</h1>
+    <AuthLayout imageSrc="/images/login.jpg" imageAlt="Forgot Password">
+      <FormContainer>
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">
+          Forgot Password
+        </h1>
         <p className="mb-6 text-gray-600">
-          Enter your email address and we'll send you a link to reset your password.
+          Enter your email address and we&apos;ll send you a link to reset your
+          password.
         </p>
         {submitted ? (
           <div className="text-green-600 mb-4">
@@ -26,33 +33,36 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+              <label
+                htmlFor="email"
+                className="block text-gray-700 font-medium mb-2"
+              >
                 Email Address
               </label>
-              <input
+              <Input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@example.com"
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+                className="w-full"
               />
             </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-            >
+            <Button type="submit" variant="primary" className="w-full">
               Send Reset Link
-            </button>
+            </Button>
           </form>
         )}
         <div className="mt-6 text-center">
-          <Link href="/login" className="text-blue-500 hover:underline">
+          <Link
+            href="/login"
+            className="text-green-700 font-semibold hover:underline"
+          >
             Back to Login
           </Link>
         </div>
-      </div>
-    </div>
+      </FormContainer>
+    </AuthLayout>
   );
 }

@@ -1,3 +1,6 @@
+import ValueCard from "@/components/ValueCard";
+import Button from "@/components/button";
+
 export default function MIHUPage() {
   return (
     <div className="bg-gray-50">
@@ -8,12 +11,14 @@ export default function MIHUPage() {
           A student-led support system offering guidance, emotional help, and
           mentorship through peer-to-peer interactions.
         </p>
-        <a
+        <Button
+          as="a"
           href="#learn-more"
+          variant="primary"
           className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
         >
           Learn More
-        </a>
+        </Button>
       </section>
 
       {/* Purpose and Goals Section */}
@@ -33,58 +38,52 @@ export default function MIHUPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Emotional Support */}
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <h3 className="text-2xl font-semibold text-green-800 mb-4">
-              Emotional Support
-            </h3>
+          <ValueCard title="Emotional Support">
             <p className="text-lg text-gray-700 mb-4">
               Feeling low, stressed, or overwhelmed? Connect with trained peers
               who listen without judgment and guide you toward helpful
               resources.
             </p>
-            <a
+            <Button
+              as="a"
               href="/cds/mihu/emotional-support"
-              className="text-green-700 font-semibold hover:text-green-600 transition"
+              variant="primary"
+              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
             >
               Talk to Someone
-            </a>
-          </div>
+            </Button>
+          </ValueCard>
 
-          {/* Academic Guidance */}
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <h3 className="text-2xl font-semibold text-green-800 mb-4">
-              Academic Guidance
-            </h3>
+          <ValueCard title="Academic Guidance">
             <p className="text-lg text-gray-700 mb-4">
               Need help navigating courses, exams, or time management? MIHU can
               connect you with experienced peers who’ve been there.
             </p>
-            <a
+            <Button
+              as="a"
               href="/cds/mihu/academic-guidance"
-              className="text-green-700 font-semibold hover:text-green-600 transition"
+              variant="primary"
+              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
             >
               Get Support
-            </a>
-          </div>
+            </Button>
+          </ValueCard>
 
-          {/* Peer Mentorship */}
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <h3 className="text-2xl font-semibold text-green-800 mb-4">
-              Peer Mentorship
-            </h3>
+          <ValueCard title="Peer Mentorship">
             <p className="text-lg text-gray-700 mb-4">
               Join our mentorship network where senior students help juniors
               with academics, college life, and more — building a culture of
               care.
             </p>
-            <a
+            <Button
+              as="a"
               href="/cds/mihu/mentorship"
-              className="text-green-700 font-semibold hover:text-green-600 transition"
+              variant="primary"
+              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
             >
               Become a Mentor
-            </a>
-          </div>
+            </Button>
+          </ValueCard>
         </div>
       </section>
 
@@ -98,12 +97,14 @@ export default function MIHUPage() {
           welcomes you. Your empathy, experience, or need is what makes our
           community strong.
         </p>
-        <a
+        <Button
+          as="a"
           href="/cds/mihu/join"
+          variant="primary"
           className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
         >
           Join MIHU Today
-        </a>
+        </Button>
       </section>
     </div>
   );

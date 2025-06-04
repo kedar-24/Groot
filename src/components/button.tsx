@@ -1,23 +1,35 @@
 import React from "react";
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "imglogo" | "red";
-  children: React.ReactNode;
-};
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    variant?: "primary" | "secondary" | "imglogo" | "red";
+    children: React.ReactNode;
+    as?: "button" | "a";
+    href?: string;
+  };
 
 export default function Button({
   variant = "primary",
   className = "",
   children,
+  as = "button",
+  href,
   ...props
 }: ButtonProps) {
   const variants = {
     primary: "btn btn-primary",
     secondary: "btn btn-secondary",
-    imglogo:
-      "w-12 h-12 flex items-center justify-center bg-white border border-gray-300 shadow-sm hover:shadow-lg hover:bg-blue-50 hover:scale-110 hover:border-blue-400 transition-all duration-300 mx-1",
+    imglogo: "btn-imglogo",
     red: "btn btn-red",
   };
+
+  if (as === "a" && href) {
+    return (
+      <a href={href} className={`${variants[variant]} ${className}`} {...props}>
+        {children}
+      </a>
+    );
+  }
 
   return (
     <button className={`${variants[variant]} ${className}`} {...props}>

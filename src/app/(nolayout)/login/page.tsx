@@ -5,11 +5,15 @@ import AuthLayout from "@/components/LoginLayout";
 import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
 import Input from "@/components/Input";
+import Image from "next/image";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +21,7 @@ export default function LoginPage() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(form),
       });
       if (response.ok) {
         alert("Login successful!");
@@ -34,94 +38,130 @@ export default function LoginPage() {
   return (
     <AuthLayout imageSrc="/images/login.jpg" imageAlt="Login Image">
       <FormContainer>
-        <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome Back!</h1>
-        <p className="text-gray-600 mb-4">Login to your profile</p>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <h1 className="text-4xl font-bold text-green-800 mb-6">
+          Welcome Back!
+        </h1>
+        <p className="text-black mb-4">Login to your profile</p>
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4 w-full max-w-md mx-auto"
+        >
+          {/* Email */}
           <div>
             <label
               htmlFor="email"
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-sm font-medium text-green-800 mb-1"
             >
               Email
             </label>
             <Input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={form.email}
+              onChange={handleChange}
               placeholder="example@example.com"
               required
+              className="input-base"
             />
           </div>
-          <div className="relative">
+          {/* Password */}
+          <div>
             <label
               htmlFor="password"
-              className="block text-gray-700 font-medium mb-2"
+              className="block text-sm font-medium text-green-800 mb-1"
             >
               Password
             </label>
             <Input
-              type={showPassword ? "text" : "password"} // Toggle input type
+              type={showPassword ? "text" : "password"}
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={form.password}
+              onChange={handleChange}
               placeholder="Enter your password"
               required
+              className="input-base"
             />
-            <div className="flex justify-end mt-1">
+            <div className="flex justify-between items-center mt-1">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="showPassword"
+                  checked={showPassword}
+                  onChange={() => setShowPassword((v) => !v)}
+                  className="mr-2 accent-green-600"
+                />
+                <label
+                  htmlFor="showPassword"
+                  className="text-green-800 text-sm"
+                >
+                  Show Password
+                </label>
+              </div>
               <Link
                 href="/login/forgot-password"
-                className="text-blue-500 hover:underline text-sm"
+                className="text-green-700 hover:underline text-sm"
               >
                 Forgot password?
               </Link>
             </div>
           </div>
-          <div className="flex items-center mt-2">
-            <input
-              type="checkbox"
-              id="showPassword"
-              checked={showPassword}
-              onChange={() => setShowPassword(!showPassword)}
-              className="mr-2"
-            />
-            <label htmlFor="showPassword" className="text-gray-700">
-              Show Password
-            </label>
-          </div>
-          <div className="flex justify-center">
-            <Button variant="primary" type="submit" className="w-full max-w-xs">
-              Login
-            </Button>
-          </div>
+          {/* Login Button */}
+          <Button variant="primary" type="submit" className="w-full">
+            Login
+          </Button>
         </form>
-        <p className="text-center text-gray-500 mt-4">or</p>
-        <hr className="my-4 border-gray-300" />
-        <div className="flex justify-center items-center space-x-4 mt-6">
-          <Button variant="imglogo" type="button">
-            <img
+        <div className="my-6 flex items-center">
+          <hr className="flex-1 border-gray-300" />
+          <span className="mx-3 text-gray-400 text-sm">or</span>
+          <hr className="flex-1 border-gray-300" />
+        </div>
+        {/* Social Login */}
+        <div className="flex justify-center items-center space-x-4">
+          <Button
+            variant="imglogo"
+            type="button"
+            aria-label="Login with Facebook"
+          >
+            <Image
               src="/images/facebook-logo.svg"
-              alt="Facebook"
-              className="w-6 h-6"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+              priority={false}
             />
           </Button>
-          <Button variant="imglogo" type="button">
-            <img
+          <Button
+            variant="imglogo"
+            type="button"
+            aria-label="Login with Google"
+          >
+            <Image
               src="/images/google-logo.svg"
-              alt="Google"
-              className="w-6 h-6"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+              priority={false}
             />
           </Button>
-          <Button variant="imglogo" type="button">
-            <img src="/images/apple-logo.svg" alt="Apple" className="w-6 h-6" />
+          <Button variant="imglogo" type="button" aria-label="Login with Apple">
+            <Image
+              src="/images/apple-logo.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+              priority={false}
+            />
           </Button>
         </div>
-        <div className="mt-6 text-center text-gray-600">
+        <div className="mt-6 text-center text-gray-700">
           <p>
-            Dont have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/login/signup"
-              className="text-blue-500 hover:underline"
+              className="text-green-700 font-semibold hover:underline"
             >
               Sign up
             </Link>

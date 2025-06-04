@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import Button from "@/components/button";
+import ValueCard from "@/components/ValueCard";
+import Dropdown from "@/components/Dropdown";
 
 interface Job {
   id: string;
@@ -15,61 +18,65 @@ const RecruitmentPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSearch = () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     fetch(`/api/jobs?jobType=${jobType}&workspace=${workspace}`)
       .then((res) => res.json())
       .then((data) => {
         setJobs(data.jobs);
-        setLoading(false); // Stop loading
+        setLoading(false);
       });
   };
 
   return (
-    <div className="bg-gray-100 p-6">
+    <div className="bg-gray-50 py-12 px-4 min-h-screen">
       <div className="max-w-screen-xl mx-auto">
-        <h1 className="text-3xl font-bold text-green-800 text-center mb-6">
+        <h1 className="text-3xl font-bold text-green-800 text-center mb-8">
           Recruitment Drives
         </h1>
 
-        <div className="my-6">
+        {/* Filters */}
+        <section className="mb-10">
           <h2 className="text-2xl font-semibold text-center mb-4">
             Job Listings
           </h2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center space-x-6 mt-4">
-            <select
-              aria-label="Select Job Type"
-              className="w-full sm:w-auto border border-gray-300 rounded-lg px-4 py-2 text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-200 transition-shadow shadow-sm"
-              value={jobType}
-              onChange={(e) => setJobType(e.target.value)}
-            >
-              <option value="">Select Job Type</option>
-              <option value="full-time">Full-Time</option>
-              <option value="part-time">Part-Time</option>
-              <option value="internship">Internship</option>
-            </select>
-
-            <select
-              aria-label="Select Workspace"
-              className="w-full sm:w-auto border border-gray-300 rounded-lg px-4 py-2 text-base text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-200 focus:border-green-200 transition-shadow shadow-sm"
-              value={workspace}
-              onChange={(e) => setWorkspace(e.target.value)}
-            >
-              <option value="">Select Workspace</option>
-              <option value="remote">Remote</option>
-              <option value="on-site">On-Site</option>
-            </select>
-
-            <button
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-row gap-x-3">
+              <Dropdown
+                aria-label="Select Job Type"
+                value={jobType}
+                onChange={(e) => setJobType(e.target.value)}
+                options={[
+                  { value: "", label: "Select Job Type" },
+                  { value: "full-time", label: "Full-Time" },
+                  { value: "part-time", label: "Part-Time" },
+                  { value: "internship", label: "Internship" },
+                ]}
+              />
+              <Dropdown
+                aria-label="Select Workspace"
+                value={workspace}
+                onChange={(e) => setWorkspace(e.target.value)}
+                options={[
+                  { value: "", label: "Select Workspace" },
+                  { value: "remote", label: "Remote" },
+                  { value: "on-site", label: "On-Site" },
+                ]}
+              />
+            </div>
+            <Button
+              variant="red"
+              className="w-auto min-w-[120px] mt-2"
               onClick={handleSearch}
-              className="button-red text-white"
               disabled={loading}
+              type="button"
             >
               {loading ? "Searching..." : "Search Jobs"}
-            </button>
+            </Button>
           </div>
-        </div>
+        </section>
 
-        <div className="my-6">
+        {/* Job Results */}
+        <section>
           {jobs.length === 0 && !loading ? (
             <h3 className="text-xl font-semibold text-center text-gray-600">
               No jobs found. Try adjusting your search filters.
@@ -79,29 +86,29 @@ const RecruitmentPage: React.FC = () => {
               {jobs.length} Job(s) Found
             </h3>
           )}
-          <div className="space-y-4 mt-6">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
             {loading ? (
-              <div className="text-center text-lg text-gray-500">
+              <div className="col-span-full text-center text-lg text-gray-500">
                 Loading jobs...
               </div>
             ) : (
               jobs.map((job) => (
-                <div
-                  className="bg-white p-6 shadow-md rounded-lg hover:shadow-xl transition duration-300"
-                  key={job.id}
-                >
-                  <h4 className="text-xl font-semibold text-green-800">
-                    {job.title}
-                  </h4>
-                  <p className="text-gray-600">{job.location}</p>
-                  <button className="bg-blue-500 text-white py-2 px-4 rounded mt-4 hover:bg-blue-600 transition duration-200">
+                <ValueCard key={job.id} title={job.title}>
+                  <p className="text-gray-600 mb-2">{job.location}</p>
+                  <Button
+                    as="a"
+                    href={`/cds/recruitment/jobs/${job.id}`}
+                    variant="primary"
+                    className="mt-2"
+                  >
                     View Job
-                  </button>
-                </div>
+                  </Button>
+                </ValueCard>
               ))
             )}
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );

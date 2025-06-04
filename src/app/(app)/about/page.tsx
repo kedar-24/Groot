@@ -1,3 +1,5 @@
+import ValueCard from "@/components/ValueCard";
+
 export default function AboutPage() {
   return (
     <div className="bg-gray-50">
@@ -9,10 +11,7 @@ export default function AboutPage() {
             We are the Orukal Guild – promoting growth, innovation, and
             community impact.
           </p>
-          <a
-            href="/join"
-            className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 hover:scale-200 transition duration-300 "
-          >
+          <a href="/join" className="btn btn-primary text-lg font-semibold">
             Join Us
           </a>
         </div>
@@ -53,42 +52,22 @@ export default function AboutPage() {
             Core Values
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-            <div className="p-6 bg-gray-100 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold text-green-700 mb-2">
-                Innovation
-              </h3>
-              <p className="text-gray-600">
-                We value creativity and forward-thinking, continuously striving
-                to innovate and push boundaries.
-              </p>
-            </div>
-            <div className="p-6 bg-gray-100 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold text-green-700 mb-2">
-                Community
-              </h3>
-              <p className="text-gray-600">
-                Collaboration and community-building are at the core of what we
-                do. We believe in working together for a common purpose.
-              </p>
-            </div>
-            <div className="p-6 bg-gray-100 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold text-green-700 mb-2">
-                Growth
-              </h3>
-              <p className="text-gray-600">
-                We are committed to continuous personal and professional growth,
-                creating opportunities for learning and development.
-              </p>
-            </div>
-            <div className="p-6 bg-gray-100 rounded-lg shadow-md">
-              <h3 className="text-2xl font-semibold text-green-700 mb-2">
-                Impact
-              </h3>
-              <p className="text-gray-600">
-                We strive to make a meaningful impact on society by encouraging
-                responsible actions and sustainable practices.
-              </p>
-            </div>
+            <ValueCard title="Innovation">
+              We value creativity and forward-thinking, continuously striving to
+              innovate and push boundaries.
+            </ValueCard>
+            <ValueCard title="Community">
+              Collaboration and community-building are at the core of what we
+              do. We believe in working together for a common purpose.
+            </ValueCard>
+            <ValueCard title="Growth">
+              We are committed to continuous personal and professional growth,
+              creating opportunities for learning and development.
+            </ValueCard>
+            <ValueCard title="Impact">
+              We strive to make a meaningful impact on society by encouraging
+              responsible actions and sustainable practices.
+            </ValueCard>
           </div>
         </div>
       </section>
@@ -102,10 +81,7 @@ export default function AboutPage() {
             community of like-minded individuals, there&apos;s a place for you
             here.
           </p>
-          <a
-            href="/join"
-            className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
-          >
+          <a href="/join" className="btn btn-primary text-lg font-semibold">
             Become a Member
           </a>
         </div>

@@ -15,5 +15,16 @@ const ArticleSchema = new Schema({
   description: String,
 });
 
+type Article = {
+  _id: string;
+  title: string;
+  date: string;
+  category: string;
+  imageUrl: string;
+  content: string;
+  url: string;
+};
+
 export default mongoose.models.Article ||
   mongoose.model("Article", ArticleSchema);
+export type { Article };

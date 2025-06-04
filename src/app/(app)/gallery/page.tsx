@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import GalleryModal from "@/components/GalleryModal";
 
 export default function GalleryPage() {
   const images = [
@@ -17,22 +18,28 @@ export default function GalleryPage() {
   const handleImageClick = (index: number) => setSelectedIndex(index);
   const closeModal = () => setSelectedIndex(null);
   const showPrev = () =>
-    selectedIndex !== null && setSelectedIndex((i) => Math.max(0, i! - 1));
+    setSelectedIndex((i) => (i !== null ? Math.max(0, i - 1) : 0));
   const showNext = () =>
-    selectedIndex !== null &&
-    setSelectedIndex((i) => Math.min(images.length - 1, i! + 1));
+    setSelectedIndex((i) =>
+      i !== null ? Math.min(images.length - 1, i + 1) : 0
+    );
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
-      if (e.key === "ArrowRight") showNext();
-      if (e.key === "ArrowLeft") showPrev();
+      if (
+        e.key === "ArrowRight" &&
+        selectedIndex !== null &&
+        selectedIndex < images.length - 1
+      )
+        showNext();
+      if (e.key === "ArrowLeft" && selectedIndex !== null && selectedIndex > 0)
+        showPrev();
     };
 
     if (selectedIndex !== null) {
       document.addEventListener("keydown", handleKeyDown);
     }
-
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [selectedIndex]);
 
@@ -64,74 +71,14 @@ export default function GalleryPage() {
 
       {/* Modal */}
       {selectedIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex justify-center items-center transition-all animate-fade-in"
-          onClick={closeModal}
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="relative max-w-6xl w-full px-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={images[selectedIndex].src}
-              alt="Selected"
-              width={1200}
-              height={800}
-              className="w-full max-h-[85vh] rounded-lg object-contain shadow-2xl transition-transform duration-300"
-            />
-
-            {/* Close Button - Outside image */}
-            <button
-              onClick={closeModal}
-              className="absolute -top-6 -right-6 bg-white text-black text-xl w-10 h-10 flex items-center justify-center rounded-full shadow-lg hover:bg-gray-200 transition leading-none"
-              aria-label="Close image"
-            >
-              <span className="block translate-y-[-2px]">&times;</span>
-            </button>
-
-            {/* Prev Button - Outside image */}
-            {selectedIndex > 0 && (
-              <button
-                onClick={showPrev}
-                className="absolute left-[-60px] top-1/2 transform -translate-y-1/2 text-white text-4xl w-12 h-12 flex items-center justify-center rounded-full hover:scale-110 transition-all"
-                aria-label="Previous image"
-              >
-                &#8249;
-              </button>
-            )}
-
-            {/* Next Button - Outside image */}
-            {selectedIndex < images.length - 1 && (
-              <button
-                onClick={showNext}
-                className="absolute right-[-60px] top-1/2 transform -translate-y-1/2 text-white text-4xl w-12 h-12 flex items-center justify-center rounded-full hover:scale-110 transition-all"
-                aria-label="Next image"
-              >
-                &#8250;
-              </button>
-            )}
-            {/* Thumbnails */}
-            <div className="flex gap-2 mt-6 justify-center">
-              {images.map((img, idx) => (
-                <Image
-                  key={idx}
-                  src={img.src}
-                  alt={img.alt}
-                  width={96}
-                  height={64}
-                  onClick={() => setSelectedIndex(idx)}
-                  className={`h-16 w-24 object-cover cursor-pointer rounded-md border-2 transition-all duration-200 ${
-                    idx === selectedIndex
-                      ? "border-green-500"
-                      : "border-transparent"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <GalleryModal
+          images={images}
+          selectedIndex={selectedIndex}
+          onClose={closeModal}
+          onPrev={showPrev}
+          onNext={showNext}
+          setSelectedIndex={setSelectedIndex}
+        />
       )}
     </div>
   );

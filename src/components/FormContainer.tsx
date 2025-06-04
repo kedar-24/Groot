@@ -1,9 +1,13 @@
 import React from "react";
 
-export default function FormContainer({ children }: { children: React.ReactNode }) {
+export default function FormContainer({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="w-1/2 flex flex-col justify-center items-center bg-white p-8">
-      <div className="max-w-md w-full">{children}</div>
+    <div className="w-full max-w-xl mx-auto flex flex-col justify-center items-center bg-white p-8 rounded shadow-md">
+      <div className="w-full">{children}</div>
     </div>
   );
 }

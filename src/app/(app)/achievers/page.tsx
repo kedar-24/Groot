@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ValueCard from "@/components/ValueCard";
 
 const achievers = [
   {
@@ -22,7 +23,7 @@ const achievers = [
       "Contributed over 100 hours to community service and volunteer work.",
     imageUrl: "/images/achiever3.jpg",
   },
-  // You can add more achievers to this array
+  // Add more achievers as needed
 ];
 
 function AchieverCard({
@@ -32,22 +33,15 @@ function AchieverCard({
   imageUrl,
 }: (typeof achievers)[0]) {
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col">
-      <div className="relative w-full h-52">
-        <Image
-          src={imageUrl}
-          alt={name}
-          layout="fill"
-          objectFit="cover"
-          className="rounded-t-2xl"
-        />
+    <ValueCard title={name}>
+      <div className="flex flex-col items-center">
+        <div className="relative w-28 h-28 mb-3 rounded-full overflow-hidden border-4 border-green-100 shadow">
+          <Image src={imageUrl} alt={name} fill className="object-cover" />
+        </div>
+        <p className="text-green-700 font-semibold">{title}</p>
+        <p className="mt-2 text-gray-700 text-sm">{description}</p>
       </div>
-      <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-bold text-green-800">{name}</h3>
-        <p className="text-sm text-gray-500">{title}</p>
-        <p className="mt-3 text-gray-700 text-sm">{description}</p>
-      </div>
-    </div>
+    </ValueCard>
   );
 }
 
@@ -65,7 +59,7 @@ export default function AchieversPage() {
           </p>
           <a
             href="#nominate"
-            className="inline-block bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
+            className="btn btn-primary bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
           >
             Nominate an Achiever
           </a>
@@ -97,7 +91,7 @@ export default function AchieversPage() {
           </p>
           <a
             href="/achievers/nominate"
-            className="inline-block bg-green-700 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-md hover:bg-green-600 transition"
+            className="btn btn-primary bg-green-700 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-md hover:bg-green-600 transition"
           >
             Nominate Now
           </a>

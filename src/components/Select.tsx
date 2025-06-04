@@ -1,14 +1,17 @@
 import React from "react";
 
-type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>;
+const Select = React.forwardRef<
+  HTMLSelectElement,
+  React.SelectHTMLAttributes<HTMLSelectElement>
+>((props, ref) => (
+  <select
+    ref={ref}
+    className={`input-base text-green-800 border-green-300 focus:ring-green-500 focus:border-green-500 bg-white ${
+      props.className || ""
+    }`}
+    {...props}
+  />
+));
 
-export default function Select({ className = "", children, ...props }: SelectProps) {
-  return (
-    <select
-      className={`w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white ${className}`}
-      {...props}
-    >
-      {children}
-    </select>
-  );
-}
+Select.displayName = "Select";
+export default Select;

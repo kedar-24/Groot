@@ -1,8 +1,8 @@
+"use server";
 import HeroSection from "@/components/HeroSection";
 import NewsCard from "@/components/NewsCard";
 import SectionCard from "@/components/SectionCard";
-import type Article from "@/models/Article";
-import Image from "next/image";
+import type { Article } from "@/models/Article";
 
 async function getArticles(): Promise<Article[]> {
   try {
@@ -15,7 +15,18 @@ async function getArticles(): Promise<Article[]> {
     const data = await res.json();
 
     if (Array.isArray(data)) {
-      return data.slice(0, 6);
+      return data.slice(0, 6).map((item) => {
+        const obj = item as Partial<Article> & { id?: string; image?: string };
+        return {
+          _id: obj._id || obj.id || "",
+          title: obj.title || "",
+          date: obj.date || "",
+          category: obj.category || "",
+          imageUrl: obj.imageUrl || obj.image || "",
+          content: obj.content || "",
+          url: obj.url || "#",
+        };
+      });
     }
 
     return [];

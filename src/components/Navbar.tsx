@@ -6,6 +6,23 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import Button from "./button";
+import NavLink from "./NavLink";
+import { useRouter } from "next/navigation";
+
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/achievers", label: "Alumni" },
+  { href: "/innovationhub", label: "Innovation Hub" },
+  { href: "/events", label: "Events" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/contact", label: "Contact" },
+];
+
+const CDS_DROPDOWN = [
+  { href: "/cds/mihu", label: "MIHU" },
+  { href: "/cds/recruitment", label: "Recruitment" },
+];
 
 const NewsTicker = () => {
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
@@ -27,9 +44,7 @@ const NewsTicker = () => {
 
   return (
     <div className="w-full flex items-center py-2 justify-between px-4 bg-gray-200">
-      <div className="button-primary">
-        <span className="font-semibold">Highlights:</span>
-      </div>
+      <span className="btn btn-primary font-semibold">Highlights:</span>
       <div className="text-xl font-semibold text-gray-800 max-w-xs overflow-hidden">
         <p className="whitespace-nowrap">{newsItems[currentNewsIndex]}</p>
       </div>
@@ -49,6 +64,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
 
   const handleDropdownOpen = () => {
     if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
@@ -62,114 +78,82 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow-max-md sticky top-0 z-50">
+    <nav className="bg-white shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-green-800">
+        <Link
+          href="/"
+          className="text-2xl font-bold text-green-800 px-0 py-0 hover:text-green-800 focus:text-green-800"
+        >
           G-ROOT
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex flex-wrap gap-x-15 gap-y-2 text-sm font-medium text-gray-700 min-w-0">
-          <Link
-            href="/"
-            className="hover:text-green-600 transition duration-200"
-          >
-            Home
-          </Link>
-          <Link
-            href="/about"
-            className="hover:text-green-600 transition duration-200"
-          >
-            About
-          </Link>
-          <Link
-            href="/achievers"
-            className="hover:text-green-600 transition duration-200"
-          >
-            Alumni
-          </Link>
-          <Link
-            href="/innovationhub"
-            className="hover:text-green-600 transition duration-200"
-          >
-            Innovation Hub
-          </Link>
-          <Link
-            href="/events"
-            className="hover:text-green-600 transition duration-200"
-          >
-            Events
-          </Link>
+        <div className="hidden md:flex items-center gap-x-6 text-base font-medium text-gray-700 min-w-0">
+          {NAV_LINKS.map((link) => (
+            <NavLink key={link.href} href={link.href}>
+              {link.label}
+            </NavLink>
+          ))}
 
-          {/* Multi-level Dropdown for CDS */}
+          {/* CDS Dropdown */}
           <div
-            className="relative group"
+            className="relative"
             onMouseEnter={handleDropdownOpen}
             onMouseLeave={handleDropdownClose}
-            onFocus={handleDropdownOpen}
-            onBlur={handleDropdownClose}
           >
             <Link
               href="/cds"
-              className="flex items-center group hover:text-green-600 transition-all duration-200"
+              className={`nav-link flex items-center px-4 py-2 rounded transition-colors duration-200 ${
+                isDropdownOpen ? "bg-green-50 text-green-700" : ""
+              }`}
+              tabIndex={0}
               aria-haspopup="true"
-              aria-expanded={isDropdownOpen ? "true" : "false"} // Accessibility
+              aria-expanded={isDropdownOpen ? "true" : "false"}
+              onClick={() => {
+                setIsDropdownOpen(false); // Optional: close dropdown on click
+                router.push("/cds"); // Ensures navigation
+              }}
             >
               CDS
+              <svg
+                className={`ml-1 w-4 h-4 transition-transform duration-200 ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
             </Link>
-
-            {/* Submenu Dropdown */}
             <div
-              className={`absolute left-0 mt-2 space-y-2 bg-white shadow-lg rounded-lg group-hover:block group-focus:block transition-all duration-300 ease-in-out ${
+              className={`navbar-dropdown absolute left-0 mt-2 min-w-[180px] bg-white shadow-lg rounded-lg z-20 py-2 transition-all duration-200 ${
                 isDropdownOpen ? "block" : "hidden"
               }`}
-              aria-labelledby="cds-dropdown" // Link this dropdown to the parent
             >
-              <Link
-                href="/cds/mihu"
-                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-              >
-                MIHU
-              </Link>
-              <div className="relative group">
+              {CDS_DROPDOWN.map((opt) => (
                 <Link
-                  href="/cds/recruitment"
-                  className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  key={opt.href}
+                  href={opt.href}
+                  className="navbar-dropdown-link"
                 >
-                  Recruitment
+                  {opt.label}
                 </Link>
-              </div>
+              ))}
             </div>
           </div>
 
-          <Link
-            href="/gallery"
-            className="hover:text-green-600 transition duration-200"
-          >
-            Gallery
-          </Link>
-          <Link
-            href="/contact"
-            className="hover:text-green-600 transition duration-200"
-          >
-            Contact
-          </Link>
-          <Link
-            href="/login"
-            className="flex items-center hover:text-green-600 transition duration-200"
-          >
+          <NavLink href="/login" className="flex items-center ml-2">
             <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />
             Login
-          </Link>
+          </NavLink>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
           <span className="flex space-x-5 items-center justify-center">
-            <Link
-              href="/login"
-              className="flex items-center hover:text-green-600 transition duration-200"
-            >
+            <Link href="/login" className="flex items-center">
               <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />
               Login
             </Link>
@@ -189,49 +173,19 @@ const Navbar = () => {
       {isOpen && (
         <div
           id="mobile-menu"
-          className="max-md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-700 flex flex-col items-start"
+          className="md:hidden px-4 pb-4 space-y-2 text-base font-medium text-gray-700 flex flex-col items-start"
         >
-          <Link
-            href="/"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
-            Home
-          </Link>
-          <Link
-            href="/about"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
-            About
-          </Link>
-          <Link
-            href="/achievers"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
-            Alumni
-          </Link>
-          <Link
-            href="/events"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
-            Events
-          </Link>
-          <Link
-            href="/cds"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="block w-full text-center"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <Link href="/cds" className="block w-full text-center">
             CDS
-          </Link>
-          <Link
-            href="/gallery"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
-            Gallery
-          </Link>
-          <Link
-            href="/contact"
-            className="block w-full text-center hover:text-green-600 transition duration-200 px-4 py-2"
-          >
-            Contact
           </Link>
         </div>
       )}

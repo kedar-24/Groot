@@ -6,7 +6,7 @@ interface NewsCardProps {
   category: string;
   imageUrl: string;
   content: string;
-  url: string; // Add the link to the full article
+  url: string;
 }
 
 const NewsCard = ({
@@ -25,7 +25,6 @@ const NewsCard = ({
         width={600}
         height={400}
         className="w-full h-48 object-cover"
-        // unoptimized // Avoid domain config issues, or remove if domains are whitelisted
         placeholder="empty"
       />
       <div className="p-4 flex-1 flex flex-col justify-between">

@@ -1,5 +1,9 @@
 "use client";
 import { useState } from "react";
+import Input from "@/components/Input";
+import Textarea from "@/components/Textrea";
+import Button from "@/components/button";
+import FormContainer from "@/components/FormContainer";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -21,13 +25,11 @@ export default function ContactPage() {
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
-
     if (!formData.name) errors.name = "Name is required.";
     if (!formData.email) errors.email = "Email is required.";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       errors.email = "Please enter a valid email.";
     if (!formData.message) errors.message = "Message is required.";
-
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -35,16 +37,14 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsSubmitting(true);
-    setSubmissionStatus(null); // Reset status
-
+    setSubmissionStatus(null);
     try {
-      // Mock API call to simulate form submission
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setSubmissionStatus("success");
-      setFormData({ name: "", email: "", message: "" }); // Reset form
-    } catch (error) {
+      setFormData({ name: "", email: "", message: "" });
+      setFormErrors({});
+    } catch {
       setSubmissionStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -52,28 +52,27 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="max-w-lg mx-auto mt-12 p-6 bg-white border rounded shadow-md">
+    <FormContainer>
       <h2 className="text-2xl font-semibold mb-6 text-center">Contact Us</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 w-full">
         {/* Name Field */}
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Name
           </label>
-          <input
+          <Input
             name="name"
             id="name"
             type="text"
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {formErrors.name && (
-            <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+            <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
           )}
         </div>
 
@@ -81,21 +80,20 @@ export default function ContactPage() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Email
           </label>
-          <input
+          <Input
             name="email"
             id="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {formErrors.email && (
-            <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>
+            <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>
           )}
         </div>
 
@@ -103,53 +101,49 @@ export default function ContactPage() {
         <div>
           <label
             htmlFor="message"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 mb-1"
           >
             Message
           </label>
-          <textarea
+          <Textarea
             name="message"
             id="message"
             rows={4}
             value={formData.message}
             onChange={handleChange}
             required
-            className="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           {formErrors.message && (
-            <p className="text-red-500 text-sm mt-1">{formErrors.message}</p>
+            <p className="text-red-500 text-xs mt-1">{formErrors.message}</p>
           )}
         </div>
 
-        {/* Display Status Messages */}
+        {/* Status Messages */}
         {submissionStatus === "success" && (
-          <p className="text-green-600 text-sm mt-2">
+          <p className="text-green-600 text-sm mt-2 text-center">
             Message sent successfully!
           </p>
         )}
         {submissionStatus === "error" && (
-          <p className="text-red-600 text-sm mt-2">
+          <p className="text-red-600 text-sm mt-2 text-center">
             There was an error sending your message. Please try again.
           </p>
         )}
 
         {/* Submit Button */}
-        <button
+        <Button
           type="submit"
+          variant="primary"
+          className="w-full"
           disabled={isSubmitting}
-          className={`w-full p-3 rounded-md ${
-            isSubmitting
-              ? "bg-gray-400"
-              : "bg-black text-white hover:bg-green-700 transition"
-          }`}
         >
           {isSubmitting ? (
-            <span className="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-green-700 rounded-full"></span>
+            <span className="inline-block w-5 h-5 border-2 border-t-2 border-green-700 border-t-transparent rounded-full animate-spin align-middle"></span>
           ) : (
             "Send Message"
           )}
-        </button>
+        </Button>
       </form>
-    </section>
+    </FormContainer>
   );
 }

@@ -1,3 +1,6 @@
+import ValueCard from "@/components/ValueCard";
+import Button from "@/components/button";
+
 export default function CDSPage() {
   return (
     <div className="bg-gray-50">
@@ -9,22 +12,20 @@ export default function CDSPage() {
         <p className="text-lg mb-6">
           Learn about our MIHU and Recruitment initiatives below.
         </p>
-        <a
-          href="#initiatives"
+        <Button
+          variant="primary"
           className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
+          as="a"
+          href="#initiatives"
         >
           Explore Initiatives
-        </a>
+        </Button>
       </section>
 
       {/* MIHU and Recruitment Sections */}
       <section id="initiatives" className="max-w-screen-xl mx-auto py-12 px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
-          {/* MIHU Section */}
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <h3 className="text-2xl font-semibold text-green-800 mb-4">
-              MIHU - May I Help You
-            </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <ValueCard title="MIHU - May I Help You">
             <p className="text-lg text-gray-700 mb-4">
               MIHU (May I Help You) is an initiative designed to provide
               assistance, support, and resources to individuals in need. Our
@@ -33,31 +34,30 @@ export default function CDSPage() {
               with information, resources, or services, MIHU aims to make a
               positive impact in people&apos;s lives.
             </p>
-            <a
+            <Button
+              variant="primary"
+              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
+              as="a"
               href="/cds/mihu"
-              className="text-green-700 font-semibold hover:text-green-600 transition duration-200"
             >
               Learn More about MIHU
-            </a>
-          </div>
-
-          {/* Recruitment Section */}
-          <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-            <h3 className="text-2xl font-semibold text-green-800 mb-4">
-              Recruitment
-            </h3>
+            </Button>
+          </ValueCard>
+          <ValueCard title="Recruitment">
             <p className="text-lg text-gray-700 mb-4">
               Our recruitment initiatives provide opportunities to contribute to
               impactful projects. We are always looking for passionate
               individuals to join our team and make a difference.
             </p>
-            <a
+            <Button
+              variant="primary"
+              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
+              as="a"
               href="/cds/recruitment"
-              className="text-green-700 font-semibold hover:text-green-600 transition duration-200"
             >
               Explore Recruitment Opportunities
-            </a>
-          </div>
+            </Button>
+          </ValueCard>
         </div>
       </section>
 
@@ -72,12 +72,14 @@ export default function CDSPage() {
             recruitment program, or get involved in other initiatives,
             there&apos;s a place for you here.
           </p>
-          <a
-            href="/cds/mihu/join"
+          <Button
+            variant="primary"
             className="bg-green-700 text-white py-3 px-8 rounded-lg text-lg font-semibold hover:bg-green-600 transition duration-300"
+            as="a"
+            href="/cds/mihu/join"
           >
             Get Involved
-          </a>
+          </Button>
         </div>
       </section>
     </div>
