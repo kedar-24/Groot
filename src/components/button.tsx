@@ -1,7 +1,7 @@
 import React from "react";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "social";
+  variant?: "primary" | "secondary" | "imglogo" | "red";
   children: React.ReactNode;
 };
 
@@ -11,18 +11,16 @@ export default function Button({
   children,
   ...props
 }: ButtonProps) {
-  let base =
-    "w-full py-1.5 px-6 rounded-lg font-semibold transition duration-300";
-  let variants = {
-    primary:
-      "bg-green-500 text-gray-900 hover:bg-green-700 hover:text-white hover:scale-105",
-    secondary:
-      "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700",
-    social:
-      "flex items-center justify-center bg-white py-2 px-4 border border-gray-400 hover:bg-gray-100",
+  const variants = {
+    primary: "btn btn-primary",
+    secondary: "btn btn-secondary",
+    imglogo:
+      "w-12 h-12 flex items-center justify-center bg-white border border-gray-300 shadow-sm hover:shadow-lg hover:bg-blue-50 hover:scale-110 hover:border-blue-400 transition-all duration-300 mx-1",
+    red: "btn btn-red",
   };
+
   return (
-    <button className={`${base} ${variants[variant]} ${className}`} {...props}>
+    <button className={`${variants[variant]} ${className}`} {...props}>
       {children}
     </button>
   );

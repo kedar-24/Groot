@@ -1,6 +1,8 @@
 import HeroSection from "@/components/HeroSection";
 import NewsCard from "@/components/NewsCard";
+import SectionCard from "@/components/SectionCard";
 import type Article from "@/models/Article";
+import Image from "next/image";
 
 async function getArticles(): Promise<Article[]> {
   try {
@@ -29,44 +31,34 @@ export default async function HomePage() {
   return (
     <main className="flex flex-col bg-white text-gray-900 min-h-screen">
       <div className="flex flex-col md:flex-row items-stretch w-full h-[600px]">
-        {/* Left: HeroSection */}
         <div className="flex-1 flex h-full">
           <HeroSection />
         </div>
-        <div className="flex flex-col flex-1 h-full bg-green-800 gap-y-0.5 p-1">
+        <div className="flex flex-col flex-1 h-full bg-green-800 p-0">
           {/* Top: full width, half height */}
           <section className="h-1/2 flex items-center justify-center">
-            <div
-              className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-95 flex items-center justify-center bg-cover bg-top"
-              style={{ backgroundImage: "url('/images/hero.webp')" }}
-            >
-              <span className="text-white text-lg font-bold">
-                Your Content Here
+            <SectionCard bgImage="https://images.unsplash.com/photo-1496449903678-68ddcb189a24?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tfGVufDB8fDB8fHww">
+              <span className="absolute bottom-4 left-4 text-white text-2xl font-extrabold drop-shadow-lg z-10 tracking-wide">
+                Inspiring Growth
               </span>
-            </div>
+            </SectionCard>
           </section>
 
           {/* Bottom: two half-width sections */}
-          <div className="flex flex-row h-1/2 gap-x-0.5">
+          <div className="flex flex-row h-1/2">
             <section className="w-1/2 h-full flex items-center justify-center">
-              <div
-                className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-95 flex items-center justify-center bg-cover bg-bottom"
-                style={{ backgroundImage: "url('/images/image1.webp')" }}
-              >
-                <span className="text-white text-lg font-bold">
-                  Your Content Here
+              <SectionCard bgImage="/images/image1.webp">
+                <span className="absolute bottom-4 left-4 text-white text-xl font-bold drop-shadow z-10">
+                  Daily Insights
                 </span>
-              </div>
+              </SectionCard>
             </section>
             <section className="w-1/2 h-full flex items-center justify-center">
-              <div
-                className="w-full h-full overflow-hidden shadow-2xl shadow-black/60 duration-300 transform-gpu will-change-transform z-0 hover:z-10 hover:scale-95 flex items-center justify-center bg-cover bg-right"
-                style={{ backgroundImage: "url('/images/image2.webp')" }}
-              >
-                <span className="text-white text-lg font-bold">
-                  Your Content Here
+              <SectionCard bgImage="/images/image2.webp">
+                <span className="absolute bottom-4 left-4 text-white text-xl font-bold drop-shadow z-10">
+                  Market Trends
                 </span>
-              </div>
+              </SectionCard>
             </section>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import AuthLayout from "@/components/LoginLayout";
 import FormContainer from "@/components/FormContainer";
-import Button from "@/components/button"
+import Button from "@/components/button";
 import Input from "@/components/Input";
 
 export default function LoginPage() {
@@ -38,7 +38,10 @@ export default function LoginPage() {
         <p className="text-gray-600 mb-4">Login to your profile</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-2"
+            >
               Email
             </label>
             <Input
@@ -51,7 +54,10 @@ export default function LoginPage() {
             />
           </div>
           <div className="relative">
-            <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-medium mb-2"
+            >
               Password
             </label>
             <Input
@@ -63,7 +69,10 @@ export default function LoginPage() {
               required
             />
             <div className="flex justify-end mt-1">
-              <Link href="/login/forgot-password" className="text-blue-500 hover:underline text-sm">
+              <Link
+                href="/login/forgot-password"
+                className="text-blue-500 hover:underline text-sm"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -80,25 +89,40 @@ export default function LoginPage() {
               Show Password
             </label>
           </div>
-          <Button type="submit">Login</Button>
+          <div className="flex justify-center">
+            <Button variant="primary" type="submit" className="w-full max-w-xs">
+              Login
+            </Button>
+          </div>
         </form>
         <p className="text-center text-gray-500 mt-4">or</p>
         <hr className="my-4 border-gray-300" />
         <div className="flex justify-center items-center space-x-4 mt-6">
-          <Button variant="social" type="button">
-            <img src="/images/facebook-logo.svg" alt="Facebook" className="w-6 h-6" />
+          <Button variant="imglogo" type="button">
+            <img
+              src="/images/facebook-logo.svg"
+              alt="Facebook"
+              className="w-6 h-6"
+            />
           </Button>
-          <Button variant="social" type="button">
-            <img src="/images/google-logo.svg" alt="Google" className="w-6 h-6" />
+          <Button variant="imglogo" type="button">
+            <img
+              src="/images/google-logo.svg"
+              alt="Google"
+              className="w-6 h-6"
+            />
           </Button>
-          <Button variant="social" type="button" className="hover:bg-gray-400">
+          <Button variant="imglogo" type="button">
             <img src="/images/apple-logo.svg" alt="Apple" className="w-6 h-6" />
           </Button>
         </div>
         <div className="mt-6 text-center text-gray-600">
           <p>
             Dont have an account?{" "}
-            <Link href="/login/signup" className="text-blue-500 hover:underline">
+            <Link
+              href="/login/signup"
+              className="text-blue-500 hover:underline"
+            >
               Sign up
             </Link>
           </p>

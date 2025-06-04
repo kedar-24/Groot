@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import Button from "./button";
 
 const NewsTicker = () => {
   const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
@@ -32,14 +33,14 @@ const NewsTicker = () => {
       <div className="text-xl font-semibold text-gray-800 max-w-xs overflow-hidden">
         <p className="whitespace-nowrap">{newsItems[currentNewsIndex]}</p>
       </div>
-      <button
+      <Button
+        variant="primary"
         onClick={() =>
           setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
         }
-        className="button-primary"
       >
         Next
-      </button>
+      </Button>
     </div>
   );
 };
