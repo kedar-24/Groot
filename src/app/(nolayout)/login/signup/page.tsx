@@ -5,29 +5,21 @@ import AuthLayout from "@/components/AuthLayout";
 import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
 import Input from "@/components/Input";
-import Select from "@/components/Select";
-import Textarea from "@/components/Textrea";
+import Image from "next/image";
 
 export default function SignupPage() {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
+    emailOrMobile: "",
+    username: "",
     password: "",
     confirmPassword: "",
-    role: "",
-    phone: "",
-    dob: "",
-    address: "",
-    gender: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,208 +31,188 @@ export default function SignupPage() {
   return (
     <AuthLayout imageSrc="/images/login.jpg" imageAlt="Signup Image">
       <FormContainer>
-        <h1 className="text-4xl font-bold text-green-800 mb-2 tracking-tight">
-          Sign Up
-        </h1>
-        <p className="text-gray-700 mb-6 text-lg">
-          Create your account to join our community of learners and educators.
-        </p>
+        <h1 className="text-4xl font-bold text-green-800 mb-6">Sign Up</h1>
+        <p className="text-gray-700 mb-4">Create your account</p>
         {submitted ? (
           <div className="text-green-700 text-lg mb-8">
             Account created! Please check your email to verify your account.
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Full Name
-                </label>
-                <Input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Your Name"
-                  required
-                  className="w-full"
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 w-full max-w-md mx-auto"
+          >
+            {/* Email or Mobile */}
+            <div>
+              <label
+                htmlFor="emailOrMobile"
+                className="block text-sm font-medium text-green-800 mb-1"
+              >
+                Email or Mobile Number
+              </label>
+              <Input
+                type="text"
+                id="emailOrMobile"
+                value={form.emailOrMobile}
+                onChange={handleChange}
+                placeholder="you@example.com or 1234567890"
+                required
+                className="input-base"
+              />
+            </div>
+            {/* Username */}
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-green-800 mb-1"
+              >
+                Username
+              </label>
+              <Input
+                type="text"
+                id="username"
+                value={form.username}
+                onChange={handleChange}
+                placeholder="Choose a username"
+                required
+                className="input-base"
+              />
+            </div>
+            {/* Password */}
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-green-800 mb-1"
+              >
+                Password
+              </label>
+              <Input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+                required
+                className="input-base"
+              />
+              <div className="flex items-center mt-1">
+                <input
+                  type="checkbox"
+                  id="showPassword"
+                  checked={showPassword}
+                  onChange={() => setShowPassword((v) => !v)}
+                  className="mr-2 accent-green-600"
                 />
-              </div>
-              <div>
                 <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-green-800 mb-1"
+                  htmlFor="showPassword"
+                  className="text-green-800 text-sm"
                 >
-                  Email Address
+                  Show Password
                 </label>
-                <Input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="you@school.edu"
-                  required
-                  className="w-full"
+              </div>
+            </div>
+            {/* Confirm Password */}
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-green-800 mb-1"
+              >
+                Confirm Password
+              </label>
+              <Input
+                type={showConfirm ? "text" : "password"}
+                id="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                placeholder="Repeat your password"
+                required
+                className="input-base"
+              />
+              <div className="flex items-center mt-1">
+                <input
+                  type="checkbox"
+                  id="showConfirm"
+                  checked={showConfirm}
+                  onChange={() => setShowConfirm((v) => !v)}
+                  className="mr-2 accent-green-600"
                 />
-              </div>
-              <div>
                 <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-green-800 mb-1"
+                  htmlFor="showConfirm"
+                  className="text-green-800 text-sm"
                 >
-                  Phone Number
+                  Show Password
                 </label>
-                <Input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  placeholder="123-456-7890"
-                  required
-                  className="w-full"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="dob"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Date of Birth
-                </label>
-                <Input
-                  type="date"
-                  id="dob"
-                  name="dob"
-                  value={form.dob}
-                  onChange={handleChange}
-                  required
-                  className="w-full"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="gender"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Gender
-                </label>
-                <Select
-                  id="gender"
-                  name="gender"
-                  value={form.gender}
-                  onChange={handleChange}
-                  required
-                  className="input-base text-green-800 border-gray-300 focus:ring-green-500 focus:border-green-500 bg-white"
-                >
-                  <option value="" disabled>
-                    Select Gender
-                  </option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </Select>
-              </div>
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Role
-                </label>
-                <Select
-                  id="role"
-                  name="role"
-                  value={form.role}
-                  onChange={handleChange}
-                  required
-                  className="input-base text-green-800 border-gray-300 focus:ring-green-500 focus:border-green-500 bg-white"
-                >
-                  <option value="" disabled>
-                    Select Role
-                  </option>
-                  <option value="student">Student</option>
-                  <option value="teacher">Teacher</option>
-                  <option value="admin">Admin</option>
-                </Select>
-              </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Password
-                </label>
-                <Input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Password"
-                  required
-                  className="w-full"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Confirm Password
-                </label>
-                <Input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Repeat Password"
-                  required
-                  className="w-full"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-green-800 mb-1"
-                >
-                  Address
-                </label>
-                <Textarea
-                  id="address"
-                  name="address"
-                  value={form.address}
-                  onChange={handleChange}
-                  placeholder="Your Address"
-                  rows={2}
-                  required
-                  className="input-base text-green-800 border-gray-300 focus:ring-green-500 focus:border-green-500 bg-white"
-                />
               </div>
             </div>
             <Button
-              type="submit"
               variant="primary"
+              type="submit"
               className="w-full bg-green-700 hover:bg-green-800 text-white"
             >
               Sign Up
             </Button>
           </form>
         )}
-        <div className="mt-8 text-center">
-          <span className="text-gray-700">Already have an account? </span>
-          <Link
-            href="/login"
-            className="text-green-700 font-semibold hover:underline"
+        <div className="my-6 flex items-center">
+          <hr className="flex-1 border-gray-300" />
+          <span className="mx-3 text-gray-400 text-sm">or</span>
+          <hr className="flex-1 border-gray-300" />
+        </div>
+        {/* Social Signup */}
+        <div className="flex justify-center items-center gap-4">
+          <Button
+            variant="imglogo"
+            type="button"
+            aria-label="Sign up with Facebook"
           >
-            Login
-          </Link>
+            <Image
+              src="/images/facebook-logo.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+              priority={false}
+            />
+          </Button>
+          <Button
+            variant="imglogo"
+            type="button"
+            aria-label="Sign up with Google"
+          >
+            <Image
+              src="/images/google-logo.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+              priority={false}
+            />
+          </Button>
+          <Button
+            variant="imglogo"
+            type="button"
+            aria-label="Sign up with Apple"
+          >
+            <Image
+              src="/images/apple-logo.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+              priority={false}
+            />
+          </Button>
+        </div>
+        <div className="mt-6 text-center text-gray-700">
+          <p>
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-green-700 font-semibold hover:underline"
+            >
+              Login
+            </Link>
+          </p>
         </div>
       </FormContainer>
     </AuthLayout>
