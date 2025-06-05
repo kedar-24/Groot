@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/achievers", label: "Achievers" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/groups", label: "Groups" },
 ];
 
 const CDS_DROPDOWN = [
