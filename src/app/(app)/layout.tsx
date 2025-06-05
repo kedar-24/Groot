@@ -33,7 +33,7 @@ export default function RootLayout({
         </header>
 
         {/* Main content */}
-        <main className="flex-grow flex flex-col pb-12 mx-auto w-full">
+        <main className="flex-grow flex flex-col pb-12 mx-auto w-full pt-[136px]">
           {children}
         </main>
 
