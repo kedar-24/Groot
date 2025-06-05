@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ValueCard from "@/components/ValueCard";
+import Button from "@/components/button"; // <-- Import your Button component
 
 const achievers = [
   {
@@ -57,12 +58,14 @@ export default function AchieversPage() {
           <p className="text-lg sm:text-xl mb-6 max-w-2xl mx-auto">
             Celebrating excellence and impact by our alumni and contributors.
           </p>
-          <a
+          <Button
+            as="a"
             href="#nominate"
-            className="btn btn-primary bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
+            variant="secondary"
+            className="bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-gray-100 transition"
           >
             Nominate an Achiever
-          </a>
+          </Button>
         </div>
       </section>
 
@@ -89,12 +92,14 @@ export default function AchieversPage() {
             contributions? Submit a nomination and help us highlight their
             impact.
           </p>
-          <a
+          <Button
+            as="a"
             href="/achievers/nominate"
-            className="btn btn-primary bg-green-700 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-md hover:bg-green-600 transition"
+            variant="primary"
+            className="bg-green-700 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-md hover:bg-green-600 transition"
           >
             Nominate Now
-          </a>
+          </Button>
         </div>
       </section>
     </div>

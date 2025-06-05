@@ -10,7 +10,7 @@ interface NavLinkProps {
 const NavLink = ({ href, children, className = "" }: NavLinkProps) => (
   <Link
     href={href}
-    className={`px-3 py-2 rounded transition-colors duration-200 hover:text-green-700 focus:text-green-700 focus:bg-gray-100 ${className}`}
+    className={`text-base px-4 py-2 rounded transition-colors duration-200 hover:text-green-700 focus:text-green-700 focus:bg-gray-100 ${className}`}
   >
     {children}
   </Link>

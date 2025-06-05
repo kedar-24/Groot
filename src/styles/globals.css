@@ -10,28 +10,7 @@
 
 /* ...existing code... */
 
-.input-base {
-  @apply w-full rounded-lg px-3 py-2 text-base border border-gray-300 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white;
-}
-.btn {
-  @apply inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus:outline-none px-3 py-2 text-base;
-}
-.btn-primary {
-  @apply bg-green-700 text-white hover:bg-green-800 focus:ring-2 focus:ring-green-400;
-}
-.btn-secondary {
-  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 shadow hover:from-blue-700 hover:to-purple-800 active:from-blue-800 active:to-purple-900 focus-visible:ring-purple-500;
-}
-.btn-red {
-  @apply inline-block bg-[#8b1f2f]  text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl  hover:bg-[#a83242] hover:scale-105 active:scale-100 focus-visible:ring-4 focus-visible:ring-[#b94a5a]/40 transition-all duration-200 border-none;
-}
-.btn-imglogo {
-  @apply w-12 h-12 flex items-center justify-center bg-white border border-gray-300 shadow-sm hover:shadow-lg hover:bg-green-50 hover:scale-110 hover:border-green-400 transition-all duration-300 mx-1;
-  width: 40px; /* or w-10 if using Tailwind JIT */
-  height: 40px; /* or h-10 */
-  min-width: 40px;
-  min-height: 40px;
-}
+/* Remove .input-base, .btn, .btn-primary, .btn-secondary, .btn-red, .btn-imglogo, .nav-link, .navbar-dropdown, .navbar-dropdown-link, .gallery-modal-btn, .gallery-modal-btn--close, .gallery-modal-btn--nav as all button, input, nav, and modal styles are now handled inline with Tailwind utility classes in components. */
 
 .card {
   @apply bg-white shadow overflow-hidden transition-all flex flex-col h-full;
@@ -78,29 +57,3 @@ h1, h2, h3 {
 }
 
 /* Consistent heading styles */
-
-
-/* navbar stuff */
-.nav-link {
-  @apply text-base px-4 py-2 rounded transition-colors duration-200 hover:text-green-700 focus:text-green-700 focus:bg-gray-100;
-}
-
-.navbar-dropdown {
-  @apply absolute left-0 mt-2 min-w-[180px] bg-white shadow-lg rounded-lg z-20 py-2;
-}
-.navbar-dropdown-link {
-  @apply text-base px-4 py-2 block text-gray-700 hover:bg-green-50 hover:text-green-700 transition rounded;
-}
-
-.gallery-modal-btn {
-  @apply bg-white/90 text-green-800 flex items-center justify-center rounded-full shadow-lg transition focus:outline-none;
-}
-.gallery-modal-btn:hover {
-  @apply bg-green-700 text-white;
-}
-.gallery-modal-btn--close {
-  @apply text-black hover:bg-red-500 hover:text-white z-20;
-}
-.gallery-modal-btn--nav {
-  @apply text-3xl w-12 h-12 z-10;
-}

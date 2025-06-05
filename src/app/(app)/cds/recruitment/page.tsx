@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Button from "@/components/button";
 import ValueCard from "@/components/ValueCard";
-import Dropdown from "@/components/Dropdown";
+import UniversalDropdown from "@/components/UniversalDropdown";
 
 interface Job {
   id: string;
@@ -41,26 +41,32 @@ const RecruitmentPage: React.FC = () => {
           </h2>
           <div className="flex flex-col items-center gap-3">
             <div className="flex flex-row gap-x-3">
-              <Dropdown
-                aria-label="Select Job Type"
-                value={jobType}
-                onChange={(e) => setJobType(e.target.value)}
-                options={[
+              <UniversalDropdown
+                label="Job Type"
+                selectOptions={[
                   { value: "", label: "Select Job Type" },
                   { value: "full-time", label: "Full-Time" },
                   { value: "part-time", label: "Part-Time" },
                   { value: "internship", label: "Internship" },
                 ]}
+                selectProps={{
+                  "aria-label": "Select Job Type",
+                  value: jobType,
+                  onChange: (e) => setJobType(e.target.value),
+                }}
               />
-              <Dropdown
-                aria-label="Select Workspace"
-                value={workspace}
-                onChange={(e) => setWorkspace(e.target.value)}
-                options={[
+              <UniversalDropdown
+                label="Workspace"
+                selectOptions={[
                   { value: "", label: "Select Workspace" },
                   { value: "remote", label: "Remote" },
                   { value: "on-site", label: "On-Site" },
                 ]}
+                selectProps={{
+                  "aria-label": "Select Workspace",
+                  value: workspace,
+                  onChange: (e) => setWorkspace(e.target.value),
+                }}
               />
             </div>
             <Button

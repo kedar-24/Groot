@@ -1,7 +1,6 @@
 "use server";
 import HeroSection from "@/components/HeroSection";
 import NewsCard from "@/components/NewsCard";
-import SectionCard from "@/components/SectionCard";
 import type { Article } from "@/models/Article";
 
 async function getArticles(): Promise<Article[]> {
@@ -41,39 +40,67 @@ export default async function HomePage() {
 
   return (
     <main className="flex flex-col bg-white text-gray-900 min-h-screen">
-      <div className="flex flex-col md:flex-row items-stretch w-full h-[600px]">
+      {/* Improved HeroSection: left hero + right stacked sections */}
+      <section className="flex flex-col md:flex-row items-stretch w-full h-[600px]">
+        {/* Left: Main Hero */}
         <div className="flex-1 flex h-full">
           <HeroSection />
         </div>
-        <div className="flex flex-col flex-1 h-full bg-green-800 p-0">
+        {/* Right: Top and Bottom Sections */}
+        <div className="flex flex-col flex-1 h-full bg-green-800 p-0 m-0">
           {/* Top: full width, half height */}
-          <section className="h-1/2 flex items-center justify-center">
-            <SectionCard bgImage="https://images.unsplash.com/photo-1496449903678-68ddcb189a24?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tfGVufDB8fDB8fHww">
+          <section className="h-1/2 flex items-center justify-center p-0 m-0">
+            <div className="group relative w-full h-full flex items-center justify-center overflow-hidden shadow-lg bg-gray-900 rounded-none">
+              <div
+                className="absolute inset-0 w-full h-full bg-cover bg-center z-0 transition-transform duration-300 scale-105 group-hover:scale-110"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1496449903678-68ddcb189a24?w=1200&auto=format&fit=crop&q=80&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tfGVufDB8fDB8fHww')",
+                }}
+              >
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
+              </div>
               <span className="absolute bottom-4 left-4 text-white text-2xl font-extrabold drop-shadow-lg z-10 tracking-wide">
                 Inspiring Growth
               </span>
-            </SectionCard>
+            </div>
           </section>
 
           {/* Bottom: two half-width sections */}
-          <div className="flex flex-row h-1/2">
-            <section className="w-1/2 h-full flex items-center justify-center">
-              <SectionCard bgImage="/images/image1.webp">
+          <div className="flex flex-row h-1/2 p-0 m-0">
+            <section className="w-1/2 h-full flex items-center justify-center p-0 m-0">
+              <div className="group relative w-full h-full flex items-center justify-center overflow-hidden shadow-lg bg-gray-900 rounded-none">
+                <div
+                  className="absolute inset-0 w-full h-full bg-cover bg-center z-0 transition-transform duration-300 scale-105 group-hover:scale-110"
+                  style={{
+                    backgroundImage: "url('/images/image1.webp')",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
+                </div>
                 <span className="absolute bottom-4 left-4 text-white text-xl font-bold drop-shadow z-10">
                   Daily Insights
                 </span>
-              </SectionCard>
+              </div>
             </section>
-            <section className="w-1/2 h-full flex items-center justify-center">
-              <SectionCard bgImage="/images/image2.webp">
+            <section className="w-1/2 h-full flex items-center justify-center p-0 m-0">
+              <div className="group relative w-full h-full flex items-center justify-center overflow-hidden shadow-lg bg-gray-900 rounded-none">
+                <div
+                  className="absolute inset-0 w-full h-full bg-cover bg-center z-0 transition-transform duration-300 scale-105 group-hover:scale-110"
+                  style={{
+                    backgroundImage: "url('/images/image2.webp')",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
+                </div>
                 <span className="absolute bottom-4 left-4 text-white text-xl font-bold drop-shadow z-10">
                   Market Trends
                 </span>
-              </SectionCard>
+              </div>
             </section>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Latest News Section */}
       <section

@@ -35,7 +35,7 @@ const GalleryModal = ({
         {selectedIndex > 0 && (
           <GalleryNavButton
             onClick={onPrev}
-            className="gallery-modal-btn--nav absolute left-2 top-1/2 -translate-y-1/2"
+            className="text-3xl w-12 h-12 z-10 absolute left-2 top-1/2 -translate-y-1/2"
             aria-label="Previous image"
             tabIndex={0}
           >
@@ -56,7 +56,7 @@ const GalleryModal = ({
         {selectedIndex < images.length - 1 && (
           <GalleryNavButton
             onClick={onNext}
-            className="gallery-modal-btn--nav absolute right-2 top-1/2 -translate-y-1/2"
+            className="text-3xl w-12 h-12 z-10 absolute right-2 top-1/2 -translate-y-1/2"
             aria-label="Next image"
             tabIndex={0}
           >
@@ -67,7 +67,7 @@ const GalleryModal = ({
         {/* Close Button */}
         <GalleryNavButton
           onClick={onClose}
-          className="gallery-modal-btn--close"
+          className="text-black hover:bg-red-500 hover:text-white z-20 text-2xl w-10 h-10 absolute top-2 right-2"
           aria-label="Close image"
           tabIndex={0}
         >

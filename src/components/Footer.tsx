@@ -1,3 +1,7 @@
+import Link from "next/link";
+import Input from "./Input";
+import Button from "./button";
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-12 mt-20">
@@ -8,36 +12,36 @@ export default function Footer() {
             <h4 className="font-semibold text-lg mb-4">Site</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <a
+                <Link
                   href="/"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/about"
                   className="hover:text-green-500 transition duration-200"
                 >
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/contact"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/accessibility"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Accessibility
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -47,36 +51,36 @@ export default function Footer() {
             <h4 className="font-semibold text-lg mb-4">Policies</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <a
+                <Link
                   href="/terms"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Terms
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/privacy"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Privacy
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/shipping"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Shipping
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/refund"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Refund
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -86,36 +90,36 @@ export default function Footer() {
             <h4 className="font-semibold text-lg mb-4">Explore</h4>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <a
+                <Link
                   href="/innovation"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Innovation
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/gadgets"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Gadgets
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/app-reviews"
                   className="hover:text-green-500 transition duration-200"
                 >
                   App Reviews
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/advertise"
                   className="hover:text-green-500 transition duration-200"
                 >
                   Advertise
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -124,18 +128,19 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-lg mb-4">Subscribe</h4>
             <form className="space-y-4">
-              <input
+              <Input
                 type="email"
                 placeholder="Enter your email"
                 className="w-full p-3 rounded-lg text-black bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
                 required
               />
-              <button
+              <Button
                 type="submit"
+                variant="primary"
                 className="w-full p-3 bg-green-800 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300"
               >
                 Subscribe
-              </button>
+              </Button>
             </form>
           </div>
         </div>

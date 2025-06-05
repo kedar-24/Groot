@@ -11,7 +11,11 @@ const GalleryNavButton = ({
   className = "",
   ...props
 }: GalleryNavButtonProps) => (
-  <button type="button" className={`gallery-modal-btn ${className}`} {...props}>
+  <button
+    type="button"
+    className={`bg-white/90 text-green-800 flex items-center justify-center rounded-full shadow-lg transition focus:outline-none hover:bg-green-700 hover:text-white ${className}`}
+    {...props}
+  >
     {children}
   </button>
 );
