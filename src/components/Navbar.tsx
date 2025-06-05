@@ -14,6 +14,7 @@ const NAV_LINKS = [
   // { href: "/innovationhub", label: "Innovation Hub" },
   // { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/groups", label: "Groups" },
   // { href: "/contact", label: "Contact" },
 ];
 
