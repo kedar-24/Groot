@@ -2,20 +2,19 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import Button from "./button";
 import NavLink from "./NavLink";
 import UniversalDropdown from "./UniversalDropdown";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/achievers", label: "Alumni" },
-  { href: "/innovationhub", label: "Innovation Hub" },
-  { href: "/events", label: "Events" },
+  // { href: "/about", label: "About" },
+  { href: "/achievers", label: "Achievers" },
+  // { href: "/innovationhub", label: "Innovation Hub" },
+  // { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
+  // { href: "/contact", label: "Contact" },
 ];
 
 const CDS_DROPDOWN = [
@@ -78,8 +77,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white shadow sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <nav className="bg-white shadow sticky top-0 z-50 w-full">
+      <div className="px-4 py-3 flex justify-between items-center max-w-8xl mx-auto">
         <Link
           href="/"
           className="text-2xl font-bold text-green-800 hover:text-green-900 transition"
@@ -110,7 +109,15 @@ const Navbar = () => {
             onClose={handleDropdownClose}
           />
           <NavLink href="/login" className="flex items-center ml-2">
-            <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />
+            <span className="w-10 h-10 rounded-full bg-[#0b8c0799] flex items-center justify-center mr-2">
+              <Image
+                src="/images/user-logo.png"
+                alt="User Logo"
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            </span>
             Login
           </NavLink>
         </div>
@@ -119,7 +126,15 @@ const Navbar = () => {
         <div className="md:hidden">
           <span className="flex items-center space-x-3">
             <Link href="/login" className="flex items-center">
-              <FontAwesomeIcon icon={faSignInAlt} className="mr-2 text-lg" />
+              <span className="w-8 h-8 rounded-full bg-[#0b8c0799] flex items-center justify-center mr-2">
+                <Image
+                  src="/images/user-logo.png"
+                  alt="User Logo"
+                  width={24}
+                  height={24}
+                  className="rounded-full"
+                />
+              </span>
               Login
             </Link>
             <button

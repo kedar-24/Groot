@@ -34,12 +34,7 @@ export default function CDSPage() {
               with information, resources, or services, MIHU aims to make a
               positive impact in people&apos;s lives.
             </p>
-            <Button
-              variant="primary"
-              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
-              as="a"
-              href="/cds/mihu"
-            >
+            <Button variant="primary" as="a" href="/cds/mihu">
               Learn More about MIHU
             </Button>
           </ValueCard>
@@ -49,12 +44,7 @@ export default function CDSPage() {
               impactful projects. We are always looking for passionate
               individuals to join our team and make a difference.
             </p>
-            <Button
-              variant="primary"
-              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
-              as="a"
-              href="/cds/recruitment"
-            >
+            <Button variant="primary" as="a" href="/cds/recruitment">
               Explore Recruitment Opportunities
             </Button>
           </ValueCard>

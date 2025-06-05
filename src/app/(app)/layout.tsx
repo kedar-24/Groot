@@ -38,8 +38,8 @@ export default function RootLayout({
         </main>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-8 w-full">
-          <div className="px-4 md:px-8 max-w-7xl mx-auto">
+        <footer className="bg-gray-900 text-white py-2 w-full">
+          <div className="px-4 md:px-8 w-full">
             <Footer />
           </div>
         </footer>

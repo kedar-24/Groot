@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import AuthLayout from "@/components/LoginLayout";
+import AuthLayout from "@/components/AuthLayout";
 import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
 import Input from "@/components/Input";
