@@ -4,13 +4,12 @@ import Link from "next/link";
 import Button from "./button";
 import NavLink from "./NavLink";
 import UniversalDropdown from "./UniversalDropdown";
-import Image from "next/image";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/achievers", label: "Achievers" },
   { href: "/gallery", label: "Gallery" },
-  // { href: "/contact", label: "Contact" },
+  { href: "/groups", label: "Groups" },
 ];
 
 const CDS_DROPDOWN = [
@@ -51,8 +50,6 @@ const NewsTicker = () => {
     </div>
   );
 };
-
-const NAVBAR_HEIGHT = 112; // px (adjust if needed: 72px for nav + 40px for ticker)
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,21 +92,20 @@ const Navbar = () => {
       }`}
       style={{
         willChange: "transform",
-        // Remove height and minHeight here!
       }}
     >
       <div>
         {/* Main navbar content */}
-        <div className="px-4 py-3 flex justify-between items-center max-w-8xl mx-auto">
+        <div className="px-4 py-3 flex justify-between items-center max-w-8xl mx-auto font-sans">
           <Link
             href="/"
-            className="text-2xl font-bold text-green-800 hover:text-green-900 transition"
+            className="text-2xl font-bold text-green-800 hover:text-green-900 transition font-sans"
           >
             G-ROOT
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-x-4 text-base font-medium text-gray-700">
+          <div className="hidden md:flex items-center gap-x-4 text-base font-medium text-gray-700 font-sans">
             {NAV_LINKS.map((link) => (
               <NavLink key={link.href} href={link.href}>
                 {link.label}
@@ -119,7 +115,7 @@ const Navbar = () => {
               label={
                 <Link
                   href="/cds"
-                  className="flex items-center px-3 py-1 rounded hover:text-green-700 focus:text-green-700 focus:bg-gray-100 transition"
+                  className="flex items-center px-3 py-1 rounded hover:text-green-700 focus:text-green-700 focus:bg-gray-100 transition font-sans"
                   tabIndex={-1}
                 >
                   CDS
@@ -130,34 +126,38 @@ const Navbar = () => {
               onOpen={handleDropdownOpen}
               onClose={handleDropdownClose}
             />
-            <NavLink href="/login" className="flex items-center ml-2">
-              <span className="w-10 h-10 rounded-full bg-[#0b8c0799] flex items-center justify-center mr-2">
-                <Image
-                  src="/images/user-logo.png"
-                  alt="User Logo"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
+            <NavLink href="/login" className="flex items-center ml-2 font-sans">
+              <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
+                <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" fill="#f5efe0" />
+                  <path
+                    d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
+                    stroke="#f5efe0"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
               </span>
-              Login
+              <span className="text-base">Login</span>
             </NavLink>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <span className="flex items-center space-x-3">
-              <Link href="/login" className="flex items-center">
-                <span className="w-8 h-8 rounded-full bg-[#0b8c0799] flex items-center justify-center mr-2">
-                  <Image
-                    src="/images/user-logo.png"
-                    alt="User Logo"
-                    width={24}
-                    height={24}
-                    className="rounded-full"
-                  />
+              <Link href="/login" className="flex items-center font-sans">
+                <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
+                  <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" fill="#f5efe0" />
+                    <path
+                      d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
+                      stroke="#f5efe0"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </span>
-                Login
+                <span className="text-base">Login</span>
               </Link>
               <button
                 onClick={() => setIsOpen((v) => !v)}
@@ -190,7 +190,7 @@ const Navbar = () => {
           isOpen
             ? "max-h-[400px] opacity-100 pointer-events-auto"
             : "max-h-0 opacity-0 pointer-events-none"
-        } overflow-hidden space-y-2 text-base font-medium text-gray-700`}
+        } overflow-hidden space-y-2 text-base font-medium text-gray-700 font-sans`}
       >
         {NAV_LINKS.map((link) => (
           <Link

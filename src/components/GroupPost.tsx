@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function GroupPost({
   author,
@@ -11,11 +11,27 @@ export default function GroupPost({
   content: string;
   isSuggested?: boolean;
 }) {
+  const [likes, setLikes] = useState(0);
+  const [shares, setShares] = useState(0);
+  const [comments, setComments] = useState<string[]>([]);
+  const [commentInput, setCommentInput] = useState("");
+  const [showComments, setShowComments] = useState(false);
+
+  const handleLike = () => setLikes((l) => l + 1);
+  const handleShare = () => setShares((s) => s + 1);
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (commentInput.trim()) {
+      setComments((prev) => [...prev, commentInput.trim()]);
+      setCommentInput("");
+    }
+  };
+
   return (
-    <div className="border border-gray-200 rounded-xl bg-white shadow p-5 mb-6">
+    <div className="border border-gray-200 rounded-2xl bg-white shadow-sm p-6 mb-6 transition hover:shadow-md font-sans">
       <div className="flex items-center mb-2">
         {isSuggested && (
-          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded mr-2 font-semibold">
+          <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded font-semibold mr-3">
             Suggested
           </span>
         )}
@@ -23,12 +39,64 @@ export default function GroupPost({
         <span className="mx-2 text-gray-400">•</span>
         <span className="text-xs text-gray-500">{date}</span>
       </div>
-      <div className="text-gray-800 text-base mb-3">{content}</div>
-      <div className="flex gap-6 text-sm text-gray-500 font-medium">
-        <button className="hover:text-green-800 transition">Like</button>
-        <button className="hover:text-green-800 transition">Comment</button>
-        <button className="hover:text-green-800 transition">Share</button>
+      <div className="text-gray-800 text-base mb-4 leading-relaxed">
+        {content}
       </div>
+      <div className="flex gap-6 text-sm text-gray-500 font-medium items-center mb-2">
+        <button
+          className="hover:text-green-800 transition focus:outline-none flex items-center gap-1"
+          onClick={handleLike}
+          aria-label="Like"
+        >
+          👍 <span>{likes}</span>
+        </button>
+        <button
+          className="hover:text-green-800 transition focus:outline-none flex items-center gap-1"
+          onClick={() => setShowComments((v) => !v)}
+          aria-label="Comment"
+        >
+          💬 <span>{comments.length}</span>
+        </button>
+        <button
+          className="hover:text-green-800 transition focus:outline-none flex items-center gap-1"
+          onClick={handleShare}
+          aria-label="Share"
+        >
+          🔗 <span>{shares}</span>
+        </button>
+      </div>
+      {showComments && (
+        <div className="mt-4">
+          <form onSubmit={handleAddComment} className="flex gap-2 mb-2">
+            <input
+              type="text"
+              className="flex-1 border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-700"
+              placeholder="Write a comment..."
+              value={commentInput}
+              onChange={(e) => setCommentInput(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-green-800 text-white px-4 py-1 rounded hover:bg-green-900 text-sm"
+            >
+              Post
+            </button>
+          </form>
+          <div className="space-y-2">
+            {comments.length === 0 && (
+              <div className="text-xs text-gray-400">No comments yet.</div>
+            )}
+            {comments.map((c, i) => (
+              <div
+                key={i}
+                className="bg-gray-100 rounded px-3 py-1 text-sm text-gray-800"
+              >
+                {c}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

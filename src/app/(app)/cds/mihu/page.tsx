@@ -44,12 +44,7 @@ export default function MIHUPage() {
               who listen without judgment and guide you toward helpful
               resources.
             </p>
-            <Button
-              as="a"
-              href="/cds/mihu/emotional-support"
-              variant="primary"
-              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
-            >
+            <Button as="a" href="/cds/mihu/emotional-support" variant="primary">
               Talk to Someone
             </Button>
           </ValueCard>
@@ -59,12 +54,7 @@ export default function MIHUPage() {
               Need help navigating courses, exams, or time management? MIHU can
               connect you with experienced peers who’ve been there.
             </p>
-            <Button
-              as="a"
-              href="/cds/mihu/academic-guidance"
-              variant="primary"
-              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
-            >
+            <Button as="a" href="/cds/mihu/academic-guidance" variant="primary">
               Get Support
             </Button>
           </ValueCard>
@@ -75,12 +65,7 @@ export default function MIHUPage() {
               with academics, college life, and more — building a culture of
               care.
             </p>
-            <Button
-              as="a"
-              href="/cds/mihu/mentorship"
-              variant="primary"
-              className="text-green-700 bg-transparent hover:text-green-600 px-0 py-0 shadow-none"
-            >
+            <Button as="a" href="/cds/mihu/mentorship" variant="primary">
               Become a Mentor
             </Button>
           </ValueCard>
