@@ -126,7 +126,7 @@ const Navbar = () => {
               onOpen={handleDropdownOpen}
               onClose={handleDropdownClose}
             />
-            <NavLink href="/login" className="flex items-center ml-2 font-sans">
+            <NavLink href="/auth/login" className="flex items-center ml-2 font-sans">
               <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
                 <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
                   <circle cx="12" cy="8" r="4" fill="#f5efe0" />

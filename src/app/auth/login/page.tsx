@@ -41,27 +41,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative">
-      {/* Left: Auth content with background image */}
-      <div className="flex-1 flex flex-col justify-center items-center bg-green-700 p-4 relative">
-        {/* Background Image for left half */}
-        <div className="absolute inset-0 w-full h-full z-0">
-          <Image
-            src="/images/login.jpg"
-            alt="Login Image"
-            fill
-            className="object-cover opacity-60"
-            priority
-            sizes="50vw"
-          />
-        </div>
-        {/* Form content above image */}
-        <div className="w-full max-w-md mx-auto relative z-10">
+    <div className="min-h-screen flex">
+      {/* Left: Login content */}
+      <div
+        className={`flex-1 flex flex-col justify-center items-center ${BG_COLOR} p-4`}
+      >
+        <div className="w-full max-w-md mx-auto">
           <FormContainer>
-            <h1 className="text-4xl font-bold text-green-800 mb-6">
+            <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>
               Welcome Back!
             </h1>
-            <p className="text-black mb-4">Login to your profile</p>
+            <p className={`${CARD_BG === "bg-white" ? "text-black" : ""} mb-4`}>
+              Login to your profile
+            </p>
             <form
               onSubmit={handleSubmit}
               className="space-y-4 w-full max-w-md mx-auto"
@@ -70,7 +62,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-green-800 mb-1"
+                  className={`block text-sm font-medium ${TEXT_PRIMARY} mb-1`}
                 >
                   Email
                 </label>
@@ -88,7 +80,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-green-800 mb-1"
+                  className={`block text-sm font-medium ${TEXT_PRIMARY} mb-1`}
                 >
                   Password
                 </label>
@@ -108,18 +100,18 @@ export default function LoginPage() {
                       id="showPassword"
                       checked={showPassword}
                       onChange={() => setShowPassword((v) => !v)}
-                      className="mr-2 accent-green-600"
+                      className={`mr-2 ${INPUT_ACCENT}`}
                     />
                     <label
                       htmlFor="showPassword"
-                      className="text-green-800 text-sm"
+                      className={`${TEXT_PRIMARY} text-sm`}
                     >
                       Show Password
                     </label>
                   </div>
                   <Link
-                    href="/login/forgot-password"
-                    className="text-green-700 hover:underline text-sm"
+                    href="/auth/forgot-password"
+                    className={`${TEXT_LINK} hover:underline text-sm`}
                   >
                     Forgot password?
                   </Link>
@@ -180,8 +172,8 @@ export default function LoginPage() {
               <p>
                 Don&apos;t have an account?{" "}
                 <Link
-                  href="/login/signup"
-                  className="text-green-700 font-semibold hover:underline"
+                  href="/auth/signup"
+                  className={`${TEXT_LINK} font-semibold hover:underline`}
                 >
                   Sign up
                 </Link>
@@ -191,9 +183,18 @@ export default function LoginPage() {
         </div>
       </div>
       {/* Divider */}
-      <div className="w-px bg-gray-200 relative z-20"></div>
-      {/* Right: Empty */}
-      <div className="w-1/2 hidden md:block relative z-20"></div>
+      <div className="w-px bg-gray-200"></div>
+      {/* Right: Image */}
+      <div className="w-1/2 hidden md:block relative">
+        <Image
+          src="/images/login.jpg"
+          alt="Login Image"
+          fill
+          className="object-cover"
+          priority
+          sizes="50vw"
+        />
+      </div>
     </div>
   );
 }

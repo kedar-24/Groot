@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
             )}
             <div className="mt-6 text-center text-gray-700">
               <Link
-                href="/login"
+                href="/auth/login"
                 className={`${TEXT_LINK} font-semibold hover:underline`}
               >
                 Back to Login
