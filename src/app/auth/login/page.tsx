@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
@@ -7,14 +7,18 @@ import Input from "@/components/Input";
 import Image from "next/image";
 
 // Color constants (matching signup page)
-const BG_COLOR = "bg-white";
-const TEXT_PRIMARY = "text-white";
-const TEXT_LINK = "text-blue-300";
-const INPUT_ACCENT = "accent-white";
+const TEXT_PRIMARY = "text-black";
+const TEXT_LINK = "text-blue-500";
+const INPUT_ACCENT = "accent-black";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -22,6 +26,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -30,29 +35,31 @@ export default function LoginPage() {
       });
       if (response.ok) {
         alert("Login successful!");
+        setError("");
       } else {
-        alert("Invalid credentials");
+        setError("Invalid credentials");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("An error occurred. Please try again.");
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-white">
       {/* Left: Login content */}
-      <div
-        className={`flex-1 flex flex-col justify-center items-center ${BG_COLOR} p-4`}
-      >
+        <div className="flex-1 flex flex-col justify-center items-center p-4">
         <div className="w-full max-w-md mx-auto">
           <FormContainer>
-            <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>
+            <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}> 
               Welcome Back!
             </h1>
             <p className="text-white mb-4">
               Login to your profile
             </p>
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <form
               onSubmit={handleSubmit}
               className="space-y-4 w-full max-w-md mx-auto"
@@ -61,6 +68,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
+                  id="emailLabel"
                   className={`block text-sm font-medium ${TEXT_PRIMARY} mb-1`}
                 >
                   Email
@@ -73,6 +81,8 @@ export default function LoginPage() {
                   placeholder="example@example.com"
                   required
                   className="input-base"
+                  aria-labelledby="emailLabel"
+                  disabled={loading}
                 />
               </div>
               {/* Password */}
@@ -90,7 +100,10 @@ export default function LoginPage() {
                   onChange={handleChange}
                   placeholder="Enter your password"
                   required
+                  autoComplete="current-password"
                   className="input-base"
+                  aria-label="Password"
+                  disabled={loading}
                 />
                 <div className="flex justify-between items-center mt-1">
                   <div className="flex items-center">
@@ -100,6 +113,7 @@ export default function LoginPage() {
                       checked={showPassword}
                       onChange={() => setShowPassword((v) => !v)}
                       className={`mr-2 ${INPUT_ACCENT}`}
+                      disabled={loading}
                     />
                     <label
                       htmlFor="showPassword"
@@ -117,8 +131,13 @@ export default function LoginPage() {
                 </div>
               </div>
               {/* Login Button */}
-              <Button variant="secondary" type="submit" className="w-full hover:bg-green-200 text-green-700">
-                Login
+              <Button
+                variant="primary"
+                type="submit"
+                className="w-full hover:bg-green-200 text-green-700"
+                disabled={loading}
+              >
+                {loading ? "Logging in..." : "Login"}
               </Button>
             </form>
             <div className="my-6 flex items-center">
@@ -132,6 +151,7 @@ export default function LoginPage() {
                 variant="imglogo"
                 type="button"
                 aria-label="Login with Facebook"
+                disabled={loading}
               >
                 <Image
                   src="/images/facebook-logo.svg"
@@ -146,6 +166,7 @@ export default function LoginPage() {
                 variant="imglogo"
                 type="button"
                 aria-label="Login with Google"
+                disabled={loading}
               >
                 <Image
                   src="/images/google-logo.svg"
@@ -160,6 +181,7 @@ export default function LoginPage() {
                 variant="imglogo"
                 type="button"
                 aria-label="Login with Apple"
+                disabled={loading}
               >
                 <Image
                   src="/images/apple-logo.svg"
@@ -171,7 +193,7 @@ export default function LoginPage() {
                 />
               </Button>
             </div>
-            <div className="mt-6 text-center text-white">
+            <div className={`mt-6 text-center ${TEXT_PRIMARY}`}>
               <p>
                 Don&apos;t have an account?{" "}
                 <Link
@@ -184,7 +206,7 @@ export default function LoginPage() {
             </div>
           </FormContainer>
         </div>
-      </div>
+        </div>
       {/* Divider */}
       <div className="w-px bg-gray-200"></div>
       {/* Right: Image */}

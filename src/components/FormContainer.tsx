@@ -6,7 +6,7 @@ export default function FormContainer({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full max-w-xl mx-auto flex flex-col justify-center items-center bg-green-800 p-8 rounded-2xl shadow-md">
+    <div className="w-full max-w-xl mx-auto flex flex-col justify-center items-center bg-white p-8 rounded-2xl shadow-md hover:scale-105 transition-500 duration-300">
       <div className="w-full">{children}</div>
     </div>
   );
