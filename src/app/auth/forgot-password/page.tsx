@@ -6,12 +6,10 @@ import Input from "@/components/Input";
 import Button from "@/components/button";
 import Image from "next/image";
 
-// Color constants
-const BG_COLOR = "bg-green-700";
-const TEXT_PRIMARY = "text-green-800";
-const TEXT_LINK = "text-green-700";
-const CARD_BG = "bg-white";
-const INPUT_ACCENT = "accent-green-600";
+// Color constants (matching login page)
+const BG_COLOR = "bg-[beige]";
+const TEXT_PRIMARY = "text-white";
+const TEXT_LINK = "text-blue-400";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -23,7 +21,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className={`min-h-screen flex ${BG_COLOR}`}>
       {/* Left: Forgot Password content */}
       <div
         className={`flex-1 flex flex-col justify-center items-center ${BG_COLOR} p-4`}
@@ -33,12 +31,12 @@ export default function ForgotPasswordPage() {
             <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>
               Forgot Password
             </h1>
-            <p className={`${CARD_BG === "bg-white" ? "text-black" : ""} mb-4`}>
+            <p className={`${TEXT_PRIMARY} mb-4`}>
               Enter your email address and we&apos;ll send you a link to reset
               your password.
             </p>
             {submitted ? (
-              <div className="text-green-700 text-lg mb-8">
+              <div className="text-green-200 text-lg mb-8">
                 If an account with that email exists, a reset link has been sent.
               </div>
             ) : (
@@ -63,12 +61,16 @@ export default function ForgotPasswordPage() {
                     className="input-base"
                   />
                 </div>
-                <Button type="submit" variant="primary" className="w-full">
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="w-full bg-green-700 hover:bg-green-100 text-green-700"
+                >
                   Send Reset Link
                 </Button>
               </form>
             )}
-            <div className="mt-6 text-center text-gray-700">
+            <div className="mt-6 text-center">
               <Link
                 href="/auth/login"
                 className={`${TEXT_LINK} font-semibold hover:underline`}

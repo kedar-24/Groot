@@ -6,11 +6,10 @@ import Button from "@/components/button";
 import Input from "@/components/Input";
 import Image from "next/image";
 
-// Color constants
-const BG_COLOR = "bg-green-700";
-const TEXT_PRIMARY = "text-green-800";
-const TEXT_LINK = "text-green-700";
-const CARD_BG = "bg-white";
+// Color constants (matching login page)
+const BG_COLOR = "bg-white";
+const TEXT_PRIMARY = "text-white";
+const TEXT_LINK = "text-blue-400";
 const INPUT_ACCENT = "accent-green-600";
 
 export default function SignupPage() {
@@ -35,19 +34,17 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className={`min-h-screen flex ${BG_COLOR}`}>
       {/* Left: Signup content */}
-      <div
-        className={`flex-1 flex flex-col justify-center items-center ${BG_COLOR} p-4`}
-      >
+      <div className={`flex-1 flex flex-col justify-center items-center ${BG_COLOR} p-4`}>
         <div className="w-full max-w-md mx-auto">
           <FormContainer>
             <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>Sign Up</h1>
-            <p className={`${CARD_BG === "bg-white" ? "text-black" : ""} mb-4`}>
+            <p className={`${TEXT_PRIMARY} mb-4`}>
               Create your account
             </p>
             {submitted ? (
-              <div className="text-green-700 text-lg mb-8">
+              <div className="text-green-200 text-lg mb-8">
                 Account created! Please check your email to verify your account.
               </div>
             ) : (
@@ -158,9 +155,9 @@ export default function SignupPage() {
                   </div>
                 </div>
                 <Button
-                  variant="primary"
+                  variant="secondary"
                   type="submit"
-                  className="w-full bg-green-700 hover:bg-green-800 text-white"
+                  className="w-full hover:bg-green-200 text-green-700"
                 >
                   Sign Up
                 </Button>
@@ -168,7 +165,7 @@ export default function SignupPage() {
             )}
             <div className="my-6 flex items-center">
               <hr className="flex-1 border-gray-300" />
-              <span className="mx-3 text-gray-400 text-sm">or</span>
+              <span className="mx-3 text-gray-200 text-sm">or</span>
               <hr className="flex-1 border-gray-300" />
             </div>
             {/* Social Signup */}
@@ -216,8 +213,8 @@ export default function SignupPage() {
                 />
               </Button>
             </div>
-            <div className="mt-6 text-center text-gray-700">
-              <p>
+            <div className="mt-6 text-center">
+              <p className={TEXT_PRIMARY}>
                 Already have an account?{" "}
                 <Link
                   href="/auth/login"

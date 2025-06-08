@@ -6,12 +6,11 @@ import Button from "@/components/button";
 import Input from "@/components/Input";
 import Image from "next/image";
 
-// Color constants
-const BG_COLOR = "bg-green-700";
-const TEXT_PRIMARY = "text-green-800";
-const TEXT_LINK = "text-green-700";
-const CARD_BG = "bg-white";
-const INPUT_ACCENT = "accent-green-600";
+// Color constants (matching signup page)
+const BG_COLOR = "bg-white";
+const TEXT_PRIMARY = "text-white";
+const TEXT_LINK = "text-blue-300";
+const INPUT_ACCENT = "accent-white";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -51,7 +50,7 @@ export default function LoginPage() {
             <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>
               Welcome Back!
             </h1>
-            <p className={`${CARD_BG === "bg-white" ? "text-black" : ""} mb-4`}>
+            <p className="text-white mb-4">
               Login to your profile
             </p>
             <form
@@ -118,7 +117,7 @@ export default function LoginPage() {
                 </div>
               </div>
               {/* Login Button */}
-              <Button variant="primary" type="submit" className="w-full">
+              <Button variant="secondary" type="submit" className="w-full hover:bg-green-200 text-green-700">
                 Login
               </Button>
             </form>
@@ -128,7 +127,7 @@ export default function LoginPage() {
               <hr className="flex-1 border-gray-300" />
             </div>
             {/* Social Login */}
-            <div className="flex justify-center items-center space-x-4">
+            <div className="flex justify-center items-center gap-4">
               <Button
                 variant="imglogo"
                 type="button"
@@ -157,7 +156,11 @@ export default function LoginPage() {
                   priority={false}
                 />
               </Button>
-              <Button variant="imglogo" type="button" aria-label="Login with Apple">
+              <Button
+                variant="imglogo"
+                type="button"
+                aria-label="Login with Apple"
+              >
                 <Image
                   src="/images/apple-logo.svg"
                   alt=""
@@ -168,7 +171,7 @@ export default function LoginPage() {
                 />
               </Button>
             </div>
-            <div className="mt-6 text-center text-gray-700">
+            <div className="mt-6 text-center text-white">
               <p>
                 Don&apos;t have an account?{" "}
                 <Link
