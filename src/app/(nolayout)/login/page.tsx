@@ -6,6 +6,13 @@ import Button from "@/components/button";
 import Input from "@/components/Input";
 import Image from "next/image";
 
+// Color constants
+const BG_COLOR = "bg-green-700";
+const TEXT_PRIMARY = "text-green-800";
+const TEXT_LINK = "text-green-700";
+const CARD_BG = "bg-white";
+const INPUT_ACCENT = "accent-green-600";
+
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +31,6 @@ export default function LoginPage() {
       });
       if (response.ok) {
         alert("Login successful!");
-        // Redirect to a dashboard or home page
       } else {
         alert("Invalid credentials");
       }
@@ -35,15 +41,27 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left: Auth content */}
-      <div className="flex-1 flex flex-col justify-center items-center bg-white p-6 md:p-12">
-        <div className="w-full max-w-md mx-auto">
+    <div className="min-h-screen flex relative">
+      {/* Left: Auth content with background image */}
+      <div className="flex-1 flex flex-col justify-center items-center bg-green-700 p-4 relative">
+        {/* Background Image for left half */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <Image
+            src="/images/login.jpg"
+            alt="Login Image"
+            fill
+            className="object-cover opacity-60"
+            priority
+            sizes="50vw"
+          />
+        </div>
+        {/* Form content above image */}
+        <div className="w-full max-w-md mx-auto relative z-10">
           <FormContainer>
-            <h1 className="text-4xl font-bold text-white mb-6">
+            <h1 className="text-4xl font-bold text-green-800 mb-6">
               Welcome Back!
             </h1>
-            <p className="text-white mb-4">Login to your profile</p>
+            <p className="text-black mb-4">Login to your profile</p>
             <form
               onSubmit={handleSubmit}
               className="space-y-4 w-full max-w-md mx-auto"
@@ -52,7 +70,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-white mb-1"
+                  className="block text-sm font-medium text-green-800 mb-1"
                 >
                   Email
                 </label>
@@ -70,7 +88,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-white mb-1"
+                  className="block text-sm font-medium text-green-800 mb-1"
                 >
                   Password
                 </label>
@@ -94,21 +112,21 @@ export default function LoginPage() {
                     />
                     <label
                       htmlFor="showPassword"
-                      className="text-white text-sm"
+                      className="text-green-800 text-sm"
                     >
                       Show Password
                     </label>
                   </div>
                   <Link
                     href="/login/forgot-password"
-                    className="text-white hover:underline text-sm"
+                    className="text-green-700 hover:underline text-sm"
                   >
                     Forgot password?
                   </Link>
                 </div>
               </div>
               {/* Login Button */}
-              <Button variant="secondary" type="submit" className="w-full">
+              <Button variant="primary" type="submit" className="w-full">
                 Login
               </Button>
             </form>
@@ -158,12 +176,12 @@ export default function LoginPage() {
                 />
               </Button>
             </div>
-            <div className="mt-6 text-center text-white">
+            <div className="mt-6 text-center text-gray-700">
               <p>
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/login/signup"
-                  className="text-blue-300 font-semibold hover:underline"
+                  className="text-green-700 font-semibold hover:underline"
                 >
                   Sign up
                 </Link>
@@ -173,18 +191,9 @@ export default function LoginPage() {
         </div>
       </div>
       {/* Divider */}
-      <div className="w-px bg-gray-200"></div>
-      {/* Right: Image */}
-      <div className="w-1/2 hidden md:block relative">
-        <Image
-          src="/images/login.jpg"
-          alt="Login Image"
-          fill
-          className="object-cover"
-          priority
-          sizes="50vw"
-        />
-      </div>
-      </div>
+      <div className="w-px bg-gray-200 relative z-20"></div>
+      {/* Right: Empty */}
+      <div className="w-1/2 hidden md:block relative z-20"></div>
+    </div>
   );
 }
