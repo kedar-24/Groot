@@ -1,0 +1,86 @@
+export const loginStrips = [
+  // White strips in green diagonal
+  {
+    left: "6%", top: "5%", width: "90px", height: "12px",
+    background: "#ffffff", borderRadius: "10px",
+    boxShadow: "0 2px 12px 0 rgba(255,255,255,0.18)",
+    transform: "rotate(-13deg)", transitionDelay: "100ms"
+  },
+  {
+    left: "18%", top: "13%", width: "70px", height: "10px",
+    background: "#ffffff", borderRadius: "8px",
+    boxShadow: "0 2px 12px 0 rgba(255,255,255,0.13)",
+    transform: "rotate(11deg)", transitionDelay: "120ms"
+  },
+  {
+    left: "28%", top: "8%", width: "60px", height: "8px",
+    background: "#ffffff", borderRadius: "7px",
+    boxShadow: "0 2px 12px 0 rgba(34,197,94,0.13)",
+    transform: "rotate(-7deg)", transitionDelay: "140ms"
+  },
+  {
+    left: "12%", top: "25%", width: "80px", height: "10px",
+    background: "#ffffff", borderRadius: "8px",
+    boxShadow: "0 2px 12px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(17deg)", transitionDelay: "160ms"
+  },
+  {
+    left: "32%", top: "22%", width: "55px", height: "8px",
+    background: "#ffffff", borderRadius: "7px",
+    boxShadow: "0 2px 12px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(-19deg)", transitionDelay: "180ms"
+  },
+  {
+    left: "20%", top: "35%", width: "65px", height: "9px",
+    background: "#ffffff", borderRadius: "8px",
+    boxShadow: "0 2px 12px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(8deg)", transitionDelay: "200ms"
+  },
+  // Green strips on white bg
+  {
+    left: "55%", top: "30%", width: "110px", height: "14px",
+    background: "#22c55e", borderRadius: "10px",
+    boxShadow: "0 4px 24px 0 rgba(34,197,94,0.13)",
+    transform: "rotate(-8deg)", transitionDelay: "220ms"
+  },
+  {
+    left: "30%", top: "60%", width: "180px", height: "22px",
+    background: "#4ade80", borderRadius: "16px",
+    boxShadow: "0 8px 32px 0 rgba(57,255,20,0.13)",
+    transform: "rotate(-13deg)", transitionDelay: "250ms"
+  },
+  {
+    left: "65%", top: "75%", width: "140px", height: "18px",
+    background: "#22c55e", borderRadius: "12px",
+    boxShadow: "0 8px 32px 0 rgba(57,255,20,0.18)",
+    transform: "rotate(18deg)", transitionDelay: "300ms"
+  },
+  {
+    left: "10%", top: "80%", width: "120px", height: "16px",
+    background: "#bbf7d0", borderRadius: "10px",
+    boxShadow: "0 4px 24px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(-16deg)", transitionDelay: "320ms"
+  },
+  {
+    left: "70%", top: "55%", width: "100px", height: "12px",
+    background: "#4ade80", borderRadius: "8px",
+    boxShadow: "0 4px 24px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(10deg)", transitionDelay: "340ms"
+  },
+  {
+    left: "80%", top: "65%", width: "70px", height: "10px",
+    background: "#22c55e", borderRadius: "8px",
+    boxShadow: "0 4px 24px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(-21deg)", transitionDelay: "360ms"
+  },
+  {
+    left: "60%", top: "85%", width: "90px", height: "12px",
+    background: "#bbf7d0", borderRadius: "10px",
+    boxShadow: "0 4px 24px 0 rgba(34,197,94,0.10)",
+    transform: "rotate(13deg)", transitionDelay: "380ms"
+  }
+];
+
+// You can reuse or randomize for signup/forgot as needed
+export const signupStrips = loginStrips;
+export const forgotStrips = loginStrips;

@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
 import Input from "@/components/Input";
 import Image from "next/image";
+import StripsBackground from "@/components/StripsBackground";
+import { signupStrips } from "@/components/stripsPresets";
 
 // Color constants (matching login page)
 const TEXT_PRIMARY = "text-black";
@@ -21,6 +23,11 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [bgAndStripsIn, setBgAndStripsIn] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setBgAndStripsIn(true), 300);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -34,8 +41,8 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex bg-white">
       {/* Left: Signup content */}
-      <div className="flex-1 flex flex-col justify-center items-center p-4">
-        <div className="w-full max-w-md mx-auto">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 relative overflow-hidden bg-white">
+        <div className="w-full max-w-md mx-auto z-40">
           <FormContainer>
             <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>Sign Up</h1>
             <p className={`${TEXT_PRIMARY} mb-4`}>
@@ -224,11 +231,12 @@ export default function SignupPage() {
             </div>
           </FormContainer>
         </div>
+        <StripsBackground bgAndStripsIn={bgAndStripsIn} strips={signupStrips} />
       </div>
       {/* Divider */}
       <div className="w-px bg-gray-200"></div>
       {/* Right: Image */}
-      <div className="w-1/2 hidden md:block relative">
+      <div className="w-3/5 hidden md:block relative">
         <Image
           src="/images/login.jpg"
           alt="Signup Image"

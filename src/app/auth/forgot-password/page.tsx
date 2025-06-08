@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import FormContainer from "@/components/FormContainer";
 import Input from "@/components/Input";
 import Button from "@/components/button";
 import Image from "next/image";
+import StripsBackground from "@/components/StripsBackground";
+import { forgotStrips } from "@/components/stripsPresets";
 
 // Color constants (matching login page)
 const TEXT_PRIMARY = "text-black";
@@ -14,6 +16,11 @@ const INPUT_ACCENT = "accent-black";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [bgAndStripsIn, setBgAndStripsIn] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setBgAndStripsIn(true), 300);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +30,9 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen flex bg-white">
       {/* Left: Forgot Password content */}
-      <div className="flex-1 flex flex-col justify-center items-center p-4">
-        <div className="w-full max-w-md mx-auto">
-          <FormContainer>
+      <div className="flex-1 flex flex-col justify-center items-center p-4 relative overflow-hidden bg-white">
+        <div className="w-full max-w-md mx-auto z-40">
+           <FormContainer>
             <h1 className={`text-4xl font-bold ${TEXT_PRIMARY} mb-6`}>
               Forgot Password
             </h1>
@@ -77,12 +84,16 @@ export default function ForgotPasswordPage() {
               </Link>
             </div>
           </FormContainer>
+         
         </div>
+        <StripsBackground bgAndStripsIn={bgAndStripsIn} strips={forgotStrips} />
+        
       </div>
+      
       {/* Divider */}
       <div className="w-px bg-gray-200"></div>
       {/* Right: Image */}
-      <div className="w-1/2 hidden md:block relative">
+      <div className="w-3/5 hidden md:block relative">
         <Image
           src="/images/login.jpg"
           alt="Forgot Password"
