@@ -1,4 +1,5 @@
 "use client";
+import "@flaticon/flaticon-uicons/css/all/all.css";
 
 import { useEffect, useState } from "react";
 import "@/styles/globals.css";

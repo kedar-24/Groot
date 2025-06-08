@@ -14,6 +14,12 @@ module.exports = {
   },
   extend: {
   animation: {
+    'pulse-fast': 'pulse 0.5s ease-in-out',
+  },
+}
+,
+  extend: {
+  animation: {
     'fade-in': 'fadeIn 0.3s ease-out',
   },
   keyframes: {
