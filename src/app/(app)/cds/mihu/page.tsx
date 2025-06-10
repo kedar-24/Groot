@@ -1,4 +1,4 @@
-import ValueCard from "@/components/ValueCard";
+import Card from "@/components/Card";
 import Button from "@/components/button";
 
 export default function MIHUPage() {
@@ -38,7 +38,7 @@ export default function MIHUPage() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <ValueCard title="Emotional Support">
+          <Card variant="value" title="Emotional Support">
             <p className="text-lg text-gray-700 mb-4">
               Feeling low, stressed, or overwhelmed? Connect with trained peers
               who listen without judgment and guide you toward helpful
@@ -47,9 +47,9 @@ export default function MIHUPage() {
             <Button as="a" href="/cds/mihu/emotional-support" variant="primary">
               Talk to Someone
             </Button>
-          </ValueCard>
+          </Card>
 
-          <ValueCard title="Academic Guidance">
+          <Card variant="value" title="Academic Guidance">
             <p className="text-lg text-gray-700 mb-4">
               Need help navigating courses, exams, or time management? MIHU can
               connect you with experienced peers who’ve been there.
@@ -57,9 +57,9 @@ export default function MIHUPage() {
             <Button as="a" href="/cds/mihu/academic-guidance" variant="primary">
               Get Support
             </Button>
-          </ValueCard>
+          </Card>
 
-          <ValueCard title="Peer Mentorship">
+          <Card variant="value" title="Peer Mentorship">
             <p className="text-lg text-gray-700 mb-4">
               Join our mentorship network where senior students help juniors
               with academics, college life, and more — building a culture of
@@ -68,7 +68,7 @@ export default function MIHUPage() {
             <Button as="a" href="/cds/mihu/mentorship" variant="primary">
               Become a Mentor
             </Button>
-          </ValueCard>
+          </Card>
         </div>
       </section>
 

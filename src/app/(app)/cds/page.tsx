@@ -1,4 +1,4 @@
-import ValueCard from "@/components/ValueCard";
+import Card from "@/components/Card";
 import Button from "@/components/button";
 
 export default function CDSPage() {
@@ -25,7 +25,7 @@ export default function CDSPage() {
       {/* MIHU and Recruitment Sections */}
       <section id="initiatives" className="max-w-screen-xl mx-auto py-12 px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          <ValueCard title="MIHU - May I Help You">
+          <Card variant="value" title="MIHU - May I Help You">
             <p className="text-lg text-gray-700 mb-4">
               MIHU (May I Help You) is an initiative designed to provide
               assistance, support, and resources to individuals in need. Our
@@ -37,8 +37,8 @@ export default function CDSPage() {
             <Button variant="primary" as="a" href="/cds/mihu">
               Learn More about MIHU
             </Button>
-          </ValueCard>
-          <ValueCard title="Recruitment">
+          </Card>
+          <Card variant="value" title="Recruitment">
             <p className="text-lg text-gray-700 mb-4">
               Our recruitment initiatives provide opportunities to contribute to
               impactful projects. We are always looking for passionate
@@ -47,7 +47,7 @@ export default function CDSPage() {
             <Button variant="primary" as="a" href="/cds/recruitment">
               Explore Recruitment Opportunities
             </Button>
-          </ValueCard>
+          </Card>
         </div>
       </section>
 

@@ -1,6 +1,6 @@
 "use server";
 import HeroSection from "@/components/HeroSection";
-import NewsCard from "@/components/NewsCard";
+import Card from "@/components/Card";
 import type { Article } from "@/models/Article";
 
 async function getArticles(): Promise<Article[]> {
@@ -134,7 +134,8 @@ export default async function HomePage() {
                 key={article._id}
                 className="transition duration-300 hover:scale-[1.03] focus-within:scale-[1.03] will-change-transform"
               >
-                <NewsCard
+                <Card
+                  variant="news"
                   title={article.title}
                   date={article.date}
                   category={article.category}

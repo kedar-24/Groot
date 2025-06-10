@@ -1,4 +1,4 @@
-import ValueCard from "@/components/ValueCard";
+import Card from "@/components/Card";
 
 export default function AboutPage() {
   return (
@@ -52,22 +52,22 @@ export default function AboutPage() {
             Core Values
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-            <ValueCard title="Innovation">
+            <Card variant="value" title="Innovation">
               We value creativity and forward-thinking, continuously striving to
               innovate and push boundaries.
-            </ValueCard>
-            <ValueCard title="Community">
+            </Card>
+            <Card variant="value" title="Community">
               Collaboration and community-building are at the core of what we
               do. We believe in working together for a common purpose.
-            </ValueCard>
-            <ValueCard title="Growth">
+            </Card>
+            <Card variant="value" title="Growth">
               We are committed to continuous personal and professional growth,
               creating opportunities for learning and development.
-            </ValueCard>
-            <ValueCard title="Impact">
+            </Card>
+            <Card variant="value" title="Impact">
               We strive to make a meaningful impact on society by encouraging
               responsible actions and sustainable practices.
-            </ValueCard>
+            </Card>
           </div>
         </div>
       </section>

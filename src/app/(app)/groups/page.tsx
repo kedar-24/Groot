@@ -1,5 +1,5 @@
 "use client";
-import GroupCard from "@/components/GroupCard";
+import Card from "@/components/Card";
 import GroupPost from "@/components/GroupPost";
 import GroupSidebar from "@/components/GroupSidebar";
 import { useState } from "react";
@@ -77,8 +77,9 @@ export default function GroupsPage() {
             <p className="text-gray-700 mb-4">View groups and posts below.</p>
             <div className="space-y-4">
               {DUMMY_GROUPS.map((group) => (
-                <GroupCard
+                <Card
                   key={group.title}
+                  variant="group"
                   title={group.title}
                   description={group.description}
                   joined={joinedGroups.includes(group.title)}

@@ -1,13 +1,18 @@
 import React from "react";
+import Card from "./Card";
+
+type FormContainerProps = {
+  children: React.ReactNode;
+  className?: string;
+};
 
 export default function FormContainer({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  className = "",
+}: FormContainerProps) {
   return (
-    <div className="w-full max-w-xl mx-auto flex flex-col justify-center items-center bg-white p-8 rounded-2xl shadow-md hover:scale-105 transition-500 duration-300">
-      <div className="w-full">{children}</div>
-    </div>
+    <Card className={`max-w-xl w-full p-8 items-center ${className}`}>
+      {children}
+    </Card>
   );
 }

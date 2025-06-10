@@ -1,6 +1,6 @@
 import Image from "next/image";
-import ValueCard from "@/components/ValueCard";
-import Button from "@/components/button"; // <-- Import your Button component
+import Card from "@/components/Card";
+import Button from "@/components/button";
 
 const achievers = [
   {
@@ -34,15 +34,15 @@ function AchieverCard({
   imageUrl,
 }: (typeof achievers)[0]) {
   return (
-    <ValueCard title={name}>
+    <Card variant="value" title={name} className="h-full">
       <div className="flex flex-col items-center">
         <div className="relative w-28 h-28 mb-3 rounded-full overflow-hidden border-4 border-green-100 shadow">
           <Image src={imageUrl} alt={name} fill className="object-cover" />
         </div>
         <p className="text-green-700 font-semibold">{title}</p>
-        <p className="mt-2 text-gray-700 text-sm">{description}</p>
+        <p className="mt-2 text-gray-700 text-sm text-center">{description}</p>
       </div>
-    </ValueCard>
+    </Card>
   );
 }
 

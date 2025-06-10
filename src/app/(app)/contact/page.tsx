@@ -52,7 +52,7 @@ export default function ContactPage() {
   };
 
   return (
-    <FormContainer>
+    <FormContainer className="Center w-full max-w-md mx-auto p-6">
       <h2 className="text-2xl font-semibold mb-6 text-center">Contact Us</h2>
       <form onSubmit={handleSubmit} className="space-y-6 w-full">
         {/* Name Field */}

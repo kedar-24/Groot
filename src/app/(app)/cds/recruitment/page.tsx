@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Button from "@/components/button";
-import ValueCard from "@/components/ValueCard";
+import Card from "@/components/Card";
 import UniversalDropdown from "@/components/UniversalDropdown";
 
 interface Job {
@@ -100,7 +100,7 @@ const RecruitmentPage: React.FC = () => {
               </div>
             ) : (
               jobs.map((job) => (
-                <ValueCard key={job.id} title={job.title}>
+                <Card variant="value" key={job.id} title={job.title}>
                   <p className="text-gray-600 mb-2">{job.location}</p>
                   <Button
                     as="a"
@@ -110,7 +110,7 @@ const RecruitmentPage: React.FC = () => {
                   >
                     View Job
                   </Button>
-                </ValueCard>
+                </Card>
               ))
             )}
           </div>

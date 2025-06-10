@@ -1,6 +1,6 @@
 "use client";
 
-import ValueCard from "@/components/ValueCard";
+import Card from "@/components/Card";
 import Button from "@/components/button";
 
 export default function EventsPage() {
@@ -44,7 +44,7 @@ export default function EventsPage() {
       {/* Events List */}
       <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {events.map((event, index) => (
-          <ValueCard key={index} title={event.title}>
+          <Card variant="value" key={index} title={event.title}>
             <p className="text-sm text-gray-500 mb-2">{event.date}</p>
             <p className="text-gray-700 mb-4">{event.description}</p>
             <p className="text-sm text-gray-600 mb-4">
@@ -57,7 +57,7 @@ export default function EventsPage() {
             >
               Register Now
             </Button>
-          </ValueCard>
+          </Card>
         ))}
       </div>
     </div>
