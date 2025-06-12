@@ -5,6 +5,8 @@ import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
 import AuthFormField from "@/components/AuthFormField";
 import SocialAuthButtons from "@/components/SocialAuthButtons";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const TEXT_PRIMARY = "text-green-900";
 const TEXT_LINK = "text-blue-500";
@@ -15,6 +17,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter(); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -23,24 +26,25 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      if (response.ok) {
         setError("");
-        // handle login
-      } else {
-        setError("Invalid credentials");
-      }
-    } catch {
-      setError("An error occurred. Please try again.");
-    } finally {
+      // Call next-auth signIn with credentials provider
+  const res = await signIn("credentials", {
+    redirect: false,          // don't redirect automatically
+    emailOrUsername: form.email, // your input name/key must match your provider credentials config
+    password: form.password,
+  });
+
       setLoading(false);
-    }
-  };
+
+  if (res?.error) {
+    setError(res.error || "Invalid credentials");
+  } else {
+    // Login success, redirect or show success message
+    alert("Login successful!");
+    // You can redirect manually like:
+    router.push("/");
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">

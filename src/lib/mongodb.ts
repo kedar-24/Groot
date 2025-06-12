@@ -1,44 +1,19 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "";
+let isConnected = false;
 
-if (!MONGODB_URI) {
-  throw new Error(
-    "Please define the MONGODB_URI environment variable inside .env.local"
-  );
-}
+export async function connectDB() {
+  if (isConnected) return;
 
-// Fix for global type in TypeScript
-interface MongooseGlobal {
-  mongoose: {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  };
-}
+  try {
+    const db = await mongoose.connect(process.env.MONGODB_URI!, {
+      dbName: "my_database", // optional, specify if not in URI
+    });
 
-// Extend global with mongoose cache
-const globalWithMongoose = global as typeof globalThis & MongooseGlobal;
-
-let cached = globalWithMongoose.mongoose;
-
-if (!cached) {
-  cached = globalWithMongoose.mongoose = {
-    conn: null,
-    promise: null,
-  };
-}
-
-export async function connectToDatabase() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        bufferCommands: false,
-      })
-      .then((mongoose) => mongoose);
-  }
-
-  cached.conn = await cached.promise;
-  return cached.conn;
+    isConnected = true;
+    console.log("✅ MongoDB connected:", db.connection.name);
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    throw err;
+  }
 }

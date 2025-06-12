@@ -17,6 +17,10 @@ export default function SignupPage() {
     password: "",
     confirmPassword: "",
   });
+
+  const [message, setMessage] = useState("");
+
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -28,6 +32,26 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setMessage("Signup successful! Please login.");
+      setForm({
+    emailOrMobile: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  }); // Clear form on success
+    } else {
+      setMessage(data.error || "Signup failed");
+    }
+    console.log("Signup message:", message);
   };
 
   return (

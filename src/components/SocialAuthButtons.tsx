@@ -1,3 +1,4 @@
+import { signIn } from "next-auth/react";
 import Button from "./button";
 import Image from "next/image";
 
@@ -20,6 +21,8 @@ export default function SocialAuthButtons({
           variant="imglogo"
           type="button"
           aria-label={`Continue with ${s.label}`}
+          onClick={() => signIn("google",{  prompt: "consent select_account",
+  callbackUrl: "/"} )}
           disabled={disabled}
         >
           <Image
