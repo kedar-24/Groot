@@ -1,4 +1,3 @@
-
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/lib/mongodb";
@@ -6,6 +5,7 @@ import { User } from "@/models/User";
 import { comparePassword } from "@/utils/hash";
 import type { NextAuthOptions } from "next-auth";
 import { Types } from "mongoose";
+import bcrypt from "bcryptjs";
 
 
 export const authOptions: NextAuthOptions = {
@@ -17,41 +17,23 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        emailOrUsername: { label: "Email, Username or Mobile", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.emailOrUsername || !credentials?.password) {
-          throw new Error("Missing credentials");
-        }
-
         await connectDB();
-
-        const { emailOrUsername, password } = credentials;
-
-        const user = await User.findOne({
-          $or: [
-            { email: emailOrUsername },
-            { username: emailOrUsername },
-            { mobile: emailOrUsername },
-          ],
-        });
-
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials");
+        const user = await User.findOne({ email: credentials?.email });
+        if (user && await bcrypt.compare(credentials!.password, user.password)) {
+          // Return the user document as a plain object, ensuring id is a string
+          const typedUser = user as typeof user & { _id: Types.ObjectId };
+          return {
+            id: typedUser._id.toString(),
+            email: typedUser.email,
+            name: typedUser.username,
+            image: typedUser.image,
+          };
         }
-         console.log(password,user.password);
-        const isMatch = await comparePassword(password, user.password);
-        if (!isMatch) {
-          throw new Error("Invalid credentials");
-        }
-
-        return {
-          id: (user._id as Types.ObjectId).toString(),
-          name: user.username,
-          email: user.email,
-          image: user.image,
-        };
+        return null;
       },
     }),
   ],
