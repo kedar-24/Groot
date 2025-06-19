@@ -3,9 +3,25 @@ import Button from "./button";
 import Image from "next/image";
 
 const socials = [
-  { src: "/images/facebook-logo.svg", alt: "Facebook", label: "Facebook" },
-  { src: "/images/google-logo.svg", alt: "Google", label: "Google" },
-  { src: "/images/apple-logo.svg", alt: "Apple", label: "Apple" },
+  {
+    src: "/images/facebook-logo.svg",
+    alt: "Facebook",
+    label: "Facebook",
+    provider: "facebook",
+  },
+  {
+    src: "/images/google-logo.svg",
+    alt: "Google",
+    label: "Google",
+    provider: "google",
+  },
+  // Add Facebook/Apple only if configured
+  {
+    src: "/images/apple-logo.svg",
+    alt: "Apple",
+    label: "Apple",
+    provider: "apple",
+  },
 ];
 
 export default function SocialAuthButtons({
@@ -21,8 +37,7 @@ export default function SocialAuthButtons({
           variant="imglogo"
           type="button"
           aria-label={`Continue with ${s.label}`}
-          onClick={() => signIn("google",{  prompt: "consent select_account",
-  callbackUrl: "/"} )}
+          onClick={() => signIn(s.provider, { callbackUrl: "/" })}
           disabled={disabled}
         >
           <Image

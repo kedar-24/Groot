@@ -5,7 +5,6 @@ import { User } from "@/models/User";
 import type { NextAuthOptions } from "next-auth";
 import { Types } from "mongoose";
 import bcrypt from "bcryptjs";
-import { nanoid } from "nanoid";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -22,9 +21,12 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         await connectDB();
         const user = await User.findOne({ email: credentials?.email });
-
-        if (user && await bcrypt.compare(credentials!.password, user.password)) {
-          const typedUser = user as typeof user & { userId: Types.ObjectId; _id: Types.ObjectId };
+        if (
+          user &&
+          (await bcrypt.compare(credentials!.password, user.password))
+        ) {
+          // Return the user document as a plain object, ensuring id is a string
+          const typedUser = user as typeof user & { _id: Types.ObjectId };
           return {
             id: typedUser._id.toString(),
             email: typedUser.email,

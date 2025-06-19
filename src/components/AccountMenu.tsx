@@ -1,8 +1,16 @@
 import { signOut } from "next-auth/react";
 import React from "react";
 
-// 👇 Pass user data as an argument
-export function getAccountMenuOptions(user: any, onClose?: () => void) {
+type AccountMenuOption = {
+  href: string;
+  label: React.ReactNode;
+  onClick?: (e: React.MouseEvent) => void;
+};
+
+export function getAccountMenuOptions(
+  user: { name?: string } | null,
+  onClose?: () => void
+): AccountMenuOption[] {
   return [
     {
       href: "/profile",
@@ -21,8 +29,8 @@ export function getAccountMenuOptions(user: any, onClose?: () => void) {
       label: <span className="text-red-700 font-semibold">Sign Out</span>,
       onClick: (e: React.MouseEvent) => {
         e.preventDefault();
-        signOut();
         if (onClose) onClose();
+        signOut({ callbackUrl: window.location.origin });
       },
     },
   ];

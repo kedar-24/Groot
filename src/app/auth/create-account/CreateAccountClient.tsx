@@ -52,13 +52,6 @@ export default function CreateAccountClient({ email }: { email: string }) {
     setLoading(false);
 
     if (res.ok) {
-      // Automatically sign in the user
-      await signIn("credentials", {
-        email,
-        password: form.password,
-        redirect: false,
-      });
-      // Optionally redirect to homepage or dashboard
       router.push("/profile/further-details");
     } else {
       setError(data.error || "Account creation failed.");
@@ -68,10 +61,14 @@ export default function CreateAccountClient({ email }: { email: string }) {
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
       <FormContainer className="flex-1 flex-col items-center justify-center w-full">
-        <h1 className={`text-3xl font-bold ${TEXT_PRIMARY} mb-4 text-center w-full`}>
+        <h1
+          className={`text-3xl font-bold ${TEXT_PRIMARY} mb-4 text-center w-full`}
+        >
           Create Account
         </h1>
-        {error && <p className="text-red-600 text-sm mb-3 text-center">{error}</p>}
+        {error && (
+          <p className="text-red-600 text-sm mb-3 text-center">{error}</p>
+        )}
         <form
           onSubmit={handleSubmit}
           className="space-y-3 w-full flex flex-col items-center"

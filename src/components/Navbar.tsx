@@ -63,9 +63,7 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
-  const { data: user } = useCurrentUser();
-  const router = useRouter();
-  const { status } = useSession();
+  const { data: user, status } = useCurrentUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -109,41 +107,62 @@ const Navbar = () => {
     }, 200);
   };
 
-  // DRY: Account dropdown menu options
-  const accountMenuOptions = getAccountMenuOptions(user,() =>
+  // DRY: Account dropdown menu options (use user only here)
+  const accountMenuOptions = getAccountMenuOptions(user, () =>
     setIsAccountDropdownOpen(false)
   );
 
   // Account dropdown for desktop and mobile
-  const accountDropdown = user ? (
-    <UniversalDropdown
-      label={
-        <button
-          className="flex items-center ml-2 font-sans focus:outline-none"
-          tabIndex={0}
-          type="button"
-        >
-          <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="4" fill="#f5efe0" />
-              <path
-                d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
-                stroke="#f5efe0"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+  let accountDropdown = null;
+  if (status === "loading") {
+    accountDropdown = null; // Or a skeleton/loading indicator if you want
+  } else if (status === "authenticated" && user) {
+    accountDropdown = (
+      <UniversalDropdown
+        label={
+          <span className="flex items-center ml-2 font-sans">
+            <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
+              <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4" fill="#f5efe0" />
+                <path
+                  d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
+                  stroke="#f5efe0"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            <span className="text-base">{user.name || "Account"}</span>
           </span>
-          <span className="text-base">{user.name || "Account"}</span>
-        </button>
-      }
-      menuOptions={accountMenuOptions}
-      isOpen={isAccountDropdownOpen}
-      onOpen={handleAccountDropdownOpen}
-      onClose={handleAccountDropdownClose}
-      align="right"
-    />
-  ) : null;
+        }
+        menuOptions={accountMenuOptions}
+        isOpen={isAccountDropdownOpen}
+        onOpen={handleAccountDropdownOpen}
+        onClose={handleAccountDropdownClose}
+        align="right"
+      />
+    );
+  } else if (status === "unauthenticated") {
+    accountDropdown = (
+      <Link
+        href="/auth/login"
+        className="flex items-center ml-2 font-sans px-4 py-2"
+      >
+        <span className="w-8 h-8 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4" fill="#f5efe0" />
+            <path
+              d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
+              stroke="#f5efe0"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+        </span>
+        <span className="text-base">Login</span>
+      </Link>
+    );
+  }
 
   // Mobile menu links (excluding Login)
   const mobileLinks = [...NAV_LINKS, { href: "/cds", label: "CDS" }];
@@ -174,14 +193,14 @@ const Navbar = () => {
             onDropdownClose={handleDropdownClose}
             accountDropdown={accountDropdown}
           />
-           {status === "unauthenticated" && (
-          <Link
-            href="/auth/login"
-            className="px-4 py-2 text-sm font-semibold text-white bg-green-700 rounded-md shadow hover:bg-green-800 transition-colors duration-200"
-          >
-            Login
-          </Link>
-        )}
+          {status === "unauthenticated" && (
+            <Link
+              href="/auth/login"
+              className="px-4 py-2 text-sm font-semibold text-white bg-green-700 rounded-md shadow hover:bg-green-800 transition-colors duration-200"
+            >
+              Login
+            </Link>
+          )}
           <MobileNavIcons
             user={user}
             accountDropdown={accountDropdown}
@@ -193,7 +212,6 @@ const Navbar = () => {
       <NewsTicker />
       <MobileNavbar isOpen={isOpen} mobileLinks={mobileLinks} />
       {/* Login button - always visible */}
-    
     </nav>
   );
 };

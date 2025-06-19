@@ -19,28 +19,39 @@ export default function DesktopNavLinks({
   onDropdownClose,
   accountDropdown,
 }: DesktopNavLinksProps) {
+  // Insert the CDS dropdown after the second link (index 1)
+  const linksWithCDS = [
+    ...navLinks.slice(0, 2),
+    <UniversalDropdown
+      key="cds-dropdown"
+      label={
+        <Link
+          href="/cds"
+          className="flex items-center px-3 py-1 rounded hover:text-green-700 focus:text-green-700 focus:bg-gray-100 transition font-sans"
+          tabIndex={-1}
+        >
+          CDS
+        </Link>
+      }
+      menuOptions={cdsDropdown}
+      isOpen={isDropdownOpen}
+      onOpen={onDropdownOpen}
+      onClose={onDropdownClose}
+    />,
+    ...navLinks.slice(2),
+  ];
+
   return (
     <div className="hidden md:flex items-center gap-x-4 text-base font-medium text-gray-700 font-sans">
-      {navLinks.map((link) => (
-        <NavLink key={link.href} href={link.href}>
-          {link.label}
-        </NavLink>
-      ))}
-      <UniversalDropdown
-        label={
-          <Link
-            href="/cds"
-            className="flex items-center px-3 py-1 rounded hover:text-green-700 focus:text-green-700 focus:bg-gray-100 transition font-sans"
-            tabIndex={-1}
-          >
-            CDS
-          </Link>
-        }
-        menuOptions={cdsDropdown}
-        isOpen={isDropdownOpen}
-        onOpen={onDropdownOpen}
-        onClose={onDropdownClose}
-      />
+      {linksWithCDS.map((link, idx) =>
+        typeof link === "object" && "props" in link ? (
+          link // UniversalDropdown
+        ) : (
+          <NavLink key={navLinks[idx]?.href || idx} href={link.href}>
+            {link.label}
+          </NavLink>
+        )
+      )}
       {accountDropdown}
     </div>
   );

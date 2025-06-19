@@ -4,10 +4,11 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        // Debug Next.js frontend & backend (SSR, API, client)
         {
             "type": "pwa-node",
             "request": "launch",
-            "name": "Debug Next.js API (dev server)",
+            "name": "Debug Next.js (Frontend & Backend)",
             "runtimeExecutable": "npm",
             "runtimeArgs": ["run", "dev"],
             "env": {
@@ -15,6 +16,23 @@
             },
             "console": "integratedTerminal",
             "skipFiles": ["<node_internals>/**"]
+        },
+        // Attach to Next.js backend (API routes, server functions)
+        {
+            "type": "pwa-node",
+            "request": "attach",
+            "name": "Attach to Next.js Backend",
+            "port": 9229,
+            "restart": true,
+            "skipFiles": ["<node_internals>/**"]
+        },
+        // Debug client-side JS in Chrome (optional)
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Debug Next.js Frontend in Chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }

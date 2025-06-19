@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -26,25 +26,24 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-        setError("");
-      // Call next-auth signIn with credentials provider
-  const res = await signIn("credentials", {
-    redirect: false,          // don't redirect automatically
-    emailOrUsername: form.email, // your input name/key must match your provider credentials config
-    password: form.password,
-  });
+    setError("");
+    // Call next-auth signIn with credentials provider
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: form.email, // <-- FIXED
+      password: form.password,
+    });
 
-      setLoading(false);
+    setLoading(false);
 
-  if (res?.error) {
-    setError(res.error || "Invalid credentials");
-  } else {
-    // Login success, redirect or show success message
-    alert("Login successful!");
-    // You can redirect manually like:
-    router.push("/");
-    }
-  };
+    if (res?.error) {
+      setError(res.error || "Invalid credentials");
+    } else {
+      // Login success, redirect or show success message
+      alert("Login successful!");
+      router.push("/");
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
