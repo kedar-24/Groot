@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 
 const TEXT_PRIMARY = "text-green-900";
 const TEXT_LINK = "text-blue-500";
-const INPUT_ACCENT = "accent-green-700";
 
 const RESEND_OTP_SECONDS = 30;
 

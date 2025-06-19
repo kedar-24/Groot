@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 interface MobileNavIconsProps {
-  user: any;
+  user: { id: string; name?: string; email?: string } | null;
   accountDropdown?: React.ReactNode;
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;

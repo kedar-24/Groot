@@ -2,15 +2,7 @@ import { signOut } from "next-auth/react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import React from "react";
 
-type AccountMenuOption = {
-  href: string;
-  label: React.ReactNode;
-  onClick?: (e: React.MouseEvent) => void;
-};
-
-export function getAccountMenuOptions(
-  onClose?: () => void
-): AccountMenuOption[] {
+export function getAccountMenuOptions(onClose?: () => void) {
   const { data } = useCurrentUser();
 
   return [

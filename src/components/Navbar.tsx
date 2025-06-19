@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Button from "./button";
 import MobileNavbar from "./MobileNavbar";
+import { getAccountMenuOptions } from "./AccountMenu";
 import UniversalDropdown from "./UniversalDropdown";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { getAccountMenuOptions } from "./AccountMenu";
 import DesktopNavLinks from "./DesktopNavLinks";
 import MobileNavIcons from "./MobileNavIcons";
 
@@ -58,12 +58,9 @@ const NewsTicker = () => {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
-  const accountDropdownTimer = useRef<NodeJS.Timeout | null>(null);
-
   const { data: user } = useCurrentUser();
 
   useEffect(() => {
@@ -94,20 +91,19 @@ const Navbar = () => {
   };
 
   // Account dropdown handlers
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+  const accountDropdownTimer = useRef<NodeJS.Timeout | null>(null);
+
   const handleAccountDropdownOpen = () => {
     if (accountDropdownTimer.current)
       clearTimeout(accountDropdownTimer.current);
     setIsAccountDropdownOpen(true);
   };
-
   const handleAccountDropdownClose = () => {
     accountDropdownTimer.current = setTimeout(() => {
       setIsAccountDropdownOpen(false);
     }, 200);
   };
-
-  // Mobile menu links (excluding Login)
-  const mobileLinks = [...NAV_LINKS, { href: "/cds", label: "CDS" }];
 
   // DRY: Account dropdown menu options
   const accountMenuOptions = getAccountMenuOptions(() =>
@@ -144,6 +140,9 @@ const Navbar = () => {
       align="right"
     />
   ) : null;
+
+  // Mobile menu links (excluding Login)
+  const mobileLinks = [...NAV_LINKS, { href: "/cds", label: "CDS" }];
 
   return (
     <nav
