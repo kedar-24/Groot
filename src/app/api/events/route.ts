@@ -45,11 +45,21 @@ export async function POST(req: NextRequest) {
 }
 
 // GET /api/events — Fetch all events
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await connectDB();
-    const events = await Event.find() // Optional: include creator info
-      .sort({ date: -1 }); // Latest first
+    const url = new URL(req.url);
+    const includeParticipants = url.searchParams.get("includeParticipants") === "true";
+    let query = Event.find().sort({ date: -1 }); // Optional: include creator info
+
+    if (includeParticipants) {
+      query = query.populate({
+        path: "participants",
+        select: "username email image jobRole",
+      });
+    } // Latest first
+
+    const events = await query;
 
     return NextResponse.json({ success: true, events }, { status: 200 });
   } catch (err: any) {

@@ -48,19 +48,32 @@ export default function EventsPage() {
       alert('Please sign in to register for events.');
       return;
     }
-
     try {
-      const res = await fetch('/api/events/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventId, userEmail: session.user?.email }),
-      });
+    const res = await fetch("/api/events/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        eventId,
+        userEmail: session.user?.email,
+      }),
+    });
 
-      if (!res.ok) throw new Error('Registration failed');
-      alert(`Successfully registered for ${title}`);
-    } catch (err) {
-      alert('There was a problem registering for the event.');
+    const data = await res.json();
+
+    if (res.status === 409) {
+      alert("⚠️ You are already registered for this event.");
+    } else if (!res.ok) {
+      throw new Error(data?.message || "Registration failed");
+    } else {
+      alert(`✅ ${data.message || `Successfully registered for ${title}`}`);
     }
+  } catch (err) {
+    console.error("Registration error:", err);
+    alert("❌ There was a problem registering for the event.");
+  }
+  
   };
 
   return (
