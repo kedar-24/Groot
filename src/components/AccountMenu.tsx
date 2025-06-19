@@ -1,17 +1,15 @@
 import { signOut } from "next-auth/react";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import React from "react";
 
-export function getAccountMenuOptions(onClose?: () => void) {
-  const { data } = useCurrentUser();
-
+// 👇 Pass user data as an argument
+export function getAccountMenuOptions(user: any, onClose?: () => void) {
   return [
     {
       href: "/profile",
       label: (
         <span className="flex flex-col items-start">
           <span className="font-semibold text-green-900">
-            {data?.name || "Profile"}
+            {user?.name || "Profile"}
           </span>
           <span className="text-xs text-gray-500">Profile</span>
         </span>

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-type MenuOption = { href: string; label: string };
+type MenuOption = { href: string; label: React.ReactNode; };
 type SelectOption = { value: string; label: string };
 
 interface UniversalDropdownProps {

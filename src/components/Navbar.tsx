@@ -8,6 +8,8 @@ import UniversalDropdown from "./UniversalDropdown";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import DesktopNavLinks from "./DesktopNavLinks";
 import MobileNavIcons from "./MobileNavIcons";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -62,6 +64,8 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
   const { data: user } = useCurrentUser();
+  const router = useRouter();
+  const { status } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,7 +110,7 @@ const Navbar = () => {
   };
 
   // DRY: Account dropdown menu options
-  const accountMenuOptions = getAccountMenuOptions(() =>
+  const accountMenuOptions = getAccountMenuOptions(user,() =>
     setIsAccountDropdownOpen(false)
   );
 
@@ -170,6 +174,14 @@ const Navbar = () => {
             onDropdownClose={handleDropdownClose}
             accountDropdown={accountDropdown}
           />
+           {status === "unauthenticated" && (
+          <Link
+            href="/auth/login"
+            className="px-4 py-2 text-sm font-semibold text-white bg-green-700 rounded-md shadow hover:bg-green-800 transition-colors duration-200"
+          >
+            Login
+          </Link>
+        )}
           <MobileNavIcons
             user={user}
             accountDropdown={accountDropdown}
@@ -180,6 +192,8 @@ const Navbar = () => {
       </div>
       <NewsTicker />
       <MobileNavbar isOpen={isOpen} mobileLinks={mobileLinks} />
+      {/* Login button - always visible */}
+    
     </nav>
   );
 };
