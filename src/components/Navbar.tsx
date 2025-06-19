@@ -193,14 +193,6 @@ const Navbar = () => {
             onDropdownClose={handleDropdownClose}
             accountDropdown={accountDropdown}
           />
-          {status === "unauthenticated" && (
-            <Link
-              href="/auth/login"
-              className="px-4 py-2 text-sm font-semibold text-white bg-green-700 rounded-md shadow hover:bg-green-800 transition-colors duration-200"
-            >
-              Login
-            </Link>
-          )}
           <MobileNavIcons
             user={user}
             accountDropdown={accountDropdown}
