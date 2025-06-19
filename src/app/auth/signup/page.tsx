@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import FormContainer from "@/components/FormContainer";
 import Button from "@/components/button";
@@ -11,16 +11,27 @@ const TEXT_PRIMARY = "text-green-900";
 const TEXT_LINK = "text-blue-500";
 const INPUT_ACCENT = "accent-green-700";
 
+const RESEND_OTP_SECONDS = 30;
+
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"email" | "otp">("email");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
   const router = useRouter();
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Timer for resend OTP
+  React.useEffect(() => {
+    if (resendTimer > 0) {
+      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendTimer]);
+
+  const handleSendOtp = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setLoading(true);
     setMessage("");
 
@@ -36,6 +47,7 @@ export default function SignupPage() {
     if (res.ok) {
       setStep("otp");
       setMessage("OTP sent to your email.");
+      setResendTimer(RESEND_OTP_SECONDS);
     } else {
       setMessage(data.error || "Failed to send OTP.");
     }
@@ -56,7 +68,7 @@ export default function SignupPage() {
     setLoading(false);
 
     if (res.ok) {
-      sessionStorage.setItem("verified_email", email); // Only store email for display
+      sessionStorage.setItem("verified_email", email);
       router.push("/auth/create-account");
     } else {
       setMessage(data.error || "Invalid OTP.");
@@ -66,17 +78,26 @@ export default function SignupPage() {
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
       <FormContainer className="flex-1 flex-col items-center justify-center w-full">
-        <h1 className={`text-3xl font-bold ${TEXT_PRIMARY} mb-4 text-center w-full`}>
+        <h1
+          className={`text-3xl font-bold ${TEXT_PRIMARY} mb-4 text-center w-full`}
+        >
           Sign Up
         </h1>
         <p className={`${TEXT_PRIMARY} mb-3 text-base text-center w-full`}>
-          {step === "email" ? "Enter your email to get started" : "Enter the OTP sent to your email"}
+          {step === "email"
+            ? "Enter your email to get started"
+            : "Enter the OTP sent to your email"}
         </p>
 
-        {message && <p className="text-sm text-center text-green-700 mb-4">{message}</p>}
+        {message && (
+          <p className="text-sm text-center text-green-700 mb-4">{message}</p>
+        )}
 
         {step === "email" ? (
-          <form onSubmit={handleSendOtp} className="space-y-3 w-full flex flex-col items-center">
+          <form
+            onSubmit={handleSendOtp}
+            className="space-y-3 w-full flex flex-col items-center"
+          >
             <AuthFormField
               id="email"
               label="Email"
@@ -98,7 +119,10 @@ export default function SignupPage() {
             </Button>
           </form>
         ) : (
-          <form onSubmit={handleVerifyOtp} className="space-y-3 w-full flex flex-col items-center">
+          <form
+            onSubmit={handleVerifyOtp}
+            className="space-y-3 w-full flex flex-col items-center"
+          >
             <AuthFormField
               id="otp"
               label="OTP"
@@ -110,14 +134,27 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full"
             />
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-full hover:bg-green-200 text-green-700"
-              disabled={loading}
-            >
-              {loading ? "Verifying..." : "Verify OTP"}
-            </Button>
+            <div className="flex w-full gap-3">
+              <Button
+                variant="primary"
+                type="submit"
+                className="flex-1 hover:bg-green-200 text-green-700"
+                disabled={loading}
+              >
+                {loading ? "Verifying..." : "Verify OTP"}
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="flex-1 text-green-700 px-3 py-1 text-sm"
+                disabled={resendTimer > 0 || loading}
+                onClick={() => handleSendOtp()}
+              >
+                {resendTimer > 0
+                  ? `Resend OTP in ${resendTimer}s`
+                  : "Resend OTP"}
+              </Button>
+            </div>
           </form>
         )}
 

@@ -22,29 +22,27 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
-      <body className="flex flex-col min-h-screen w-full">
-        {/* Navbar */}
-        <header
-          className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ease-in-out ${
-            scrolled ? "shadow-lg" : "shadow-md"
-          }`}
-        >
-          <Navbar />
-        </header>
+    <>
+      {/* Navbar */}
+      <header
+        className={`sticky top-0 z-50 bg-white transition-shadow duration-300 ease-in-out ${
+          scrolled ? "shadow-lg" : "shadow-md"
+        }`}
+      >
+        <Navbar />
+      </header>
 
-        {/* Main content */}
-        <main className="flex-grow flex flex-col pb-12 mx-auto w-full pt-[136px]">
-          {children}
-        </main>
+      {/* Main content */}
+      <main className="flex-grow flex flex-col pb-12 mx-auto w-full pt-[136px]">
+        {children}
+      </main>
 
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white py-2 w-full">
-          <div className="px-4 md:px-8 w-full">
-            <Footer />
-          </div>
-        </footer>
-      </body>
-    </html>
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-2 w-full">
+        <div className="px-4 md:px-8 w-full">
+          <Footer />
+        </div>
+      </footer>
+    </>
   );
 }

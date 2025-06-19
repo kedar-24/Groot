@@ -44,7 +44,7 @@ const UniversalDropdown: React.FC<UniversalDropdownProps> = ({
         >
           {label}
           <svg
-            className="ml-1 w-4 h-4"
+            className="ml-1 w-4 h-4 onhover:rotate-180 transition-transform duration-200"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
