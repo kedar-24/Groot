@@ -21,7 +21,7 @@ export default function DesktopNavLinks({
 }: DesktopNavLinksProps) {
   // Insert the CDS dropdown after the second link (index 1)
   const linksWithCDS = [
-    ...navLinks.slice(0, 2),
+    ...navLinks.slice(0, 3),
     <UniversalDropdown
       key="cds-dropdown"
       label={

@@ -13,7 +13,13 @@ export async function POST(req: NextRequest) {
 
   const email = session.user.email.toLowerCase().trim();
 
-  const { jobRole, businessDetails, workingCity, workingState, fieldsOfExpertise } = await req.json();
+  const {
+    jobRole,
+    businessDetails,
+    workingCity,
+    workingState,
+    fieldsOfExpertise,
+  } = await req.json();
 
   try {
     await connectDB();
@@ -31,7 +37,10 @@ export async function POST(req: NextRequest) {
     );
 
     if (!user) {
-      return NextResponse.json({ error: `User not found for email: ${email}` }, { status: 404 });
+      return NextResponse.json(
+        { error: `User not found for email: ${email}` },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({ success: true, user });

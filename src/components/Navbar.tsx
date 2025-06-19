@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/achievers", label: "Achievers" },
+  { href: "/events", label: "Events" }, // <-- Added Events here
   { href: "/gallery", label: "Gallery" },
   { href: "/groups", label: "Groups" },
 ];

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import FormContainer from "@/components/FormContainer";
 import AuthFormField from "@/components/AuthFormField";
 import Button from "@/components/button";
@@ -52,7 +52,19 @@ export default function CreateAccountClient({ email }: { email: string }) {
     setLoading(false);
 
     if (res.ok) {
-      router.push("/profile/further-details");
+      // Automatically sign in the user
+      const loginRes = await signIn("credentials", {
+        redirect: false,
+        email,
+        password: form.password,
+      });
+
+      if (loginRes?.ok) {
+        // Redirect to further details page
+        router.push("/profile/further-details");
+      } else {
+        setError("Failed to sign in after account creation.");
+      }
     } else {
       setError(data.error || "Account creation failed.");
     }
