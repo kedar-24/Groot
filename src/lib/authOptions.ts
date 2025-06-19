@@ -6,6 +6,7 @@ import { User } from "@/models/User";
 import type { NextAuthOptions } from "next-auth";
 import { Types } from "mongoose";
 import bcrypt from "bcryptjs";
+import { nanoid } from "nanoid";
 
 export const authOptions: NextAuthOptions = {
   providers: [

@@ -48,8 +48,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     await connectDB();
-    const events = await Event.find()
-      .populate("createdBy", "name email") // Optional: include creator info
+    const events = await Event.find() // Optional: include creator info
       .sort({ date: -1 }); // Latest first
 
     return NextResponse.json({ success: true, events }, { status: 200 });
