@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid"; // Ensure you have nanoid installed
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/lib/mongodb";

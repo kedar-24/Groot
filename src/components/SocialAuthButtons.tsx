@@ -4,12 +4,6 @@ import Image from "next/image";
 
 const socials = [
   {
-    src: "/images/facebook-logo.svg",
-    alt: "Facebook",
-    label: "Facebook",
-    provider: "facebook",
-  },
-  {
     src: "/images/google-logo.svg",
     alt: "Google",
     label: "Google",

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Button from "./button";
 import MobileNavbar from "./MobileNavbar";
 import { getAccountMenuOptions } from "./AccountMenu";
@@ -122,17 +123,29 @@ const Navbar = () => {
       <UniversalDropdown
         label={
           <span className="flex items-center ml-2 font-sans">
-            <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
-              <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4" fill="#f5efe0" />
-                <path
-                  d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
-                  stroke="#f5efe0"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
+            {user.image ? (
+              <Image
+                src={user.image}
+                alt={user.name || "Account"}
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-full object-cover mr-2 border border-green-200"
+                unoptimized={false}
+                priority
+              />
+            ) : (
+              <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
+                <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" fill="#f5efe0" />
+                  <path
+                    d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
+                    stroke="#f5efe0"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
+            )}
             <span className="text-base">{user.name || "Account"}</span>
           </span>
         }

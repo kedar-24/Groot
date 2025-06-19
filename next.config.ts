@@ -19,6 +19,7 @@ const nextConfig = {
       "150102931.v2.pressablecdn.com",
       "static1.xdaimages.com",
       "images.macrumors.com",
+      "lh3.googleusercontent.com", // <-- Added Google profile images domain
     ], // Add any other needed domains
   },
 };
