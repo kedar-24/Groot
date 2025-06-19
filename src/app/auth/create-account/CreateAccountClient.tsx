@@ -51,7 +51,7 @@ export default function CreateAccountClient({ email }: { email: string }) {
     setLoading(false);
 
     if (res.ok) {
-      router.push("/auth/further-details");
+      router.push("/profile/furthur-details");
     } else {
       setError(data.error || "Account creation failed.");
     }

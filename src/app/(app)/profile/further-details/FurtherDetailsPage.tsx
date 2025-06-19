@@ -65,7 +65,7 @@ export default function FurtherDetailsPage() {
       setLoading(false);
 
       if (res.ok) {
-        router.push("/");
+        router.push("/profile/work-details");
       } else {
         setError(data.error || "Failed to save details.");
       }
