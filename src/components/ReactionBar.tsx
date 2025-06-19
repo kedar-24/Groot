@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import clsx from "clsx";
+import {
+  FaRegHeart,
+  FaRegFaceLaughSquint,
+  FaRegFaceSurprise,
+  FaRegFaceAngry,
+} from "react-icons/fa6";
+import { FaRegSadCry } from "react-icons/fa";
 
 const reactionsList = [
-  { iconClass: "fi-rr-heart", label: "Love", color: "text-rose-500" },
-  { iconClass: "fi-rr-laugh", label: "Haha", color: "text-yellow-500" },
-  { iconClass: "fi-rr-surprise", label: "Wow", color: "text-purple-500" },
-  { iconClass: "fi-rr-sad", label: "Sad", color: "text-blue-500" },
-  { iconClass: "fi-rr-angry", label: "Angry", color: "text-red-600" },
+  { icon: FaRegHeart, label: "Love", color: "text-rose-500" },
+  { icon: FaRegFaceLaughSquint, label: "Haha", color: "text-yellow-500" },
+  { icon: FaRegFaceSurprise, label: "Wow", color: "text-purple-500" },
+  { icon: FaRegSadCry, label: "Sad", color: "text-blue-500" },
+  { icon: FaRegFaceAngry, label: "Angry", color: "text-red-600" },
 ];
 
 export default function ReactionBar() {
@@ -14,6 +21,7 @@ export default function ReactionBar() {
   const [userReaction, setUserReaction] = useState<string | null>(null);
   const [hovering, setHovering] = useState(false);
   const [animateLabel, setAnimateLabel] = useState<string | null>(null);
+  const hideTimer = useRef<NodeJS.Timeout | null>(null);
 
   const handleReact = (label: string) => {
     setReactions((prev) => {
@@ -33,32 +41,42 @@ export default function ReactionBar() {
     (r) => r.label === userReaction
   );
 
+  // --- Hover logic with delay ---
+  const handleMouseEnter = () => {
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    hideTimer.current = setTimeout(() => setHovering(false), 250);
+  };
+
   return (
     <div
       className="relative inline-block"
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Main Reaction Button (Changes to user's selected reaction) */}
+      {/* Main Reaction Button */}
       <button
         className={clsx(
-          "inline-flex items-center gap-1 text-sm cursor-pointer px-3 py-1 rounded-full transition duration-200 border",
+          "inline-flex items-center gap-3 text-base cursor-pointer px-6 py-3 rounded-full transition duration-200 border shadow-sm",
           userReactionDetails
             ? `${userReactionDetails.color} bg-gray-50 border-transparent`
             : "text-gray-700 hover:bg-gray-50 border-gray-300"
         )}
+        style={{ minWidth: 120 }}
         title={userReactionDetails?.label || "Like"}
         onClick={() => handleReact("Love")}
       >
-        <i
-          className={clsx(
-            "fi text-xl",
-            userReactionDetails?.iconClass || "fi-rr-heart"
-          )}
-        />
+        {userReactionDetails ? (
+          <userReactionDetails.icon className="text-2xl" />
+        ) : (
+          <FaRegHeart className="text-2xl" />
+        )}
         <span
           className={clsx(
-            "ml-1 min-w-[40px] text-left transition-transform duration-300",
+            "ml-2 min-w-[48px] text-left transition-transform duration-300",
             animateLabel === userReaction && "scale-125 font-semibold"
           )}
         >
@@ -68,23 +86,28 @@ export default function ReactionBar() {
 
       {/* Reaction Bar */}
       {hovering && (
-        <div className="absolute top-10 left-0 flex gap-4 bg-white border px-4 py-2 rounded-2xl shadow-md z-10 transition-opacity duration-300">
-          {reactionsList.map(({ iconClass, label, color }) => (
+        <div
+          className="absolute top-14 left-1/2 -translate-x-1/2 flex gap-6 bg-white border px-8 py-4 rounded-3xl shadow-2xl z-10 transition-opacity duration-300"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {reactionsList.map(({ icon: Icon, label, color }) => (
             <button
               key={label}
               onClick={() => handleReact(label)}
-              className="flex flex-col items-center w-10 hover:scale-125 transition-transform duration-200"
+              className="flex flex-col items-center w-14 h-14 justify-center hover:scale-125 transition-transform duration-200"
               title={label}
+              style={{ fontSize: "1.25rem" }}
             >
-              <i
+              <Icon
                 className={clsx(
-                  `fi ${iconClass} text-xl`,
+                  "text-3xl",
                   userReaction === label ? color : "text-gray-400"
                 )}
               />
               <span
                 className={clsx(
-                  "text-xs text-gray-600 mt-1 transition-transform duration-300",
+                  "text-xs text-gray-600 mt-2 transition-transform duration-300",
                   animateLabel === label && "scale-125 font-semibold"
                 )}
               >
@@ -100,9 +123,9 @@ export default function ReactionBar() {
         <div className="flex flex-wrap items-center gap-2 mt-2 ml-1 text-xs text-gray-600">
           {reactionsList
             .filter(({ label }) => reactions[label])
-            .map(({ iconClass, label }) => (
+            .map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-1 min-w-[48px]">
-                <i className={`fi ${iconClass} text-sm`} />
+                <Icon className="text-base" />
                 <span>{reactions[label]}</span>
               </div>
             ))}

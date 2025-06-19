@@ -2,8 +2,12 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Button from "./button";
-import NavLink from "./NavLink";
+import MobileNavbar from "./MobileNavbar";
 import UniversalDropdown from "./UniversalDropdown";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import { getAccountMenuOptions } from "./AccountMenu";
+import DesktopNavLinks from "./DesktopNavLinks";
+import MobileNavIcons from "./MobileNavIcons";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -54,9 +58,13 @@ const NewsTicker = () => {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
+  const accountDropdownTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const { data: user } = useCurrentUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,6 +93,58 @@ const Navbar = () => {
     }, 200);
   };
 
+  // Account dropdown handlers
+  const handleAccountDropdownOpen = () => {
+    if (accountDropdownTimer.current)
+      clearTimeout(accountDropdownTimer.current);
+    setIsAccountDropdownOpen(true);
+  };
+
+  const handleAccountDropdownClose = () => {
+    accountDropdownTimer.current = setTimeout(() => {
+      setIsAccountDropdownOpen(false);
+    }, 200);
+  };
+
+  // Mobile menu links (excluding Login)
+  const mobileLinks = [...NAV_LINKS, { href: "/cds", label: "CDS" }];
+
+  // DRY: Account dropdown menu options
+  const accountMenuOptions = getAccountMenuOptions(() =>
+    setIsAccountDropdownOpen(false)
+  );
+
+  // Account dropdown for desktop and mobile
+  const accountDropdown = user ? (
+    <UniversalDropdown
+      label={
+        <button
+          className="flex items-center ml-2 font-sans focus:outline-none"
+          tabIndex={0}
+          type="button"
+        >
+          <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
+            <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4" fill="#f5efe0" />
+              <path
+                d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
+                stroke="#f5efe0"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <span className="text-base">{user.name || "Account"}</span>
+        </button>
+      }
+      menuOptions={accountMenuOptions}
+      isOpen={isAccountDropdownOpen}
+      onOpen={handleAccountDropdownOpen}
+      onClose={handleAccountDropdownClose}
+      align="right"
+    />
+  ) : null;
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 bg-white shadow transition-transform duration-300 ${
@@ -103,108 +163,24 @@ const Navbar = () => {
           >
             G-ROOT
           </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-x-4 text-base font-medium text-gray-700 font-sans">
-            {NAV_LINKS.map((link) => (
-              <NavLink key={link.href} href={link.href}>
-                {link.label}
-              </NavLink>
-            ))}
-            <UniversalDropdown
-              label={
-                <Link
-                  href="/cds"
-                  className="flex items-center px-3 py-1 rounded hover:text-green-700 focus:text-green-700 focus:bg-gray-100 transition font-sans"
-                  tabIndex={-1}
-                >
-                  CDS
-                </Link>
-              }
-              menuOptions={CDS_DROPDOWN}
-              isOpen={isDropdownOpen}
-              onOpen={handleDropdownOpen}
-              onClose={handleDropdownClose}
-            />
-            <NavLink href="/auth/login" className="flex items-center ml-2 font-sans">
-              <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
-                <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-                  <circle cx="12" cy="8" r="4" fill="#f5efe0" />
-                  <path
-                    d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
-                    stroke="#f5efe0"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-              <span className="text-base">Login</span>
-            </NavLink>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <span className="flex items-center space-x-3">
-              <Link href="/login" className="flex items-center font-sans">
-                <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
-                  <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="8" r="4" fill="#f5efe0" />
-                    <path
-                      d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
-                      stroke="#f5efe0"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </span>
-                <span className="text-base">Login</span>
-              </Link>
-              <button
-                onClick={() => setIsOpen((v) => !v)}
-                className="text-black hover:text-green-600 transition"
-                aria-expanded={isOpen ? "true" : "false"}
-                aria-controls="mobile-menu"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-7 w-7"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <rect y="4" width="20" height="2" rx="1" />
-                  <rect y="9" width="20" height="2" rx="1" />
-                  <rect y="14" width="20" height="2" rx="1" />
-                </svg>
-              </button>
-            </span>
-          </div>
+          <DesktopNavLinks
+            navLinks={NAV_LINKS}
+            cdsDropdown={CDS_DROPDOWN}
+            isDropdownOpen={isDropdownOpen}
+            onDropdownOpen={handleDropdownOpen}
+            onDropdownClose={handleDropdownClose}
+            accountDropdown={accountDropdown}
+          />
+          <MobileNavIcons
+            user={user}
+            accountDropdown={accountDropdown}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
         </div>
-        {/* NewsTicker always at the bottom of navbar */}
-        <NewsTicker />
       </div>
-
-      {/* Mobile Navigation with transition */}
-      <div
-        id="mobile-menu"
-        className={`md:hidden px-4 pb-4 flex flex-col items-start bg-white transition-all duration-300 ease-in-out ${
-          isOpen
-            ? "max-h-[400px] opacity-100 pointer-events-auto"
-            : "max-h-0 opacity-0 pointer-events-none"
-        } overflow-hidden space-y-2 text-base font-medium text-gray-700 font-sans`}
-      >
-        {NAV_LINKS.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="block w-full text-center py-2"
-          >
-            {link.label}
-          </Link>
-        ))}
-        <Link href="/cds" className="block w-full text-center py-2">
-          CDS
-        </Link>
-      </div>
+      <NewsTicker />
+      <MobileNavbar isOpen={isOpen} mobileLinks={mobileLinks} />
     </nav>
   );
 };

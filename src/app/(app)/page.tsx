@@ -3,9 +3,14 @@ import HeroSection from "@/components/HeroSection";
 import Card from "@/components/Card";
 import type { Article } from "@/models/Article";
 
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+  "http://localhost:3000";
+
 async function getArticles(): Promise<Article[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/news`, {
+    const res = await fetch(`${baseUrl}/api/news`, {
       next: { revalidate: 60 },
     });
 
