@@ -11,6 +11,9 @@ export interface IUser extends Document {
   workingCity?: string;
   workingState?: string;
   fieldsOfExpertise?: string[];
+  graduationYear?: number;
+  degree?: string;
+  linkedin?: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -25,6 +28,9 @@ const userSchema = new Schema<IUser>(
     workingCity: { type: String },
     workingState: { type: String },
     fieldsOfExpertise: [{ type: String }],
+    graduationYear: { type: Number },
+    degree: { type: String },
+    linkedin: { type: String },
   },
   { timestamps: true }
 );
