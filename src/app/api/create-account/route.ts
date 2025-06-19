@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import { User } from "@/models/User";
 import jwt from "jsonwebtoken";
+import { nanoid } from "nanoid";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
   email: email.toLowerCase().trim(),
   username,
   password: passwordHash,
+  userId: nanoid(10),
 });
 
     // Step 3: Simulate login using credentials provider

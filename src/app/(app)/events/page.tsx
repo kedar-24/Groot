@@ -1,65 +1,152 @@
-"use client";
+'use client';
 
-import Card from "@/components/Card";
-import Button from "@/components/button";
+import { useEffect, useState } from 'react';
+import Card from '@/components/Card';
+import Button from '@/components/button';
+import { useSession } from 'next-auth/react';
+
+interface Event {
+  _id: string;
+  title: string;
+  description: string;
+  date: string;
+  time?: string;
+  location: string;
+  image?: string;
+  tags?: string[];
+  isPublic?: boolean;
+  attachments?: string[];
+  participants?: string[];
+}
 
 export default function EventsPage() {
-  const events = [
-    {
-      title: "Green Hackathon",
-      date: "June 2025",
-      description:
-        "A hackathon focused on building solutions for a greener planet.",
-      location: "Online",
-    },
-    {
-      title: "GROOT Summit",
-      date: "July 2025",
-      description:
-        "An exclusive summit for thought leaders and innovators in tech.",
-      location: "San Francisco, CA",
-    },
-    {
-      title: "Art for Earth",
-      date: "August 2025",
-      description:
-        "An art exhibition to raise awareness for environmental conservation.",
-      location: "New York, NY",
-    },
-  ];
+  const { data: session } = useSession();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/events');
+      if (!res.ok) throw new Error('Failed to fetch events');
+      const data = await res.json();
+      setEvents(data.events);
+    } catch (err) {
+      setError('Failed to load events.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const handleRegister = async (title: string, eventId: string) => {
+    if (!session) {
+      alert('Please sign in to register for events.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/events/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventId, userEmail: session.user?.email }),
+      });
+
+      if (!res.ok) throw new Error('Registration failed');
+      alert(`Successfully registered for ${title}`);
+    } catch (err) {
+      alert('There was a problem registering for the event.');
+    }
+  };
 
   return (
-    <div className="bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      {/* Hero Section */}
+    <div className="bg-gradient-to-b from-white to-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      {/* Hero */}
       <section className="text-center mb-12">
-        <h1 className="text-4xl sm:text-5xl font-extrabold mb-4 tracking-tight text-green-900">
-          Upcoming Events
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-green-800 mb-2">
+          🌟 Upcoming Events
         </h1>
-        <p className="text-lg text-gray-700">
-          Join us for inspiring events that drive change, innovation, and
-          community action!
+        <p className="text-lg text-gray-600">
+          Join events that inspire change, innovation, and community!
         </p>
       </section>
 
-      {/* Events List */}
-      <div className="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {events.map((event, index) => (
-          <Card variant="value" key={index} title={event.title}>
-            <p className="text-sm text-gray-500 mb-2">{event.date}</p>
-            <p className="text-gray-700 mb-4">{event.description}</p>
-            <p className="text-sm text-gray-600 mb-4">
-              Location: {event.location}
-            </p>
-            <Button
-              variant="primary"
-              className="w-full mt-2"
-              onClick={() => alert(`Register for ${event.title}`)}
+      {/* State */}
+      {loading && (
+        <p className="text-center text-gray-600 text-lg animate-pulse">Loading events...</p>
+      )}
+      {error && (
+        <p className="text-center text-red-600 text-lg">{error}</p>
+      )}
+
+      {/* Events Grid */}
+      {!loading && events.length > 0 && (
+        <div className="max-w-7xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {events.map((event) => (
+            <div
+              key={event._id}
+              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
             >
-              Register Now
-            </Button>
-          </Card>
-        ))}
-      </div>
+              {event.image && (
+                <img
+                  src={event.image}
+                  alt="Event"
+                  className="h-48 w-full object-cover"
+                />
+              )}
+              <div className="p-5">
+                <h2 className="text-xl font-semibold text-green-900 mb-2">{event.title}</h2>
+                <p className="text-sm text-gray-500 mb-1">
+                  📅 {new Intl.DateTimeFormat('en-IN', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  }).format(new Date(event.date))}
+                  {event.time && ` at ${event.time}`}
+                </p>
+                <p className="text-sm text-gray-700 mb-2">{event.description}</p>
+                <p className="text-sm text-gray-600 mb-1">📍 {event.location}</p>
+                {Array.isArray(event.tags) && event.tags.length > 0 && (
+                  <p className="text-xs text-gray-500 mb-1">
+                    🏷️ Tags: {event.tags.join(', ')}
+                  </p>
+                )}
+                {event.attachments && event.attachments.length > 0 && (
+                  <ul className="text-xs text-blue-600 space-y-1 mb-2">
+                    {event.attachments.map((url, i) => (
+                      <li key={i}>
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline hover:text-blue-800"
+                        >
+                          📎 Attachment {i + 1}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <Button
+                  variant="primary"
+                  className="w-full mt-3"
+                  onClick={() => handleRegister(event.title, event._id)}
+                >
+                  Register Now
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!loading && events.length === 0 && (
+        <p className="text-center text-gray-500 text-lg">No upcoming events found.</p>
+      )}
     </div>
   );
 }
