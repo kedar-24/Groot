@@ -1,7 +1,6 @@
 import { signOut } from "next-auth/react";
-import React from "react";
 
-type AccountMenuOption = {
+export type AccountMenuOption = {
   href: string;
   label: React.ReactNode;
   onClick?: (e: React.MouseEvent) => void;
@@ -11,14 +10,18 @@ export function getAccountMenuOptions(
   user: { name?: string } | null,
   onClose?: () => void
 ): AccountMenuOption[] {
+  const handleSignOut = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onClose?.();
+    signOut({ callbackUrl: typeof window !== "undefined" ? window.location.origin : "/" });
+  };
+
   return [
     {
       href: "/profile",
       label: (
         <span className="flex flex-col items-start">
-          <span className="font-semibold text-green-900">
-            {user?.name || "Profile"}
-          </span>
+          <span className="font-semibold text-green-900">{user?.name || "Profile"}</span>
           <span className="text-xs text-gray-500">Profile</span>
         </span>
       ),
@@ -26,12 +29,14 @@ export function getAccountMenuOptions(
     },
     {
       href: "#",
-      label: <span className="text-red-700 font-semibold">Sign Out</span>,
-      onClick: (e: React.MouseEvent) => {
-        e.preventDefault();
-        if (onClose) onClose();
-        signOut({ callbackUrl: window.location.origin });
-      },
+      label: (
+        <button
+          onClick={handleSignOut}
+          className="text-red-700 font-semibold w-full text-left"
+        >
+          Sign Out
+        </button>
+      ),
     },
   ];
 }
