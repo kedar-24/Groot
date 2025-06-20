@@ -11,22 +11,34 @@ const TEXT_LINK = "text-blue-500";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const [error, setError] = useState<string | null>(null);
 
-  try {
-    const res = await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-    // Regardless of success or not, we show the same message for security
-    setSubmitted(true);
-  } catch (error) {
-    setSubmitted(true); // still mark submitted to avoid email guessing
-  }
-};
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 429) {
+        setError(
+          data.error || "Too many reset requests. Please try again later."
+        );
+        setSubmitted(false);
+      } else {
+        setSubmitted(true);
+      }
+    } catch (error) {
+      setError("Something went wrong. Please try again.");
+      setSubmitted(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
@@ -40,7 +52,12 @@ const handleSubmit = async (e: React.FormEvent) => {
           Enter your email address and we&apos;ll send you a link to reset your
           password.
         </p>
-        {submitted ? (
+        {error && (
+          <div className="text-red-700  text-lg mb-8 text-center w-full">
+            {error}
+          </div>
+        )}
+        {submitted && !error ? (
           <div className="text-green-700 text-lg mb-8 text-center w-full">
             If an account with that email exists, a reset link has been sent.
           </div>

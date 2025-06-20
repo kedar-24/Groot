@@ -7,9 +7,40 @@ import { sendResetPasswordEmail } from "@/utils/mailer";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+// Track reset requests per email
+const resetRequestTracker = new Map<string, number[]>();
+
+// Periodic cleanup: remove old/unused entries every 10 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [email, timestamps] of resetRequestTracker.entries()) {
+    const recent = timestamps.filter((t) => now - t < 60 * 60 * 1000); // 1 hour
+    if (recent.length > 0) {
+      resetRequestTracker.set(email, recent);
+    } else {
+      resetRequestTracker.delete(email);
+    }
+  }
+}, 10 * 60 * 1000); // cleanup every 10 min
+
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
+
+    // Rate limit: max 5 reset requests per email per hour
+    if (email) {
+      const now = Date.now();
+      const timestamps = resetRequestTracker.get(email) || [];
+      const recent = timestamps.filter((t) => now - t < 30 * 60 * 1000); // 1 hour
+      if (recent.length >= 5) {
+        return new Response(
+          JSON.stringify({ error: "Too many reset requests. Please try again later." }),
+          { status: 429 }
+        );
+      }
+      recent.push(now);
+      resetRequestTracker.set(email, recent);
+    }
 
     await connectDB();
     const user = await User.findOne({ email });
