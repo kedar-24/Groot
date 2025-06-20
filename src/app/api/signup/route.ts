@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb"; // Your MongoDB connection utility
 import { User }from "@/models/User";     // Your Mongoose User model
 import { hashPassword } from "@/utils/hash"; // Your hash utility
+import { nanoid } from "nanoid";
 
 export async function POST(req: Request) {
   try {
@@ -31,14 +32,14 @@ export async function POST(req: Request) {
     const hashedPassword = await hashPassword(password);
 
     // 4. Save user
-    const newUser = new User({
+    await User.create({
       email: emailOrMobile.includes("@") ? emailOrMobile : undefined,
       mobile: /^\d{10}$/.test(emailOrMobile) ? emailOrMobile : undefined,
       username,
       password: hashedPassword,
+      userId: nanoid(10),
+      providers: ["credentials"], // Track signup provider
     });
-
-    await newUser.save();
 
     return NextResponse.json({ message: "User created successfully" }, { status: 201 });
   } catch (error) {

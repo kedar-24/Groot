@@ -52,14 +52,14 @@ export default function CreateAccountClient({ email }: { email: string }) {
     setLoading(false);
 
     if (res.ok) {
-      // Automatically sign in the user
+      // Automatically sign in the user after successful account creation
       const loginRes = await signIn("credentials", {
         redirect: false,
         email,
         password: form.password,
       });
 
-      if (loginRes?.ok) {
+      if (!loginRes?.error) {
         // Redirect to further details page
         router.push("/profile/further-details");
       } else {

@@ -34,6 +34,22 @@ export default function SignupPage() {
     setLoading(true);
     setMessage("");
 
+    // Check if user exists
+    const checkRes = await fetch("/api/check-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const checkData = await checkRes.json();
+
+    if (checkData.exists) {
+      setLoading(false);
+      setMessage("User already exists. Redirecting to login...");
+      setTimeout(() => router.push("/auth/login"), 2000);
+      return;
+    }
+
+    // Continue with OTP sending if user does not exist
     const res = await fetch("/api/send-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -1,12 +1,11 @@
 // Ensure you have nanoid installed
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { connectDB } from "@/lib/mongodb";
 import { User } from "@/models/User";
-import type { NextAuthOptions } from "next-auth";
-import { Types } from "mongoose";
-import bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
+import { connectDB } from "@/lib/mongodb";
+import type { NextAuthOptions } from "next-auth";
+import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -23,22 +22,23 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         await connectDB();
         const user = await User.findOne({ email: credentials?.email });
-        if (
-          user &&
-          (await bcrypt.compare(credentials!.password, user.password))
-        ) {
-          // Return the user document as a plain object, ensuring id is a string
-          const typedUser = user as typeof user & { _id: Types.ObjectId };
-          return {
-            id: typedUser._id.toString(),
-            email: typedUser.email,
-            name: typedUser.username,
-            image: typedUser.image,
-            userId: typedUser.userId?.toString?.() ?? typedUser.userId,
-          };
+
+        if (!user) throw new Error("invalid credentials");
+
+        if (!user.providers.includes("credentials")) {
+          throw new Error("Please use Google login");
         }
 
-        return null;
+        const isValid = await bcrypt.compare(credentials!.password, user.password);
+        if (!isValid) throw new Error("Invalid password");
+
+        return {
+          id: user._id.toString(),
+          email: user.email,
+          name: user.username,
+          image: user.image,
+          userId: user.userId,
+        };
       },
     }),
   ],
@@ -51,18 +51,30 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       await connectDB();
 
-      if (account?.provider === "google" && user.email) {
-        const existingUser = await User.findOne({ email: user.email });
+      const existingUser = await User.findOne({ email: user.email });
 
-        if (!existingUser) {
-          await User.create({
-            email: user.email,
-            username: user.name,
-            image: user.image,
-            userId: nanoid(10), // ✅ generate random userId
-          });
-        }
-      }
+     if (account?.provider === "google") {
+  if (existingUser) {
+    // Add 'google' to providers array (if not already linked)
+    if (!existingUser.providers.includes("google")) {
+      existingUser.providers = [...new Set([...existingUser.providers, "google"])] as ("credentials" | "google")[];
+      await existingUser.save();
+    }
+
+    // ✅ Link Google login to existing user — don't create or overwrite anything
+    return true;
+  } else {
+    // New Google signup → create user
+    await User.create({
+      email: user.email,
+      username: user.name || "google_user",  // only set once
+      image: user.image || "",               // only set once
+      userId: nanoid(10),
+      providers: ["google"],
+    });
+  }
+}
+
 
       return true;
     },

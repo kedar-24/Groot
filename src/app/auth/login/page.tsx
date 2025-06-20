@@ -37,7 +37,7 @@ export default function LoginPage() {
     setLoading(false);
 
     if (res?.error) {
-      setError(res.error || "Invalid credentials");
+      setError(res.error || "Invalid credentials. Please try again.");
     } else {
       // Login success, redirect or show success message
       alert("Login successful!");

@@ -5,6 +5,7 @@ import { User } from "@/models/User";
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 
+
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function POST(req: NextRequest) {
@@ -42,36 +43,19 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
+   const newUser = await User.create({
   email: email.toLowerCase().trim(),
   username,
   password: passwordHash,
   userId: nanoid(10),
+  providers: ["credentials"], // ✅ required for sign-in to succeed
 });
 
     // Step 3: Simulate login using credentials provider
-    const loginRes = await fetch(new URL("/api/auth/callback/credentials", req.url), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        emailOrUsername: email,
-        password,
-      }),
-    });
+    // (Removed: login simulation now handled on the frontend)
 
-    if (!loginRes.ok) {
-      return NextResponse.json({ error: "Login failed after account creation." }, { status: 500 });
-    }
-
-    // Step 4: Prepare response and copy login cookies
+    // Step 4: Prepare response
     const response = NextResponse.json({ success: true, userId: newUser._id });
-
-    const authCookies = loginRes.headers.getSetCookie();
-    authCookies?.forEach((cookie) => {
-      response.headers.append("Set-Cookie", cookie);
-    });
 
     // Clear the OTP token
     response.cookies.set("email_verified_token", "", {
@@ -85,3 +69,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }
+

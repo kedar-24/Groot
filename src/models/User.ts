@@ -16,6 +16,7 @@ export interface IUser extends Document {
   graduationYear?: number;
   degree?: string;
   linkedin?: string;
+  providers: ("google" | "credentials")[];
 }
 
 const userSchema = new Schema<IUser>(
@@ -34,6 +35,17 @@ const userSchema = new Schema<IUser>(
     graduationYear: { type: Number },
     degree: { type: String },
     linkedin: { type: String },
+   providers: {
+  type: [String],
+  enum: ["google", "credentials"],
+  default: [],
+  validate: {
+    validator: function (arr: string[]) {
+      return new Set(arr).size === arr.length;
+    },
+    message: "Duplicate provider entries not allowed.",
+  },
+},
   },
   { timestamps: true }
 );
