@@ -11,11 +11,22 @@ const TEXT_LINK = "text-blue-500";
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  try {
+    const res = await fetch("/api/auth/forgot-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    // Regardless of success or not, we show the same message for security
     setSubmitted(true);
-  };
+  } catch (error) {
+    setSubmitted(true); // still mark submitted to avoid email guessing
+  }
+};
 
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
