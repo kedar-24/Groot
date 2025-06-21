@@ -1,4 +1,5 @@
-// Ensure you have nanoid installed
+// lib/authOptions.ts
+
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { User } from "@/models/User";
@@ -24,7 +25,6 @@ export const authOptions: NextAuthOptions = {
         const user = await User.findOne({ email: credentials?.email });
 
         if (!user) throw new Error("invalid credentials");
-
         if (!user.providers.includes("credentials")) {
           throw new Error("Please use Google login");
         }
@@ -50,31 +50,25 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account }) {
       await connectDB();
-
       const existingUser = await User.findOne({ email: user.email });
 
-     if (account?.provider === "google") {
-  if (existingUser) {
-    // Add 'google' to providers array (if not already linked)
-    if (!existingUser.providers.includes("google")) {
-      existingUser.providers = [...new Set([...existingUser.providers, "google"])] as ("credentials" | "google")[];
-      await existingUser.save();
-    }
-
-    // ✅ Link Google login to existing user — don't create or overwrite anything
-    return true;
-  } else {
-    // New Google signup → create user
-    await User.create({
-      email: user.email,
-      username: user.name || "google_user",  // only set once
-      image: user.image || "",               // only set once
-      userId: nanoid(10),
-      providers: ["google"],
-    });
-  }
-}
-
+      if (account?.provider === "google") {
+        if (existingUser) {
+          if (!existingUser.providers.includes("google")) {
+            existingUser.providers = [...new Set([...existingUser.providers, "google"])] as ("credentials" | "google")[];
+            await existingUser.save();
+          }
+          return true;
+        } else {
+          await User.create({
+            email: user.email,
+            username: user.name || "google_user",
+            image: user.image || "",
+            userId: nanoid(10),
+            providers: ["google"],
+          });
+        }
+      }
 
       return true;
     },
@@ -88,10 +82,27 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      if (token?.id) {
-        (session.user as any).id = token.id;
-        (session.user as any).userId = token.userId;
+      if (!session.user?.email) return session;
+
+      await connectDB();
+      const user = await User.findOne({ email: session.user.email });
+
+      if (user) {
+        session.user.id = user._id.toString();
+        session.user.userId = user.userId;
+        session.user.jobRole = user.jobRole || "";
+        session.user.businessDetails = user.businessDetails || "";
+        session.user.workingCity = user.workingCity || "";
+        session.user.workingState = user.workingState || "";
+        session.user.fieldsOfExpertise = user.fieldsOfExpertise || [];
+        session.user.graduationYear = user.graduationYear || "";
+        session.user.degree = user.degree || "";
+        session.user.linkedin = user.linkedin || "";
+        session.user.image = user.image || "";
+        session.user.name = user.username || "";
+        session.user.providers = user.providers || [];
       }
+
       return session;
     },
   },

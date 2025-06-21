@@ -9,8 +9,7 @@ import UniversalDropdown from "./UniversalDropdown";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import DesktopNavLinks from "./DesktopNavLinks";
 import MobileNavIcons from "./MobileNavIcons";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -110,8 +109,11 @@ const Navbar = () => {
   };
 
   // DRY: Account dropdown menu options (use user only here)
-  const accountMenuOptions = getAccountMenuOptions(user, () =>
-    setIsAccountDropdownOpen(false)
+  const accountMenuOptions = getAccountMenuOptions(
+    user
+      ? { name: user.name ?? undefined }
+      : null,
+    () => setIsAccountDropdownOpen(false)
   );
 
   // Account dropdown for desktop and mobile
@@ -153,7 +155,7 @@ const Navbar = () => {
         isOpen={isAccountDropdownOpen}
         onOpen={handleAccountDropdownOpen}
         onClose={handleAccountDropdownClose}
-        align="right"
+       
       />
     );
   } else if (status === "unauthenticated") {
@@ -208,7 +210,15 @@ const Navbar = () => {
             accountDropdown={accountDropdown}
           />
           <MobileNavIcons
-            user={user}
+            user={
+              user
+                ? {
+                    id: user.id,
+                    name: user.name ?? undefined,
+                    email: user.email ?? undefined,
+                  }
+                : null
+            }
             accountDropdown={accountDropdown}
             isOpen={isOpen}
             setIsOpen={setIsOpen}

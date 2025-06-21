@@ -1,3 +1,4 @@
+//User.ts
 import mongoose, { Schema, Document, Model, Types } from "mongoose";
 
 export interface IUser extends Document {
