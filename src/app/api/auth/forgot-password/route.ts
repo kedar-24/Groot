@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         { expiresIn: "15m" }
       );
 
-      const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/reset-password?token=${token}`;
+      const resetLink = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${token}`;
       await sendResetPasswordEmail(email, token);
     }
 
