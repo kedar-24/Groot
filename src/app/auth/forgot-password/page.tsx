@@ -12,10 +12,12 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true); // Disable button immediately
 
     try {
       const res = await fetch("/api/auth/forgot-password", {
@@ -38,6 +40,7 @@ export default function ForgotPasswordPage() {
       setError("Something went wrong. Please try again.");
       setSubmitted(false);
     }
+    setLoading(false); // Re-enable if needed
   };
 
   return (
@@ -81,8 +84,9 @@ export default function ForgotPasswordPage() {
               type="submit"
               variant="primary"
               className="w-full hover:bg-green-200 text-green-700"
+              disabled={loading || submitted}
             >
-              Send Reset Link
+              {loading ? "Sending..." : "Send Reset Link"}
             </Button>
           </form>
         )}

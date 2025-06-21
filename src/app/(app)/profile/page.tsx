@@ -114,12 +114,41 @@ export default function ProfilePage() {
   };
 
   // Handler for image upload (you can implement actual upload logic later)
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const url = URL.createObjectURL(file);
       setForm((prev) => ({ ...prev, image: url }));
-      // You should upload the file to your server/cloud and save the URL in DB on save
+
+      // --- Autosave after image is selected ---
+      // If you want to upload the file to your server/cloud, do it here and get the real URL
+      // For now, just call handleSave after updating the image in state
+      setLoading(true);
+      setMsg("");
+      // Prepare the updated form data
+      const updatedForm = {
+        ...form,
+        image: url,
+        fieldsOfExpertise: form.fieldsOfExpertise
+          .split(",")
+          .map((f) => f.trim())
+          .filter(Boolean),
+      };
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(updatedForm),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (res.ok) {
+        setMsg("Profile picture updated!");
+        // Optionally refresh session/profile
+        update();
+      } else {
+        setMsg(data.error || "Update failed.");
+      }
     }
   };
 
@@ -146,26 +175,24 @@ export default function ProfilePage() {
           </div>
         )}
         {/* Edit Profile Image Button */}
-        {editMode && (
-          <label className="absolute top-2 right-2 bg-white rounded-full shadow p-1 cursor-pointer border border-gray-300 hover:bg-gray-100 transition">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageChange}
-            />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-700"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2a2.828 2.828 0 11-4-4 2.828 2.828 0 014 4z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7v6a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2z" />
-            </svg>
-          </label>
-        )}
+        <label className="absolute top-2 right-2 bg-white rounded-full shadow p-1 cursor-pointer border border-gray-300 hover:bg-gray-100 transition">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 text-gray-700"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2a2.828 2.828 0 11-4-4 2.828 2.828 0 014 4z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7v6a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2z" />
+          </svg>
+        </label>
       </div>
       {msg && <p className="mb-2 text-green-600">{msg}</p>}
       <form onSubmit={handleSave} className="space-y-3">
