@@ -4,6 +4,7 @@ import type { NextConfig } from "next";
 const nextConfig = {
   images: {
     domains: [
+       "encrypted-tbn0.gstatic.com", 
       "www.livemint.com",
       "techcrunch.com",
       "d32r1sh890xpii.cloudfront.net",
@@ -22,6 +23,7 @@ const nextConfig = {
       "lh3.googleusercontent.com", // <-- Added Google profile images domain
     ], // Add any other needed domains
   },
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;

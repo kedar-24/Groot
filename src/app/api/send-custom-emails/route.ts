@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         "sendEmail",
         {
           to: user.email,
-          subject: `Invitation for Event ${eventId}`,
+          subject: `Invitation for Event: ${event.title}`, // Use event title instead of id
           html: `<p>Hello ${user.username},</p><p>${message}</p>`,
         },
         {
