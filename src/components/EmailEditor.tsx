@@ -1,89 +1,94 @@
-// components/DragDropEmailEditor.tsx
-'use client';
-
+// components/EmailEditor.tsx
+import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import dynamic from 'next/dynamic';
-import { useRef, useState, useEffect } from 'react'; // Import useState and useEffect
 
-// Dynamically import because it's not SSR compatible
-const EmailEditor = dynamic(() => import('react-email-editor'), {
-  ssr: false,
-});
+const EmailEditor = dynamic(() => import('react-email-editor'), { ssr: false });
 
-// Extend the Window interface to include Cloudinary if you were inserting images from there
-// declare global {
-//   interface Window {
-//     cloudinary: any;
-//   }
-// }
+export interface MyEmailEditorHandle {
+  editor: any; // 'any' type for the Unlayer editor instance
+}
 
-type DragDropEmailEditorProps = {
-  onExport: (html: string) => void;
-  // You can add more props here if needed, e.g., to load an initial design
-  // initialDesign?: object;
-};
+const EmailEditorComponent = forwardRef<MyEmailEditorHandle, {}>((props, ref) => {
+  const unlayerEditorInstanceRef = useRef<any>(null);
+  const [editorLoaded, setEditorLoaded] = useState(false);
 
-export default function DragDropEmailEditor({ onExport }: DragDropEmailEditorProps) {
-  const emailEditorRef = useRef<any>(null);
-  const [editorLoaded, setEditorLoaded] = useState(false); // State to track if editor is loaded
+  useImperativeHandle(ref, () => {
+    // console.log('EmailEditorComponent: useImperativeHandle is running for parent ref.');
+    return {
+      get editor() {
+        const editorFromUnlayer = unlayerEditorInstanceRef.current?.editor;
+        // console.log(`EmailEditorComponent: Parent is requesting 'editor'. Unlayer instance found: ${!!editorFromUnlayer}`);
+        return editorFromUnlayer;
+      },
+    };
+  }, []);
 
-  // Callback when the editor's iframe and internal scripts are loaded
   const onLoad = () => {
-    console.log('Email editor loaded successfully!');
+    // console.log('EmailEditorComponent: onLoad fired (react-email-editor script loaded).');
     setEditorLoaded(true);
-    // You can load an initial design here if you passed it as a prop
-    // if (emailEditorRef.current?.editor && initialDesign) {
-    //   emailEditorRef.current.editor.loadDesign(initialDesign);
+    // console.log('EmailEditorComponent: unlayerEditorInstanceRef.current after onLoad:', unlayerEditorInstanceRef.current);
+    // if (unlayerEditorInstanceRef.current && unlayerEditorInstanceRef.current.editor) {
+    //   console.log('EmailEditorComponent: Unlayer editor instance is AVAILABLE after onLoad!');
+    // } else {
+    //   console.log('EmailEditorComponent: Unlayer editor instance is NOT YET AVAILABLE after onLoad. Waiting for onReady.');
     // }
   };
 
-  // Callback when the editor is ready for API calls
   const onReady = () => {
-    console.log('Email editor is ready for commands!');
-  };
-
-  const exportHtml = () => {
-    // Only try to export if the editor is loaded and the editor instance is available
-    if (emailEditorRef.current && emailEditorRef.current.editor && editorLoaded) {
-      emailEditorRef.current.editor.exportHtml((data: any) => {
-        const { html } = data;
-        onExport(html); // Send to parent component
-        console.log('Exported HTML for email:', html);
-      });
+    // console.log('EmailEditorComponent: onReady fired (Unlayer editor is fully initialized and ready for commands).');
+    if (unlayerEditorInstanceRef.current && unlayerEditorInstanceRef.current.editor) {
+      // console.log('EmailEditorComponent: Unlayer editor instance is FULLY READY after onReady!');
+      // unlayerEditorInstanceRef.current.editor.loadDesign({ /* your default design JSON */ });
     } else {
-      console.warn('Email editor not yet loaded or ready to export HTML.');
-      alert('Email editor is not ready. Please wait a moment.');
+      console.error('EmailEditorComponent: ERROR! Unlayer editor instance is STILL NOT AVAILABLE after onReady.');
     }
   };
 
-  return (
-    <div className="w-full flex flex-col items-start"> {/* Use flex-col for vertical stacking */}
-      <div className="flex justify-end w-full mb-4"> {/* Ensure button container takes full width */}
-        <button
-          onClick={exportHtml}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50"
-          disabled={!editorLoaded} // Disable button until editor is loaded
-        >
-          Export & Send
-        </button>
-      </div>
+  useEffect(() => {
+    // console.log('EmailEditorComponent: internal unlayerEditorInstanceRef.current updated:', unlayerEditorInstanceRef.current);
+    // if (unlayerEditorInstanceRef.current?.editor) {
+    //   console.log('EmailEditorComponent: Unlayer editor property detected on internal ref.');
+    // }
+  }, [unlayerEditorInstanceRef.current]);
 
-      {/* Container for the EmailEditor with explicit dimensions */}
-      <div className="w-full h-[600px] border border-gray-300 rounded-lg overflow-hidden relative min-w-0">
-        {typeof window !== 'undefined' && (
+  const renderEditor = typeof window !== 'undefined';
+
+  return (
+    // This div needs to correctly consume the height given by its parent in EmailPage.tsx
+    // The min-h-[600px] here acts as a fallback if the parent doesn't provide enough height.
+    <div className="w-full h-full flex flex-col items-center justify-center min-h-[600px] py-4">
+      {/* This inner div is where the react-email-editor iframe actually gets rendered */}
+      <div 
+        className="w-full h-full border border-gray-300 rounded-lg overflow-hidden relative bg-white"
+        style={{ flexGrow: 1, display: 'flex' }} // Important for flex item to grow
+      >
+        {renderEditor ? (
           <EmailEditor
-            ref={emailEditorRef}
-            // Apply styles directly to the EmailEditor component
-            style={{ width: '100%', height: '100%' }}
-            onLoad={onLoad} // Attach the onLoad handler
-            onReady={onReady} // Attach the onReady handler
+            ref={unlayerEditorInstanceRef}
+            onLoad={onLoad}
+            onReady={onReady}
+            style={{ width: '100%', height: '100%' }} // CRUCIAL: Makes the iframe fill its parent
+            options={{}}
           />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 bg-opacity-90 z-10 text-gray-700">
+            <p className="text-lg">Preparing editor for client-side...</p>
+          </div>
         )}
-        {!editorLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-80 z-10">
-            <p className="text-gray-600 text-lg animate-pulse">Loading email editor...</p>
+        {!editorLoaded && renderEditor && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 bg-opacity-90 z-10 text-gray-700">
+            <svg className="animate-spin h-8 w-8 text-emerald-600 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p className="text-lg">Loading email editor...</p>
+            <p className="text-sm mt-1 text-gray-500">This might take a moment.</p>
           </div>
         )}
       </div>
     </div>
   );
-}
+});
+
+EmailEditorComponent.displayName = 'EmailEditorComponent';
+export default EmailEditorComponent;

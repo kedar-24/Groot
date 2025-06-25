@@ -1,15 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/*/.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['var(--font-montserrat)', 'ui-sans-serif', 'system-ui'],
+        montserrat: ['var(--font-montserrat)', 'ui-sans-serif', 'system-ui'],
       },
-      
     },
   },
   extend: {
@@ -29,5 +28,9 @@ module.exports = {
     },
   },
 },
-  plugins: [],
+  plugins: [
+    taosPlugin
+  ],
 };
+
+import taosPlugin from 'taos/plugin';

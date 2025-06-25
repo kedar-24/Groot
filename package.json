@@ -29,6 +29,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "bcrypt": "6.0.0",
     "bcryptjs": "^3.0.2",
+    "browser-image-compression": "^2.0.2",
     "bullmq": "^5.55.0",
     "busboy": "^1.6.0",
     "cloudinary": "^2.7.0",

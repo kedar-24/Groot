@@ -1,42 +1,32 @@
+/* Tailwind and Palette Imports */
 @import "tailwindcss";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
-.body {
+/* Base Body Styles */
+body {
   @apply font-sans bg-white text-black;
 }
 
-/* ...existing code... */
-
-/* Remove .input-base, .btn, .btn-primary, .btn-secondary, .btn-red, .btn-imglogo, .nav-link, .navbar-dropdown, .navbar-dropdown-link, .gallery-modal-btn, .gallery-modal-btn--close, .gallery-modal-btn--nav as all button, input, nav, and modal styles are now handled inline with Tailwind utility classes in components. */
-
+/* Card Styles */
 .card {
   @apply bg-white shadow overflow-hidden transition-all flex flex-col h-full;
 }
 
+/* Section Title Utility */
 .section-title {
-  @apply text-3xl sm:text-4xl font-extrabold tracking-tight mb-6 sm:mb-8 border-b-4 border-red-600 inline-block pb-2 sm:pb-3;
+  @apply text-3xl sm:text-4xl font-extrabold tracking-tight mb-6 sm:mb-8 border-b-4 border-[var(--color-primary)] inline-block pb-2 sm:pb-3;
 }
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Headings */
+h1, h2, h3 {
+  @apply font-bold;
 }
 
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Animation Utility */
 @keyframes fade-in-up {
   0% {
     opacity: 0;
@@ -47,13 +37,117 @@
     transform: translateY(0) scale(1);
   }
 }
-
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out;
 }
 
-h1, h2, h3 {
-  @apply font-bold;
+/* Color Palette: Easy Customization */
+:root {
+  /* Backgrounds & Foregrounds */
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Font Families */
+  --font-sans: var(--font-geist-sans, 'Inter', Arial, sans-serif);
+  --font-mono: var(--font-geist-mono, 'Fira Mono', monospace);
+
+  /* Neutrals */
+  --color-black: #010101;
+  --color-white: #fdfdfd;
+  --color-silver-chalice: #afafaf;
+
+
+  /* Project Roles (for easy theme switching) */
+  --color-primary: #003e29;
+  --color-primary-light: #bcf8c4;
+  --color-primary-dark: #0F1C08;
+  --color-secondary: #c19a6b;
+  --color-secondary-light: #f8ede0;
+  --color-secondary-dark: #8c673a;
 }
 
-/* Consistent heading styles */
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+  }
+}
+
+/* Utility: Consistent Heading Styles */
+/* (already handled above with h1, h2, h3) */
+
+/* Slide from left */
+@keyframes appear-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide from right */
+@keyframes appear-right {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide from bottom */
+@keyframes appear-up {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in only */
+@keyframes appear-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Utility classes for variants */
+.scroll-appear-left {
+  animation: appear-left linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+.scroll-appear-right {
+  animation: appear-right linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+.scroll-appear-up {
+  animation: appear-up linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}
+
+.scroll-appear-fade {
+  animation: appear-fade linear;
+  animation-timeline: view();
+  animation-range: entry 0% cover 30%;
+}

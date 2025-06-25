@@ -4,47 +4,68 @@ import { Event } from "@/models/Event"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 
-interface Params {
-  params: { id: string };
-}
-
-export async function GET(req: NextRequest, { params }: Params) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    await  connectDB();
-    const event = await Event.findById(params.id);
-    if (!event) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json(event);
+    await connectDB();
+
+    const url = new URL(req.url);
+    const includeParticipants = url.searchParams.get("includeParticipants") === "true";
+
+    // --- THE MORE EXPLICIT FIX ---
+    const resolvedParams = await params; // Explicitly await params
+    const { id } = resolvedParams;      // Destructure 'id' from the awaited object
+    // -----------------------------
+
+    const eventQuery = Event.findById(id);
+    if (includeParticipants) {
+      eventQuery.populate('participants');
+    }
+
+    const event = await eventQuery;
+
+    if (!event) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ event });
   } catch (err) {
-    return NextResponse.json({ error: "Failed" }, { status: 500 });
+    console.error('Error fetching event by ID:', err);
+    return NextResponse.json({ error: "Failed to fetch event" }, { status: 500 });
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: Params) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    await  connectDB();
+    await connectDB();
     const body = await req.json();
 
-    const event = await Event.findById(params.id);
+    // --- THE MORE EXPLICIT FIX ---
+    const resolvedParams = await params; // Explicitly await params
+    const { id } = resolvedParams;      // Destructure 'id' from the awaited object
+    // -----------------------------
+
+    const event = await Event.findById(id);
     if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
-    // Optional: Only creator can update
     if (event.createdBy.toString() !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(params.id, body, { new: true });
+    const updatedEvent = await Event.findByIdAndUpdate(id, body, { new: true });
     return NextResponse.json(updatedEvent);
   } catch (err) {
+    console.error('Error updating event:', err);
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Params) {
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
