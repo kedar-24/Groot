@@ -10,12 +10,10 @@
 
 /* Base Body Styles */
 body {
-/* Base Body Styles */
-body {
   @apply font-sans bg-white text-black;
 }
 
-/* Card Styles */
+
 /* Card Styles */
 .card {
   @apply bg-white shadow overflow-hidden transition-all flex flex-col h-full;
@@ -24,7 +22,6 @@ body {
 /* Section Title Utility */
 /* Section Title Utility */
 .section-title {
-  @apply text-3xl sm:text-4xl font-extrabold tracking-tight mb-6 sm:mb-8 border-b-4 border-[var(--color-primary)] inline-block pb-2 sm:pb-3;
   @apply text-3xl sm:text-4xl font-extrabold tracking-tight mb-6 sm:mb-8 border-b-4 border-[var(--color-primary)] inline-block pb-2 sm:pb-3;
 }
 

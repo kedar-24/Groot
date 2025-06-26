@@ -1,27 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Users, Calendar, MapPin, X, Loader, Info } from "lucide-react";
+import Button from "@/components/button";
 
-const PARTICIPANTS_PER_PAGE = 6;
-
-type User = {
+// --- TYPES ---
+interface Participant {
   _id: string;
   username: string;
   email: string;
   image?: string;
-  degree?: string;
   jobRole?: string;
-};
+}
 
-type Event = {
+interface Event {
   _id: string;
   title: string;
   date: string;
   location: string;
-  participants: User[];
-};
+  participants: Participant[];
+}
 
+const PARTICIPANTS_PER_PAGE = 5;
+
+// --- MAIN COMPONENT ---
 export default function EventDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,154 +45,200 @@ export default function EventDashboard() {
         setLoading(false);
       }
     }
-
     fetchEvents();
   }, []);
 
   const toggleEvent = (eventId: string) => {
     setExpandedEventId((prev) => (prev === eventId ? null : eventId));
-    setCurrentPage(1);
+    setCurrentPage(1); // Reset page on toggle
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-600 text-lg">
-        Loading events...
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-[var(--color-primary)]">
+        <Loader className="w-12 h-12 animate-spin mb-4" />
+        <p className="text-xl font-semibold">Loading Event Data...</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-green-800 mb-8">
-        🎉 Event Registrations
-      </h1>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {events.map((event) => {
-          const totalPages = Math.ceil(
-            event.participants.length / PARTICIPANTS_PER_PAGE
-          );
-          const paginatedParticipants = event.participants.slice(
-            (currentPage - 1) * PARTICIPANTS_PER_PAGE,
-            currentPage * PARTICIPANTS_PER_PAGE
-          );
+    <div className="bg-gray-50 min-h-screen font-sans">
+      <header className="bg-[var(--color-primary)] text-white text-center py-16 shadow-lg">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--color-primary-light)]">
+          Event Dashboard
+        </h1>
+        <p className="text-lg mt-2 text-[var(--color-primary-light)]/80 max-w-2xl mx-auto">
+          Manage and view participant registrations for all your events.
+        </p>
+      </header>
 
-          return (
-            <div
-              key={event._id}
-              className="border border-gray-200 rounded-xl p-6 bg-white shadow-md flex flex-col"
-            >
-              {expandedEventId === event._id ? (
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                  >
-                    <div className="flex justify-between items-center mb-4">
-                      <h2 className="text-xl font-bold text-green-700">
-                        👥 Participants for "{event.title}"
-                      </h2>
-                      <button
-                        onClick={() => toggleEvent(event._id)}
-                        className="text-sm text-red-600 font-medium hover:underline"
+      <main className="max-w-7xl mx-auto p-6 sm:p-8">
+        {events.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {events.map((event) => {
+              const totalPages = Math.ceil(
+                event.participants.length / PARTICIPANTS_PER_PAGE
+              );
+              const paginatedParticipants = event.participants.slice(
+                (currentPage - 1) * PARTICIPANTS_PER_PAGE,
+                currentPage * PARTICIPANTS_PER_PAGE
+              );
+              const isExpanded = expandedEventId === event._id;
+
+              return (
+                <div
+                  key={event._id}
+                  className="bg-white rounded-xl shadow-md flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                >
+                  <AnimatePresence initial={false}>
+                    {isExpanded ? (
+                      <motion.div
+                        key="content"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 flex flex-col flex-grow"
                       >
-                        ✖ Close
-                      </button>
-                    </div>
+                        <div className="flex justify-between items-start mb-4">
+                          <h2 className="text-xl font-bold text-[var(--color-primary-dark)] pr-4">
+                            Participants for "{event.title}"
+                          </h2>
+                          <button
+                            onClick={() => toggleEvent(event._id)}
+                            className="p-1 rounded-full text-gray-500 hover:bg-red-100 hover:text-red-600 transition-colors"
+                          >
+                            <X size={20} />
+                          </button>
+                        </div>
 
-                    {event.participants.length === 0 ? (
-                      <p className="text-gray-400 italic">
-                        No one registered yet.
-                      </p>
-                    ) : (
-                      <>
-                        <ul className="grid grid-cols-1 gap-4 mb-4">
-                          {paginatedParticipants.map((user) => (
-                            <li
-                              key={user._id}
-                              className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border border-gray-100 hover:bg-gray-100"
-                            >
-                              <img
-                                src={
-                                  user.image?.startsWith("http")
-                                    ? user.image
-                                    : `/uploads/${user.image}`
-                                }
-                                alt={user.username}
-                                width={48}
-                                height={48}
-                                className="w-12 h-12 rounded-full object-cover border border-green-300"
-                              />
-                              <div>
-                                <div className="font-semibold text-gray-800">
-                                  {user.username}
-                                </div>
-                                <div className="text-sm text-gray-500">
-                                  {user.email}
-                                </div>
-                                {user.jobRole && (
-                                  <div className="text-sm text-gray-400">
-                                    • {user.jobRole}
-                                  </div>
-                                )}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                        {totalPages > 1 && (
-                          <div className="flex justify-center gap-2">
-                            {Array.from({ length: totalPages }, (_, i) => (
-                              <button
-                                key={i + 1}
-                                onClick={() => setCurrentPage(i + 1)}
-                                className={`px-3 py-1 rounded-full border text-sm ${
-                                  currentPage === i + 1
-                                    ? "bg-green-700 text-white"
-                                    : "bg-white text-green-700 border-green-300 hover:bg-green-100"
-                                }`}
-                              >
-                                {i + 1}
-                              </button>
-                            ))}
+                        {event.participants.length === 0 ? (
+                          <div className="flex-grow flex items-center justify-center text-center bg-gray-50 rounded-lg p-8">
+                            <p className="text-gray-500 italic">
+                              No one has registered for this event yet.
+                            </p>
                           </div>
+                        ) : (
+                          <>
+                            <ul className="space-y-3 mb-4">
+                              {paginatedParticipants.map((user) => (
+                                <li
+                                  key={user._id}
+                                  className="flex items-center gap-4 p-3 rounded-lg bg-gray-50 border border-gray-200"
+                                >
+                                  <img
+                                    src={
+                                      user.image ||
+                                      `https://ui-avatars.com/api/?name=${user.username}&background=random`
+                                    }
+                                    alt={user.username}
+                                    className="w-10 h-10 rounded-full object-cover"
+                                  />
+                                  <div>
+                                    <p className="font-semibold text-gray-800">
+                                      {user.username}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                      {user.email}
+                                    </p>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                            {totalPages > 1 && (
+                              <div className="flex justify-center items-center gap-2 mt-auto pt-4">
+                                {Array.from({ length: totalPages }, (_, i) => (
+                                  <Button
+                                    key={i + 1}
+                                    variant={
+                                      currentPage === i + 1
+                                        ? "solid"
+                                        : "outline"
+                                    }
+                                    onClick={() => setCurrentPage(i + 1)}
+                                    className="!px-3 !py-1 !text-sm"
+                                  >
+                                    {i + 1}
+                                  </Button>
+                                ))}
+                              </div>
+                            )}
+                          </>
                         )}
-                      </>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="summary"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="p-6 flex flex-col flex-grow"
+                      >
+                        <h2 className="text-2xl font-bold text-[var(--color-primary-dark)] mb-3">
+                          {event.title}
+                        </h2>
+                        <div className="space-y-2 text-gray-600 mb-4">
+                          <p className="flex items-center gap-2 text-sm">
+                            <Calendar
+                              size={16}
+                              className="text-[var(--color-primary)]"
+                            />
+                            {new Date(event.date).toLocaleDateString("en-IN", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </p>
+                          <p className="flex items-center gap-2 text-sm">
+                            <MapPin
+                              size={16}
+                              className="text-[var(--color-primary)]"
+                            />
+                            {event.location}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-700 bg-gray-100 rounded-full px-3 py-1 w-fit mb-6">
+                          <Users size={16} className="text-gray-500" />
+                          <span className="font-semibold">
+                            {event.participants.length}
+                          </span>
+                          <span>Registered</span>
+                        </div>
+                        <div className="mt-auto">
+                          <Button
+                            variant="outline"
+                            onClick={() => toggleEvent(event._id)}
+                            className="w-full"
+                          >
+                            View Participants
+                          </Button>
+                        </div>
+                      </motion.div>
                     )}
-                  </motion.div>
-                </AnimatePresence>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-2xl font-semibold text-gray-800">
-                      {event.title}
-                    </h2>
-                    <span className="text-sm text-gray-500 italic">
-                      {new Date(event.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-2">
-                    📍 {event.location}
-                  </p>
-                  <p className="text-sm text-gray-500 mb-4">
-                    🧑‍🤝‍🧑{" "}
-                    <span className="font-semibold text-green-700">
-                      {event.participants.length}
-                    </span>{" "}
-                    participant{event.participants.length !== 1 ? "s" : ""}
-                  </p>
-                  <button
-                    onClick={() => toggleEvent(event._id)}
-                    className="text-sm text-green-700 font-semibold hover:underline"
-                  >
-                    View Participants →
-                  </button>
-                </>
-              )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <div className="bg-white p-8 rounded-xl shadow-md border border-gray-200 max-w-lg mx-auto">
+              <Info
+                size={48}
+                className="text-[var(--color-secondary)] mx-auto mb-4"
+              />
+              <h2 className="text-2xl font-bold text-gray-800">
+                No Events Found
+              </h2>
+              <p className="text-gray-500 mt-2">
+                There are currently no events with participant data to display.
+              </p>
             </div>
-          );
-        })}
-      </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

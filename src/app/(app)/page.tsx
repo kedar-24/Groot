@@ -94,7 +94,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Navbar variant="glass" />
+      {/* <Navbar variant="glass" /> */}
       <main
         className={`flex flex-col min-h-screen bg-[${UI.colors.background}] text-black relative`}
       >

@@ -1,57 +1,90 @@
 import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
-import { IoHome } from "react-icons/io5";
+import Link from "next/link";
 
-type ButtonProps = {
-  variant?: "solid" | "outline" | "icon" | "secondary" | "home";
-  as?: "button" | "a";
+// --- STYLES (using CVA) ---
+const buttonVariants = cva(
+  // Base styles applied to all variants
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-semibold ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        primary:
+          "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]",
+        secondary:
+          "bg-[var(--color-secondary)] text-white hover:bg-[var(--color-secondary-dark)]",
+        outline:
+          "border border-gray-300 bg-transparent hover:bg-gray-100 hover:text-gray-900",
+        ghost: "hover:bg-gray-100 hover:text-gray-900",
+        link: "text-[var(--color-primary)] underline-offset-4 hover:underline",
+      },
+      size: {
+        sm: "h-9 rounded-md px-3",
+        md: "h-10 px-4 py-2",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "md",
+    },
+  }
+);
+
+// --- PROPS ---
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asLink?: boolean;
   href?: string;
-  children?: React.ReactNode;
-  className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement> &
-  React.AnchorHTMLAttributes<HTMLAnchorElement>;
-
-export default function Button({
-  variant = "solid",
-  as,
-  href,
-  className = "",
-  children,
-  ...props
-}: ButtonProps) {
-  const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
-    solid:
-      "inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus:outline-none px-3 py-2 text-base bg-[var(--color-primary-light)] text-white hover:bg-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary-lighter)]",
-    outline:
-      "inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus:outline-none px-3 py-2 text-base bg-white text-[var(--color-primary-light)] border border-[var(--color-primary-lighter)] hover:bg-[var(--color-primary-lightest)] hover:text-black focus:ring-2 focus:ring-[var(--color-primary-lightest)]",
-    icon: "w-12 h-12 flex items-center justify-center bg-white border border-gray-300 shadow-sm hover:shadow-lg hover:bg-[var(--color-primary-lightest)] hover:scale-110 hover:border-[var(--color-primary-lighter)] transition-all duration-300 mx-1 rounded-full",
-    secondary:
-      "inline-block bg-[var(--color-secondary-light)] text-white px-10 py-4 rounded-xl font-bold text-lg shadow-xl hover:scale-105 active:scale-100 focus-visible:ring-4 focus-visible:ring-[var(--color-secondary-light)]/40 transition-all duration-200 border-none",
-    home: "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 hover:bg-white border border-[var(--color-primary-light)]/30 shadow-lg hover:shadow-xl font-montserrat font-bold text-base text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-all duration-200 backdrop-blur-sm hover:scale-105 active:scale-95",
-  };
-
-  const Element: React.ElementType = as || (href ? "a" : "button");
-
-  const commonClass = clsx(variantClasses[variant], className);
-
-  // Default content for home variant
-  const getHomeContent = () => (
-    <>
-      <IoHome
-        size={18}
-        className="transition-transform group-hover:scale-110"
-      />
-      <span>Home</span>
-    </>
-  );
-
-  return (
-    <Element
-      className={commonClass}
-      href={Element === "a" ? href || "/" : undefined}
-      {...props}
-    >
-      {variant === "home" && !children ? getHomeContent() : children}
-    </Element>
-  );
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
 }
+
+// --- COMPONENT ---
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      asLink = false,
+      href,
+      children,
+      leftIcon,
+      rightIcon,
+      ...props
+    },
+    ref
+  ) => {
+    const content = (
+      <>
+        {leftIcon && <span className="mr-2 h-4 w-4">{leftIcon}</span>}
+        {children}
+        {rightIcon && <span className="ml-2 h-4 w-4">{rightIcon}</span>}
+      </>
+    );
+
+    const buttonClasses = clsx(buttonVariants({ variant, size, className }));
+
+    if (asLink && href) {
+      return (
+        <Link href={href} className={buttonClasses} {...props}>
+          {content}
+        </Link>
+      );
+    }
+
+    return (
+      <button className={buttonClasses} ref={ref} {...props}>
+        {content}
+      </button>
+    );
+  }
+);
+
+Button.displayName = "Button";
+
+export default Button;
