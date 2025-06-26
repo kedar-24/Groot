@@ -1,0 +1,35 @@
+/* Brand Color Palette */
+
+
+/* Example usage:
+   background-color: var(--color-amazon);
+   color: var(--color-carnation);
+*/
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+.btn-primary:hover, .btn-primary:focus {
+  background: var(--color-primary-dark);
+}
+
+.btn-secondary {
+  background: var(--color-white);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+.btn-secondary:hover, .btn-secondary:focus {
+  background: var(--color-muted);
+  color: var(--color-primary-dark);
+}
+
+.btn-glass-green {
+  background: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  color: var(--color-primary);
+  border: 1px solid color-mix(in srgb, var(--color-primary-dark) 20%, transparent);
+  backdrop-filter: blur(8px);
+}
+.btn-glass-green:hover, .btn-glass-green:focus {
+  background: color-mix(in srgb, var(--color-primary) 40%, transparent);
+}

@@ -1,234 +1,250 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { RiArrowDropDownLine, RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "./button";
-import MobileNavbar from "./MobileNavbar";
-import { getAccountMenuOptions } from "./AccountMenu";
-import UniversalDropdown from "./UniversalDropdown";
+import { signOut } from "next-auth/react";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import DesktopNavLinks from "./DesktopNavLinks";
-import MobileNavIcons from "./MobileNavIcons";
+import { motion, AnimatePresence } from "framer-motion";
+import { usePathname } from "next/navigation";
 
+export type NavbarVariant = "default" | "glass";
 
-const NAV_LINKS = [
+// Define your link sets
+const LANDING_LINKS = [
   { href: "/", label: "Home" },
   { href: "/achievers", label: "Achievers" },
-  { href: "/events", label: "Events" }, // <-- Added Events here
+  { href: "/events", label: "Events" },
   { href: "/gallery", label: "Gallery" },
   { href: "/groups", label: "Groups" },
 ];
-
-const CDS_DROPDOWN = [
-  { href: "/cds/mihu", label: "MIHU" },
-  { href: "/cds/recruitment", label: "Recruitment" },
+const HOME_LINKS = [
+  { href: "/home", label: "Feed" },
+  { href: "/events", label: "Events" },
+  { href: "/groups", label: "Groups" },
+  { href: "/gallery", label: "Gallery" },
 ];
 
-const NewsTicker = () => {
-  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
-  const newsItems = [
-    "Job market NEWS",
-    "Latest tech updates",
-    "Local event highlights",
-    "Upcoming educational workshops",
-  ];
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, [newsItems.length]);
-  return (
-    <div className="w-full flex items-center py-2 justify-between px-4 bg-[#182618]">
-      <span className="inline-flex items-center justify-center rounded-lg font-semibold transition-colors duration-200 focus:outline-none px-3 py-2 text-base bg-green-700 text-white hover:bg-green-800 focus:ring-2 focus:ring-green-400">
-        Highlights:
-      </span>
-      <div className="text-xl font-semibold text-gray-100 max-w-xs overflow-hidden">
-        <p className="whitespace-nowrap">{newsItems[currentNewsIndex]}</p>
-      </div>
-      <Button
-        variant="primary"
-        onClick={() =>
-          setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
-        }
-      >
-        Next
-      </Button>
-    </div>
-  );
-};
-
-const Navbar = () => {
+const Navbar = ({ variant = "default" }: { variant?: NavbarVariant }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const dropdownTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollY = useRef(0);
+  const menuRef = useRef<HTMLDivElement>(null);
   const { data: user, status } = useCurrentUser();
+  const pathname = usePathname();
+
+  // Choose links based on route
+  const NAV_LINKS =
+    pathname === "/"
+      ? LANDING_LINKS
+      : pathname.startsWith("/home")
+      ? HOME_LINKS
+      : LANDING_LINKS;
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY <= 0) {
-        setShowNavbar(true);
-      } else if (currentScrollY > lastScrollY) {
+      // Hide navbar only when scrolling down and past a certain point
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setShowNavbar(false);
       } else {
         setShowNavbar(true);
       }
-      setLastScrollY(currentScrollY);
+      // Update the last scroll position
+      lastScrollY.current = currentScrollY;
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []); // Empty dependency array for performance
 
-  const handleDropdownOpen = () => {
-    if (dropdownTimer.current) clearTimeout(dropdownTimer.current);
-    setIsDropdownOpen(true);
+  useEffect(() => {
+    if (!showMenu) return;
+    const handler = (e: MouseEvent) =>
+      menuRef.current &&
+      !menuRef.current.contains(e.target as Node) &&
+      setShowMenu(false);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showMenu]);
+
+  const logout = () => {
+    setIsOpen(false);
+    signOut({ callbackUrl: "/" });
   };
 
-  const handleDropdownClose = () => {
-    dropdownTimer.current = setTimeout(() => {
-      setIsDropdownOpen(false);
-    }, 200);
+  const navVariants = {
+    hidden: { y: "-120%", opacity: 0 },
+    visible: { y: 0, opacity: 1 },
+    exit: { y: "-120%", opacity: 0 },
   };
 
-  // Account dropdown handlers
-  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
-  const accountDropdownTimer = useRef<NodeJS.Timeout | null>(null);
-
-  const handleAccountDropdownOpen = () => {
-    if (accountDropdownTimer.current)
-      clearTimeout(accountDropdownTimer.current);
-    setIsAccountDropdownOpen(true);
-  };
-  const handleAccountDropdownClose = () => {
-    accountDropdownTimer.current = setTimeout(() => {
-      setIsAccountDropdownOpen(false);
-    }, 200);
-  };
-
-  // DRY: Account dropdown menu options (use user only here)
-  const accountMenuOptions = getAccountMenuOptions(
-    user
-      ? { name: user.name ?? undefined }
-      : null,
-    () => setIsAccountDropdownOpen(false)
-  );
-
-  // Account dropdown for desktop and mobile
-  let accountDropdown = null;
-  if (status === "loading") {
-    accountDropdown = null; // Or a skeleton/loading indicator if you want
-  } else if (status === "authenticated" && user) {
-    accountDropdown = (
-      <UniversalDropdown
-        label={
-          <span className="flex items-center ml-2 font-sans">
-            {user.image ? (
-              <Image
-                src={user.image}
-                alt={user.name || "Account"}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full object-cover mr-2 border border-green-200"
-                unoptimized={false}
-                priority
-              />
-            ) : (
-              <span className="w-10 h-10 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
-                <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
-                  <circle cx="12" cy="8" r="4" fill="#f5efe0" />
-                  <path
-                    d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
-                    stroke="#f5efe0"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>
-            )}
-            <span className="text-base">{user.name || "Account"}</span>
-          </span>
-        }
-        menuOptions={accountMenuOptions}
-        isOpen={isAccountDropdownOpen}
-        onOpen={handleAccountDropdownOpen}
-        onClose={handleAccountDropdownClose}
-       
-      />
-    );
-  } else if (status === "unauthenticated") {
-    accountDropdown = (
+  const AuthLinks = () => (
+    <>
       <Link
         href="/auth/login"
-        className="flex items-center ml-2 font-sans px-4 py-2"
+        className="text-sm font-semibold text-black hover:text-[var(--color-primary)] transition-colors"
       >
-        <span className="w-8 h-8 rounded-full bg-[#758c07] flex items-center justify-center mr-2">
-          <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
-            <circle cx="12" cy="8" r="4" fill="#f5efe0" />
-            <path
-              d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4"
-              stroke="#f5efe0"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </span>
-        <span className="text-base">Login</span>
+        Log in
       </Link>
-    );
-  }
+      <Link
+        href="/auth/signup"
+        className="rounded-full font-serif px-6 py-2 bg-[var(--color-primary)] text-white font-semibold text-sm hover:scale-105 transition-transform shadow-md"
+      >
+        Sign up
+      </Link>
+    </>
+  );
 
-  // Mobile menu links (excluding Login)
-  const mobileLinks = [...NAV_LINKS, { href: "/cds", label: "CDS" }];
+  const ProfileMenu = () => (
+    <div className="relative flex items-center gap-4" ref={menuRef}>
+      {user?.image ? (
+        <Image
+          src={user.image}
+          alt={user.name || "Profile"}
+          width={36}
+          height={36}
+          className="w-9 h-9 rounded-full object-cover border border-gray-200"
+        />
+      ) : (
+        <span className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-600 border border-gray-200">
+          {user?.name?.[0]?.toUpperCase() || "U"}
+        </span>
+      )}
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className="font-serif flex items-center rounded px-4 h-10 bg-[var(--color-primary)] text-[var(--color-secondary-light)] font-semibold text-sm shadow-md"
+      >
+        {user?.name || user?.email}
+        <RiArrowDropDownLine size={24} className="ml-1" />
+      </button>
+      <AnimatePresence>
+        {showMenu && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute right-0 top-full mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-100 py-2 z-50 font-semibold"
+          >
+            <Link
+              href="/profile"
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            >
+              Profile
+            </Link>
+            <button
+              onClick={logout}
+              className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+            >
+              Sign out
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 
   return (
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 bg-white shadow transition-transform duration-300 ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      }`}
-      style={{
-        willChange: "transform",
-      }}
-    >
-      <div>
-        {/* Main navbar content */}
-        <div className="px-4 py-3 flex justify-between items-center max-w-8xl mx-auto font-sans">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-green-800 hover:text-green-900 transition font-sans"
+    <div className="w-full flex justify-center pointer-events-none">
+      <AnimatePresence>
+        {showNavbar && (
+          <motion.nav
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            variants={navVariants}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className={`fixed left-1/2 -translate-x-1/2 z-50 w-[95vw] max-w-7xl h-20 sm:h-24 flex items-center justify-between px-4 sm:px-8 lg:px-12 rounded-b pointer-events-auto ${
+              variant === "glass"
+                ? "backdrop-blur-lg bg-[var(--color-secondary-light)]/80 border border-white/30 shadow-xl"
+                : "bg-[var(--color-secondary-light)] shadow-lg border-gray-100"
+            }`}
           >
-            G-ROOT
-          </Link>
-          <DesktopNavLinks
-            navLinks={NAV_LINKS}
-            cdsDropdown={CDS_DROPDOWN}
-            isDropdownOpen={isDropdownOpen}
-            onDropdownOpen={handleDropdownOpen}
-            onDropdownClose={handleDropdownClose}
-            accountDropdown={accountDropdown}
-          />
-          <MobileNavIcons
-            user={
-              user
-                ? {
-                    id: user.id,
-                    name: user.name ?? undefined,
-                    email: user.email ?? undefined,
-                  }
-                : null
-            }
-            accountDropdown={accountDropdown}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-          />
-        </div>
-      </div>
-      <NewsTicker />
-      <MobileNavbar isOpen={isOpen} mobileLinks={mobileLinks} />
-      {/* Login button - always visible */}
-    </nav>
+            <Link
+              href="/"
+              className="text-2xl sm:text-3xl font-extrabold font-serif text-black pointer-events-auto"
+            >
+              GROOT
+            </Link>
+
+            <div className="hidden md:flex items-center gap-6 lg:gap-12 flex-1 ml-8">
+              {NAV_LINKS.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="text-sm sm:text-base font-medium text-black hover:text-[var(--color-primary)] transition-colors"
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="hidden md:flex items-center gap-6 ml-auto">
+              {status !== "authenticated" ? (
+                <AuthLinks />
+              ) : (
+                user && <ProfileMenu />
+              )}
+            </div>
+
+            <div className="md:hidden flex items-center ml-auto">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-black hover:text-[var(--color-primary)]"
+              >
+                {isOpen ? <RiCloseLine size={28} /> : <RiMenu3Line size={28} />}
+              </button>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden fixed top-24 left-0 right-0 bg-white shadow-xl z-40 px-6 py-4 overflow-hidden"
+          >
+            <div className="space-y-4">
+              {NAV_LINKS.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setIsOpen(false)}
+                  className="block text-black font-medium text-lg hover:text-[var(--color-primary)]"
+                >
+                  {label}
+                </Link>
+              ))}
+              {status !== "authenticated" ? (
+                <div className="flex flex-col gap-3 mt-4">
+                  <AuthLinks />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3 mt-4">
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm font-semibold text-black hover:text-[var(--color-primary)]"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="text-sm font-semibold text-red-600 text-left"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 

@@ -27,7 +27,10 @@ export async function POST(req: NextRequest) {
     const requiredFields = ["title", "description", "date", "location"];
     for (const field of requiredFields) {
       if (!body[field] || String(body[field]).trim() === "") {
-        return NextResponse.json({ error: `${field} is required` }, { status: 400 });
+        return NextResponse.json(
+          { error: `${field} is required` },
+          { status: 400 }
+        );
       }
     }
 
@@ -37,10 +40,20 @@ export async function POST(req: NextRequest) {
       createdBy: user._id, // use proper ObjectId
     });
 
-    return NextResponse.json({ success: true, event: newEvent }, { status: 201 });
-  } catch (err: any) {
-    console.error("Error creating event:", err.message || err);
-    return NextResponse.json({ success: false, error: "Failed to create event" }, { status: 500 });
+    return NextResponse.json(
+      { success: true, event: newEvent },
+      { status: 201 }
+    );
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Error creating event:", err.message);
+    } else {
+      console.error("Error creating event:", err);
+    }
+    return NextResponse.json(
+      { success: false, error: "Failed to create event" },
+      { status: 500 }
+    );
   }
 }
 
@@ -49,7 +62,8 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB();
     const url = new URL(req.url);
-    const includeParticipants = url.searchParams.get("includeParticipants") === "true";
+    const includeParticipants =
+      url.searchParams.get("includeParticipants") === "true";
     let query = Event.find().sort({ date: -1 }); // Optional: include creator info
 
     if (includeParticipants) {
@@ -62,9 +76,15 @@ export async function GET(req: NextRequest) {
     const events = await query;
 
     return NextResponse.json({ success: true, events }, { status: 200 });
-  } catch (err: any) {
-    console.error("Error fetching events:", err.message || err);
-    return NextResponse.json({ success: false, error: "Failed to fetch events" }, { status: 500 });
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Error fetching events:", err.message);
+    } else {
+      console.error("Error fetching events:", err);
+    }
+    return NextResponse.json(
+      { success: false, error: "Failed to fetch events" },
+      { status: 500 }
+    );
   }
 }
-

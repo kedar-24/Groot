@@ -1,10 +1,25 @@
-import type { NextConfig } from "next";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     domains: [
-       "encrypted-tbn0.gstatic.com", 
+      "www.apple.com",
+      "companieslogo.com",
+      "www.google.com",
+      "www.microsoft.com",
+      "www.amazon.com",
+      "www.facebook.com",
+      "www.twitter.com",
+      "www.linkedin.com",
+      "www.instagram.com",
+      "www.youtube.com",
+      "img-prod-cms-rt-microsoft-com.akamaized.net",
+      "d1a3f4spazzrp4.cloudfront.net",
+      "www.tcs.com",
+      "www.wired.com",
+      "www.github.com",
+      "www.reddit.com",
+      "logo.clearbit.com",
+      "www.pinterest.com",
       "www.livemint.com",
       "techcrunch.com",
       "d32r1sh890xpii.cloudfront.net",
@@ -20,6 +35,7 @@ const nextConfig = {
       "150102931.v2.pressablecdn.com",
       "static1.xdaimages.com",
       "images.macrumors.com",
+      "logos-world.net",
       "lh3.googleusercontent.com", // <-- Added Google profile images domain
     ], // Add any other needed domains
   },

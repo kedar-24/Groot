@@ -1,158 +1,221 @@
-"use server";
-import HeroSection from "@/components/HeroSection";
-import Card from "@/components/Card";
-import type { Article } from "@/models/Article";
+"use client";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-  "http://localhost:3000";
+import Navbar from "@/components/Navbar";
+import Image from "next/image";
+import Button from "@/components/button";
+import FeatureSection from "@/components/FeatureSection";
+import HeroCardSection from "@/components/HeroCardSection";
+import SectionContainer from "@/components/SectionContainer";
+import HighlightSection from "@/components/HighlightSection";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { ArrowRight } from "lucide-react";
 
-async function getArticles(): Promise<Article[]> {
-  try {
-    const res = await fetch(`${baseUrl}/api/news`, {
-      next: { revalidate: 60 },
-    });
+// --- UI CONFIGURATION ---
+const UI = {
+  colors: {
+    background: "var(--color-background)",
+    primary: "var(--color-primary)",
+    primaryLight: "var(--color-primary-light)",
+    secondaryLight: "var(--color-secondary-light)",
+    black: "var(--color-black)",
+  },
+  fonts: {
+    heading: "font-extrabold font-serif",
+    body: "font-montserrat",
+  },
+  layout: {
+    sectionPadding: "py-32 px-4 sm:px-8 lg:px-16",
+  },
+};
 
-    if (!res.ok) return [];
+// --- ANIMATION VARIANTS ---
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+      staggerChildren: 0.2,
+    },
+  },
+};
 
-    const data = await res.json();
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" },
+  },
+};
+const patternVariants = {
+  hidden: { opacity: 0, scale: 1.1 },
+  visible: {
+    opacity: 0.4,
+    scale: 1,
+    transition: {
+      duration: 1.2,
+      ease: "easeOut",
+      delay: 0.4,
+    },
+  },
+};
+const CompanyLogo = ({ src, alt }: { src: string; alt: string }) => (
+  <motion.div
+    variants={itemVariants}
+    className="w-32 h-16 flex items-center justify-center"
+  >
+    <Image
+      src={src}
+      alt={alt}
+      width={120}
+      height={40}
+      className="object-contain opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+    />
+  </motion.div>
+);
 
-    if (Array.isArray(data)) {
-      return data.slice(0, 6).map((item) => {
-        const obj = item as Partial<Article> & { id?: string; image?: string };
-        return {
-          _id: obj._id || obj.id || "",
-          title: obj.title || "",
-          date: obj.date || "",
-          category: obj.category || "",
-          imageUrl: obj.imageUrl || obj.image || "",
-          content: obj.content || "",
-          url: obj.url || "#",
-        };
-      });
-    }
+// --- MAIN PAGE ---
+export default function HomePage() {
+  const heroCardRef = useRef(null);
+  const heroCardInView = useInView(heroCardRef, { once: true, amount: 0.2 });
 
-    return [];
-  } catch (error) {
-    console.error("Error fetching articles:", error);
-    return [];
-  }
-}
+  const trustedByRef = useRef(null);
+  const trustedByInView = useInView(trustedByRef, { once: true, amount: 0.1 });
 
-export default async function HomePage() {
-  const articles = await getArticles();
+  const featureRef = useRef(null);
+  const featureInView = useInView(featureRef, { once: true, amount: 0.0 });
+
+  const highlightRef = useRef(null);
+  const highlightInView = useInView(highlightRef, { once: true, amount: 0.1 });
 
   return (
-    <main className="flex flex-col bg-white text-gray-900 min-h-screen">
-      {/* Improved HeroSection: left hero + right stacked sections */}
-      <section className="flex flex-col md:flex-row items-stretch w-full h-[600px]">
-        {/* Left: Main Hero */}
-        <div className="flex-1 flex h-full">
-          <HeroSection />
-        </div>
-        {/* Right: Top and Bottom Sections */}
-        <div className="flex flex-col flex-1 h-full bg-green-800 p-0 m-0">
-          {/* Top: full width, half height */}
-          <section className="h-1/2 flex items-center justify-center p-0 m-0">
-            <div className="group relative w-full h-full flex items-center justify-center overflow-hidden shadow-lg bg-gray-900 rounded-none">
-              <div
-                className="absolute inset-0 w-full h-full bg-cover bg-center z-0 transition-transform duration-300 scale-105 group-hover:scale-110"
-                style={{
-                  backgroundImage:
-                    "url('https://images.unsplash.com/photo-1496449903678-68ddcb189a24?w=1200&auto=format&fit=crop&q=80&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tfGVufDB8fDB8fHww')",
-                }}
-              >
-                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
-              </div>
-              <span className="absolute bottom-4 left-4 text-white text-2xl font-extrabold drop-shadow-lg z-10 tracking-wide">
-                Inspiring Growth
-              </span>
-            </div>
-          </section>
-
-          {/* Bottom: two half-width sections */}
-          <div className="flex flex-row h-1/2 p-0 m-0">
-            <section className="w-1/2 h-full flex items-center justify-center p-0 m-0">
-              <div className="group relative w-full h-full flex items-center justify-center overflow-hidden shadow-lg bg-gray-900 rounded-none">
-                <div
-                  className="absolute inset-0 w-full h-full bg-cover bg-center z-0 transition-transform duration-300 scale-105 group-hover:scale-110"
-                  style={{
-                    backgroundImage: "url('/images/image1.webp')",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
-                </div>
-                <span className="absolute bottom-4 left-4 text-white text-xl font-bold drop-shadow z-10">
-                  Daily Insights
-                </span>
-              </div>
-            </section>
-            <section className="w-1/2 h-full flex items-center justify-center p-0 m-0">
-              <div className="group relative w-full h-full flex items-center justify-center overflow-hidden shadow-lg bg-gray-900 rounded-none">
-                <div
-                  className="absolute inset-0 w-full h-full bg-cover bg-center z-0 transition-transform duration-300 scale-105 group-hover:scale-110"
-                  style={{
-                    backgroundImage: "url('/images/image2.webp')",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors duration-300" />
-                </div>
-                <span className="absolute bottom-4 left-4 text-white text-xl font-bold drop-shadow z-10">
-                  Market Trends
-                </span>
-              </div>
-            </section>
-          </div>
-        </div>
-      </section>
-
-      {/* Latest News Section */}
-      <section
-        aria-labelledby="latest-news-heading"
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16"
+    <>
+      <Navbar variant="glass" />
+      <main
+        className={`flex flex-col min-h-screen bg-[${UI.colors.background}] text-black relative`}
       >
-        <h2
-          id="latest-news-heading"
-          className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-6 sm:mb-8 border-b-4 border-red-600 inline-block pb-2 sm:pb-3"
+        {/* HERO */}
+        <section
+          className={`relative w-full flex items-center ${UI.layout.sectionPadding} pt-40 pb-20 md:pt-64 md:pb-64`}
         >
-          Latest News
-        </h2>
+          {/* Animated Background Panels */}
+          <motion.div
+            className="absolute top-0 left-0 h-full w-2/3 bg-[var(--color-primary-light)]"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.9, ease: [0.6, 0.01, -0.05, 0.95] }}
+            style={{ transformOrigin: "left" }}
+          />
+          <motion.div
+            className="absolute top-0 right-0 h-full w-1/3 bg-[var(--color-secondary-light)]"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.9, ease: [0.6, 0.01, -0.05, 0.95] }}
+            style={{ transformOrigin: "right" }}
+          />
+          {/* Pattern Overlay */}
+          <motion.div
+            className="absolute inset-0 z-0"
+            initial="hidden"
+            animate="visible"
+            variants={patternVariants}
+            style={{
+              backgroundImage: "url('/images/BG.jpg')",
+              backgroundSize: "400px",
+              backgroundPosition: "center top",
+              backgroundRepeat: "repeat",
+              backgroundBlendMode: "multiply",
+            }}
+          />
+        </section>
 
-        {articles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 sm:py-20">
-            <p className="text-base sm:text-lg text-gray-500 font-semibold mb-2 sm:mb-4">
-              No news articles available at the moment.
-            </p>
-            <p className="text-xs sm:text-sm text-gray-400 max-w-xs sm:max-w-sm text-center">
-              Please check back later or refresh the page for the latest
-              updates.
-            </p>
-          </div>
-        ) : (
-          <ul
-            role="list"
-            className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3"
-          >
-            {articles.map((article) => (
-              <li
-                key={article._id}
-                className="transition duration-300 hover:scale-[1.03] focus-within:scale-[1.03] will-change-transform"
-              >
-                <Card
-                  variant="news"
-                  title={article.title}
-                  date={article.date}
-                  category={article.category}
-                  imageUrl={article.imageUrl}
-                  content={article.content}
-                  url={article.url}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </main>
+        {/* FLOATING CARDS GRID */}
+        <motion.div
+          ref={heroCardRef}
+          initial="hidden"
+          animate={heroCardInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+          className="relative z-10 w-full"
+        >
+          <HeroCardSection />
+        </motion.div>
+
+        {/* TRUSTED BY */}
+        <motion.section
+          ref={trustedByRef}
+          initial="hidden"
+          animate={trustedByInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+          className={`w-full pt-20 bg-white ${UI.layout.sectionPadding} text-center relative z-0`}
+        >
+          <SectionContainer>
+            <motion.h2
+              variants={itemVariants}
+              className="text-4xl font-extrabold text-gray-900 md:text-5xl"
+            >
+              Trusted by{" "}
+              <span className={`text-[${UI.colors.primary}] opacity-80`}>
+                10,000+ alumni
+              </span>{" "}
+              working at
+            </motion.h2>
+            <motion.p
+              variants={itemVariants}
+              className="mt-5 text-lg font-normal text-gray-500 lg:text-xl mb-12"
+            >
+              Our alumni are making an impact at the world’s leading
+              organizations.
+            </motion.p>
+            <motion.div
+              variants={sectionVariants}
+              className="flex flex-wrap justify-center items-center gap-10 sm:gap-16"
+            >
+              {[
+                [
+                  "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
+                  "Google",
+                ],
+                [
+                  "https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31",
+                  "Microsoft",
+                ],
+                [
+                  "https://logos-world.net/wp-content/uploads/2020/04/Amazon-Logo.png",
+                  "Amazon",
+                ],
+                ["https://logo.clearbit.com/tcs.com", "TCS"],
+              ].map((item) => {
+                const [src, alt] = item;
+                return <CompanyLogo key={alt} src={src} alt={alt} />;
+              })}
+            </motion.div>
+          </SectionContainer>
+        </motion.section>
+
+        {/* FEATURE SECTION */}
+        <motion.div
+          ref={featureRef}
+          initial="hidden"
+          animate={featureInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <FeatureSection />
+        </motion.div>
+
+        {/* HIGHLIGHTS */}
+        <motion.div
+          ref={highlightRef}
+          initial="hidden"
+          animate={highlightInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+        >
+          <HighlightSection />
+        </motion.div>
+      </main>
+    </>
   );
 }

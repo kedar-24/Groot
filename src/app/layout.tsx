@@ -1,4 +1,5 @@
 // app/layout.tsx
+import { Montserrat } from "next/font/google";
 import "@/styles/globals.css";
 import { Providers } from "./providers";
 import type { Metadata } from "next";
@@ -8,13 +9,20 @@ export const metadata: Metadata = {
   description: "Your App Description",
 };
 
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={montserrat.variable}>
       <body>
         <Providers>{children}</Providers>
       </body>

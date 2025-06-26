@@ -7,9 +7,6 @@ import AuthFormField from "@/components/AuthFormField";
 import SocialAuthButtons from "@/components/SocialAuthButtons";
 import { useRouter } from "next/navigation";
 
-const TEXT_PRIMARY = "text-green-900";
-const TEXT_LINK = "text-blue-500";
-
 const RESEND_OTP_SECONDS = 30;
 
 export default function SignupPage() {
@@ -93,19 +90,19 @@ export default function SignupPage() {
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
       <FormContainer className="flex-1 flex-col items-center justify-center w-full">
-        <h1
-          className={`text-3xl font-bold ${TEXT_PRIMARY} mb-4 text-center w-full`}
-        >
+        <h1 className="text-3xl font-bold text-[var(--color-primary)] mb-4 text-center w-full">
           Sign Up
         </h1>
-        <p className={`${TEXT_PRIMARY} mb-3 text-base text-center w-full`}>
+        <p className="text-[var(--color-primary)] mb-3 text-base text-center w-full">
           {step === "email"
             ? "Enter your email to get started"
             : "Enter the OTP sent to your email"}
         </p>
 
         {message && (
-          <p className="text-sm text-center text-green-700 mb-4">{message}</p>
+          <p className="text-sm text-center text-[var(--color-secondary)] mb-4">
+            {message}
+          </p>
         )}
 
         {step === "email" ? (
@@ -125,9 +122,9 @@ export default function SignupPage() {
               className="w-full"
             />
             <Button
-              variant="primary"
+              variant="solid"
               type="submit"
-              className="w-full hover:bg-green-200 text-green-700"
+              className="w-full"
               disabled={loading}
             >
               {loading ? "Sending OTP..." : "Send OTP"}
@@ -151,17 +148,17 @@ export default function SignupPage() {
             />
             <div className="flex w-full gap-3">
               <Button
-                variant="primary"
+                variant="solid"
                 type="submit"
-                className="flex-1 hover:bg-green-200 text-green-700"
+                className="flex-1"
                 disabled={loading}
               >
                 {loading ? "Verifying..." : "Verify OTP"}
               </Button>
               <Button
                 type="button"
-                variant="secondary"
-                className="flex-1 text-green-700 px-3 py-1 text-sm"
+                variant="outline"
+                className="flex-1"
                 disabled={resendTimer > 0 || loading}
                 onClick={() => handleSendOtp()}
               >
@@ -183,12 +180,12 @@ export default function SignupPage() {
           <SocialAuthButtons disabled={loading} />
         </div>
 
-        <div className={`mt-4 text-center w-full ${TEXT_PRIMARY}`}>
+        <div className="mt-4 text-center w-full text-[var(--color-primary)]">
           <p>
             Already have an account?{" "}
             <Link
               href="/auth/login"
-              className={`${TEXT_LINK} font-semibold hover:underline`}
+              className="text-[var(--color-primary)] font-semibold hover:underline"
             >
               Login
             </Link>

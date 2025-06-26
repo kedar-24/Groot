@@ -8,6 +8,8 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-montserrat)', 'ui-sans-serif', 'system-ui'],
         montserrat: ['var(--font-montserrat)', 'ui-sans-serif', 'system-ui'],
+        sans: ['var(--font-montserrat)', 'ui-sans-serif', 'system-ui'],
+        montserrat: ['var(--font-montserrat)', 'ui-sans-serif', 'system-ui'],
       },
     },
   },
@@ -28,9 +30,4 @@ module.exports = {
     },
   },
 },
-  plugins: [
-    taosPlugin
-  ],
 };
-
-import taosPlugin from 'taos/plugin';

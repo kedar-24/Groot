@@ -1,213 +1,232 @@
 import React from "react";
 import Image from "next/image";
-import Button from "./button";
+import clsx from "clsx";
 
-type BaseCardProps = {
+type AlumniCardProps = {
+  variant: "alumni";
+  name: string;
+  batch: string;
+  imageUrl: string;
+  description: string;
+  profileUrl?: string;
+  className?: string;
   children?: React.ReactNode;
-  className?: string;
-  bgImage?: string;
-  overlayClass?: string;
 };
 
-type AuthSideCardProps = {
-  variant: "auth";
+type EventCardProps = {
+  variant: "event";
   title: string;
+  date: string;
+  imageUrl: string;
   description: string;
-  bgImage: string;
-  overlayClass?: string;
+  registerUrl?: string;
   className?: string;
-};
-
-type ValueCardProps = {
-  variant: "value";
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-};
-
-type GroupCardProps = {
-  variant: "group";
-  title: string;
-  description: string;
-  onJoin?: () => void;
-  joined?: boolean;
-  className?: string;
+  children?: React.ReactNode;
 };
 
 type NewsCardProps = {
   variant: "news";
   title: string;
   date: string;
-  category: string;
   imageUrl: string;
   content: string;
   url: string;
   className?: string;
+  children?: React.ReactNode;
+};
+
+type AuthCardProps = {
+  variant: "auth";
+  title: string;
+  description: string;
+  imageUrl?: string;
+  overlayClass?: string;
+  className?: string;
+  children?: React.ReactNode;
 };
 
 type CardProps =
-  | (BaseCardProps & { variant?: undefined })
-  | AuthSideCardProps
-  | ValueCardProps
-  | GroupCardProps
-  | NewsCardProps;
+  | AlumniCardProps
+  | EventCardProps
+  | NewsCardProps
+  | AuthCardProps;
 
 export default function Card(props: CardProps) {
-  // AUTH SIDE CARD
+  const baseCardClass = "bg-white/90 shadow-lg rounded-2xl overflow-hidden";
+
+  // === AUTH CARD ===
   if (props.variant === "auth") {
     const {
       title,
       description,
-      bgImage,
-      overlayClass = "bg-black/40",
-      className = "",
+      imageUrl,
+      overlayClass = "",
+      className,
+      children,
     } = props;
+
     return (
       <div
-        className={`relative rounded-2xl overflow-hidden shadow-md bg-white/80 flex flex-col justify-end ${className}`}
-        style={{ minHeight: "200px" }}
+        className={clsx(
+          "relative flex flex-col items-center justify-center p-6",
+          baseCardClass,
+          className
+        )}
       >
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={bgImage}
-            alt={title}
-            fill
-            className="object-cover w-full h-full"
-            style={{ objectFit: "cover" }}
-            sizes="100vw"
-            priority
-          />
-          <div className={`absolute inset-0 z-10 ${overlayClass}`} />
-        </div>
-        <div className="relative z-20 p-6 flex flex-col items-start">
-          <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
+        {imageUrl && (
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              className="object-cover w-full h-full opacity-40"
+              style={{ zIndex: 0 }}
+            />
+            {overlayClass && (
+              <div className={clsx("absolute inset-0 z-10", overlayClass)} />
+            )}
+          </div>
+        )}
+        <div className="relative z-20 flex flex-col items-center w-full">
+          <h3 className="text-xl font-bold mb-2 text-[var(--color-primary)] text-center">
             {title}
           </h3>
-          <p className="text-white text-base drop-shadow">{description}</p>
+          <p className="text-base text-black/80 mb-4 text-center">
+            {description}
+          </p>
+          {children}
         </div>
       </div>
     );
   }
 
-  // VALUE CARD
-  if (props.variant === "value") {
-    const { title, children, className = "" } = props;
-    return (
-      <div
-        className={`p-6 bg-gray-100 rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${className}`}
-      >
-        <h3 className="text-2xl font-semibold text-green-700 mb-2">{title}</h3>
-        <div className="text-gray-600">{children}</div>
-      </div>
-    );
-  }
+  // === ALUMNI CARD ===
+  if (props.variant === "alumni") {
+    const {
+      name,
+      batch,
+      imageUrl,
+      description,
+      profileUrl,
+      className,
+      children,
+    } = props;
 
-  // GROUP CARD
-  if (props.variant === "group") {
-    const { title, description, onJoin, joined, className = "" } = props;
     return (
       <div
-        className={`border border-gray-200 rounded-2xl bg-white shadow-sm p-6 mb-5 transition hover:shadow-md ${className}`}
+        className={clsx(
+          "flex flex-col items-center p-6",
+          baseCardClass,
+          className
+        )}
       >
-        <div className="flex justify-between items-center mb-2">
-          <h3
-            className="text-xl font-bold text-green-900 font-sans truncate"
-            title={title}
-          >
-            {title}
-          </h3>
-          <Button
-            variant={joined ? "secondary" : "primary"}
-            className={`px-5 py-1.5 text-sm rounded-lg min-w-[90px] ${
-              joined
-                ? "bg-gray-200 text-gray-500 cursor-not-allowed border border-gray-300"
-                : "bg-green-800 text-white hover:bg-green-900"
-            }`}
-            onClick={onJoin}
-            disabled={joined}
-          >
-            {joined ? "Joined" : "Join"}
-          </Button>
-        </div>
-        <p className="text-gray-700 text-base font-sans leading-relaxed">
+        <Image
+          src={imageUrl || "/images/alumni-placeholder.jpg"}
+          alt={name}
+          width={120}
+          height={120}
+          className="rounded-full object-cover border-4 border-[var(--color-primary-light)] mb-4"
+        />
+        <h3 className="text-xl font-bold mb-1">{name}</h3>
+        <div className="text-sm text-black/60 mb-2">Batch of {batch}</div>
+        <p className="text-base text-black/80 mb-4 text-center">
           {description}
         </p>
+        {profileUrl && (
+          <a
+            href={profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--color-primary)] font-semibold hover:underline"
+          >
+            View Profile →
+          </a>
+        )}
+        {children}
       </div>
     );
   }
 
-  // NEWS CARD
-  if (props.variant === "news") {
+  // === EVENT CARD ===
+  if (props.variant === "event") {
     const {
       title,
       date,
-      category,
       imageUrl,
-      content,
-      url,
-      className = "",
+      description,
+      registerUrl,
+      className,
+      children,
     } = props;
+
     return (
-      <div
-        className={`bg-white shadow rounded-2xl overflow-hidden hover:shadow-gray-400 hover:scale-105 transition-all flex flex-col h-full ${className}`}
-      >
+      <div className={clsx("flex flex-col h-full", baseCardClass, className)}>
         <Image
-          src={imageUrl?.startsWith("http") ? imageUrl : "/placeholder.jpg"}
+          src={imageUrl || "/images/event-placeholder.jpg"}
           alt={title}
           width={600}
-          height={400}
-          className="w-full h-48 object-cover"
-          placeholder="empty"
+          height={300}
+          className="w-full h-40 object-cover"
         />
         <div className="p-4 flex-1 flex flex-col justify-between">
           <div>
-            <p className="text-sm text-gray-500">
-              {category} | {new Date(date).toLocaleDateString()}
+            <p className="text-sm text-black/50 mb-1">
+              {new Date(date).toLocaleDateString()}
             </p>
-            <h3 className="text-lg font-semibold mt-1 mb-2">{title}</h3>
-            <p className="text-sm text-gray-700 line-clamp-3">{content}</p>
+            <h3 className="text-lg font-bold mb-2">{title}</h3>
+            <p className="text-sm text-black/80 mb-3">{description}</p>
+          </div>
+          {registerUrl && (
+            <a
+              href={registerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[var(--color-primary)] font-semibold hover:underline"
+            >
+              Register →
+            </a>
+          )}
+          {children}
+        </div>
+      </div>
+    );
+  }
+
+  // === NEWS CARD ===
+  if (props.variant === "news") {
+    const { title, date, imageUrl, content, url, className, children } = props;
+
+    return (
+      <div className={clsx("flex flex-col h-full", baseCardClass, className)}>
+        <Image
+          src={imageUrl || "/images/news-placeholder.jpg"}
+          alt={title}
+          width={600}
+          height={300}
+          className="w-full h-40 object-cover"
+        />
+        <div className="p-4 flex-1 flex flex-col justify-between">
+          <div>
+            <p className="text-sm text-black/50 mb-1">
+              {new Date(date).toLocaleDateString()}
+            </p>
+            <h3 className="text-lg font-bold mb-2">{title}</h3>
+            <p className="text-sm text-black/80 line-clamp-3">{content}</p>
           </div>
           <a
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-red-600 mt-4 font-medium hover:underline inline-block"
+            className="text-[var(--color-primary)] font-semibold hover:underline mt-2"
           >
             Read More →
           </a>
+          {children}
         </div>
       </div>
     );
   }
 
-  // BASE CARD (for generic use)
-  const {
-    children,
-    className = "",
-    bgImage,
-    overlayClass = "bg-black/40",
-  } = props as BaseCardProps;
-  return (
-    <div
-      className={`w-full relative rounded-2xl overflow-hidden shadow-md bg-white/80 ${className}`}
-    >
-      {bgImage && (
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={bgImage}
-            alt=""
-            fill
-            className="object-cover w-full h-full"
-            style={{ objectFit: "cover" }}
-            sizes="100vw"
-            priority
-          />
-          <div className={`absolute inset-0 z-10 ${overlayClass}`} />
-        </div>
-      )}
-      <div className="relative z-20 p-6 flex flex-col items-start">
-        {children}
-      </div>
-    </div>
-  );
+  // === FALLBACK ===
+  return null;
 }

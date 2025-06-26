@@ -28,7 +28,7 @@ export default function SocialAuthButtons({
       {socials.map((s) => (
         <Button
           key={s.alt}
-          variant="imglogo"
+          variant="icon"
           type="button"
           aria-label={`Continue with ${s.label}`}
           onClick={() => signIn(s.provider, { callbackUrl: "/" })}

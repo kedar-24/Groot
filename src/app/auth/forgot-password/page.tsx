@@ -5,9 +5,6 @@ import FormContainer from "@/components/FormContainer";
 import AuthFormField from "@/components/AuthFormField";
 import Button from "@/components/button";
 
-const TEXT_PRIMARY = "text-green-900";
-const TEXT_LINK = "text-blue-500";
-
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -46,12 +43,10 @@ export default function ForgotPasswordPage() {
   return (
     <div className="w-full max-w-md mx-auto z-40 relative flex items-center justify-center min-h-[80vh]">
       <FormContainer className="flex-1 flex-col items-center justify-center w-full">
-        <h1
-          className={`text-4xl font-bold ${TEXT_PRIMARY} mb-4 text-center w-full`}
-        >
+        <h1 className="text-4xl font-bold text-[var(--color-primary)] mb-4 text-center w-full">
           Forgot Password
         </h1>
-        <p className={`${TEXT_PRIMARY} mb-3 text-center w-full`}>
+        <p className="text-[var(--color-primary)] mb-3 text-center w-full">
           Enter your email address and we&apos;ll send you a link to reset your
           password.
         </p>
@@ -90,10 +85,10 @@ export default function ForgotPasswordPage() {
             </Button>
           </form>
         )}
-        <div className={`mt-4 text-center w-full ${TEXT_PRIMARY}`}>
+        <div className="mt-4 text-center w-full text-[var(--color-primary)]">
           <Link
             href="/auth/login"
-            className={`${TEXT_LINK} font-semibold hover:underline`}
+            className="text-[var(--color-primary)] font-semibold hover:underline"
           >
             Back to Login
           </Link>
